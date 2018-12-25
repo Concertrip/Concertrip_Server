@@ -29,18 +29,6 @@ public class UserService {
     }
 
     /**
-     * 모든 회원 조회
-     *
-     * @return DefaultRes
-     */
-    public DefaultRes getAllUsers() {
-        final List<User> userList = userMapper.findAll();
-        if (userList.isEmpty())
-            return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_USER);
-        return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_USER, userList);
-    }
-
-    /**
      * 회원 가입
      *
      * @param user 회원 데이터

@@ -21,16 +21,6 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("")
-    public ResponseEntity getUser() {
-        try {
-            return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
-        }catch (Exception e) {
-            log.error(e.getMessage());
-            return new ResponseEntity<>(FAIL_DEFAULT_RES, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
     @PostMapping("/guest")
     public ResponseEntity signUpGuest() {
         try {
