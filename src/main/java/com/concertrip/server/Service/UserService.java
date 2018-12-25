@@ -39,4 +39,23 @@ public class UserService {
             return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_USER);
         return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_USER, userList);
     }
+
+    /**
+     * 회원 가입
+     *
+     * @param user 회원 데이터
+     * @return DefaultRes
+     */
+    @Transactional
+    public DefaultRes save(final User user) {
+        try {
+            userMapper.save(user);
+            return DefaultRes.res(StatusCode.CREATED, ResponseMessage.CREATED_USER, user.getId());
+        } catch (Exception e) {
+            //Rollback
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            log.error(e.getMessage());
+            return DefaultRes.res(StatusCode.DB_ERROR, ResponseMessage.DB_ERROR);
+        }
+    }
 }
