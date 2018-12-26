@@ -10,7 +10,7 @@ public class ResponseMessage {
     public static final String INTERNAL_SERVER_ERROR = "서버 내부 에러";
 
     public static final String READ_EVENTS = "이벤트 조회 성공";
-    public static final String NOT_FOUND_EVENT = "이벤트를 찾을 수 없습니다.";
+    public static final String NOT_FOUND_EVENT = "이벤트를 찾을 수 없습니다";
     public static final String CREATED_EVENT = "이벤트 추가 성공 성공";
     public static final String UPDATE_EVENT = "이벤트 정보 수정 성공";
     public static final String DELETE_EVENT = "이벤트 삭제 성공";
