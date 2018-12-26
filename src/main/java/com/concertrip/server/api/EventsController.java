@@ -2,7 +2,7 @@ package com.concertrip.server.api;
 
 import com.concertrip.server.domain.Events;
 import com.concertrip.server.model.DefaultRes;
-import com.concertrip.server.service.EventsService;
+import com.concertrip.server.Service.EventsService;
 import com.concertrip.server.utils.ResponseMessage;
 import com.concertrip.server.utils.StatusCode;
 import lombok.extern.slf4j.Slf4j;
