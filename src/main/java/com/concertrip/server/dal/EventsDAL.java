@@ -45,6 +45,22 @@ public class EventsDAL {
         return events;
     }
 
+    public List<Events> findByTitle(String title) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("title").regex(title));
+        List<Events> events = mongoTemplate.find(query, Events.class);
+
+        return events;
+    }
+
+    public List<Events> findByTag(String tag) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("tag").all(tag));
+        List<Events> events = mongoTemplate.find(query, Events.class);
+
+        return events;
+    }
+
 
     /**
      * 이벤트 추가
