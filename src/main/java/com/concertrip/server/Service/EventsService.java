@@ -1,4 +1,4 @@
-package com.concertrip.server.service;
+package com.concertrip.server.Service;
 
 import com.concertrip.server.dao.EventsRepository;
 import com.concertrip.server.domain.Events;
