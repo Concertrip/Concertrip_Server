@@ -16,7 +16,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Document(collection="artists")
-public class Artists {
+public class Artists implements Serializable {
     @Id
     private String _id;
     private String profileImg;

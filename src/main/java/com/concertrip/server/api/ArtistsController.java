@@ -29,6 +29,12 @@ public class ArtistsController {
         return new ResponseEntity<>(artistsService.selectArtistAll(), HttpStatus.OK);
     }
 
+    @GetMapping("/{artistId}")
+    public ResponseEntity getArtistsById(@PathVariable(value = "artistsId") final String _id) {
+        if (_id.equals("")) return new ResponseEntity(DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_ARTISTS), HttpStatus.OK);
+        return new ResponseEntity(artistsService.findArtistById(_id), HttpStatus.OK);
+    }
+
     @PostMapping("")
     public ResponseEntity addArtists(@RequestBody final Artists artists) {
         return new ResponseEntity(artistsService.insertArtist(artists), HttpStatus.OK);
