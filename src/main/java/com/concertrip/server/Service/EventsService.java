@@ -1,12 +1,11 @@
 package com.concertrip.server.service;
 
-import com.concertrip.server.dao.EventsRepository;
+import com.concertrip.server.dal.EventsDAL;
 import com.concertrip.server.domain.Events;
 import com.concertrip.server.model.DefaultRes;
 import com.concertrip.server.utils.ResponseMessage;
 import com.concertrip.server.utils.StatusCode;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
@@ -20,19 +19,13 @@ import java.util.List;
  */
 @Slf4j
 @Service
-public class EventsService  {
-    private final EventsRepository eventsRepository;
-    private final MongoTemplate mongoTemplate;
+public class EventsService {
+    private final EventsDAL eventsDal;
 
-    /**
-     * 생성자 의존성 주입
-     * @param eventsRepository
-     * @param mongoTemplate
-     */
-    public EventsService(EventsRepository eventsRepository, MongoTemplate mongoTemplate) {
-        this.eventsRepository = eventsRepository;
-        this.mongoTemplate = mongoTemplate;
+    public EventsService(EventsDAL eventsDal) {
+        this.eventsDal = eventsDal;
     }
+
 
     /**
      * 전체 이벤트 정보 가져오기
@@ -41,12 +34,27 @@ public class EventsService  {
      */
     public DefaultRes selectAll() {
         try {
-            List<Events> eventsList = eventsRepository.findAll();
-
+            List<Events> eventsList = eventsDal.selectAll();
             if (eventsList.size() == 0) {
                 return DefaultRes.res(StatusCode.OK, ResponseMessage.NOT_FOUND_EVENT);
             } else {
                 return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_EVENTS, eventsList);
+            }
+        } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            log.error(e.getMessage());
+            return DefaultRes.res(StatusCode.DB_ERROR, ResponseMessage.DB_ERROR);
+        }
+    }
+
+    public DefaultRes findEventsById(String _id) {
+        try {
+            Events events = eventsDal.findEvents(_id);
+
+            if (events == null) {
+                return DefaultRes.res(StatusCode.OK, ResponseMessage.NOT_FOUND_EVENT);
+            } else {
+                return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_EVENTS, events);
             }
         } catch (Exception e) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -64,7 +72,7 @@ public class EventsService  {
      */
     public DefaultRes insert(Events events) {
         try {
-            mongoTemplate.insert(events, "events");
+            eventsDal.insert(events);
             return DefaultRes.res(StatusCode.OK, ResponseMessage.CREATED_EVENT);
         } catch (Exception e) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -81,7 +89,7 @@ public class EventsService  {
      */
     public DefaultRes update(Events events) {
         try {
-            mongoTemplate.save(events, "events");
+            eventsDal.update(events);
             return DefaultRes.res(StatusCode.OK, ResponseMessage.UPDATE_EVENT);
         } catch (Exception e) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -98,9 +106,7 @@ public class EventsService  {
      */
     public DefaultRes delete(String _id) {
         try {
-            Query query = new Query();
-            query.addCriteria(Criteria.where("_id").is(_id));
-            mongoTemplate.remove(query, "events");
+            eventsDal.delete(_id);
 
             return DefaultRes.res(StatusCode.OK, ResponseMessage.DELETE_EVENT);
         } catch (Exception e) {
@@ -109,6 +115,5 @@ public class EventsService  {
             return DefaultRes.res(StatusCode.DB_ERROR, ResponseMessage.DB_ERROR);
         }
     }
-
 
 }
