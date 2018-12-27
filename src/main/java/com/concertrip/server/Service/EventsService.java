@@ -36,7 +36,7 @@ public class EventsService {
         try {
             List<Events> eventsList = eventsDal.selectAll();
             if (eventsList.size() == 0) {
-                return DefaultRes.res(StatusCode.OK, ResponseMessage.NOT_FOUND_EVENT);
+                return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_EVENT);
             } else {
                 return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_EVENTS, eventsList);
             }
@@ -52,7 +52,7 @@ public class EventsService {
             Events events = eventsDal.findEvents(_id);
 
             if (events == null) {
-                return DefaultRes.res(StatusCode.OK, ResponseMessage.NOT_FOUND_EVENT);
+                return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_EVENT);
             } else {
                 return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_EVENTS, events);
             }
