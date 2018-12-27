@@ -16,6 +16,7 @@ public class ArtistsReq {
     @Id
     private String _id;
     private String name;
+    private String profileImg;
     private List<String> tag;
 
 }
