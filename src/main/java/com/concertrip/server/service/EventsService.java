@@ -2,6 +2,7 @@ package com.concertrip.server.service;
 
 import com.concertrip.server.dal.EventsDAL;
 import com.concertrip.server.domain.Events;
+import com.concertrip.server.mapper.EventsMapper;
 import com.concertrip.server.model.DefaultRes;
 import com.concertrip.server.utils.ResponseMessage;
 import com.concertrip.server.utils.StatusCode;
@@ -21,9 +22,11 @@ import java.util.List;
 @Service
 public class EventsService {
     private final EventsDAL eventsDal;
+    private final EventsMapper eventsMapper;
 
-    public EventsService(EventsDAL eventsDal) {
+    public EventsService(EventsDAL eventsDal, EventsMapper eventsMapper) {
         this.eventsDal = eventsDal;
+        this.eventsMapper = eventsMapper;
     }
 
 
@@ -116,4 +119,12 @@ public class EventsService {
         }
     }
 
+    public DefaultRes subscribe(final String eventIdx, final String token) {
+        try {
+            eventsMapper.subscribe(eventIdx, token);
+            return DefaultRes.res(StatusCode.OK, ResponseMessage.SUBSCRIBE_EVENT);
+        } catch (Exception e) {
+            return DefaultRes.res(StatusCode.DB_ERROR, ResponseMessage.DB_ERROR);
+        }
+    }
 }
