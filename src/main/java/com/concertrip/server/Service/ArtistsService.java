@@ -11,6 +11,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -107,9 +108,16 @@ public class ArtistsService {
          * @return
          */
         public DefaultRes deleteArtist (String _id){
+
             try {
-                artistsDAL.deleteArtist(_id);
-                return DefaultRes.res(StatusCode.OK, ResponseMessage.DELETE_ARTISTS);
+                Artists artists = artistsDAL.findArtists(_id);
+                if(artists == null) {
+                    return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_ARTISTS);
+                }
+                else {
+                    artistsDAL.deleteArtist(_id);
+                    return DefaultRes.res(StatusCode.OK, ResponseMessage.DELETE_ARTISTS);
+                }
             } catch (Exception e) {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 log.error(e.getMessage());

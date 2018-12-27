@@ -47,7 +47,7 @@ public class ArtistsController {
     }
 
     @DeleteMapping("")
-    public ResponseEntity deleteArtists(@RequestParam("id") final String _id) {
+    public ResponseEntity deleteArtists(@RequestParam(value = "id", defaultValue = "") final String _id) {
         if(_id.equals("")) return new ResponseEntity(DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.NOT_FOUND_ARTISTS), HttpStatus.OK);
         return new ResponseEntity<>(artistsService.deleteArtist(_id), HttpStatus.OK);
     }
