@@ -47,8 +47,10 @@ public class EventsDAL {
     }
 
     public List<EventsReq> findByTitle(String title) {
-        Query query = new Query();
-        query.addCriteria(Criteria.where("title").regex(title));
+        Criteria criteria = new Criteria();
+
+        criteria.orOperator(Criteria.where("title").regex(title), Criteria.where("cast").all(title));
+        Query query = new Query(criteria);
         query.fields().include("_id");
         query.fields().include("title");
 
