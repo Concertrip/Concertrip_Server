@@ -17,7 +17,7 @@ public class ResponseMessage {
 
     public static final String READ_ARTISTS = "아티스트 조회 성공";
     public static final String NOT_FOUND_ARTISTS = "아티스트를 찾을 수 없습니다.";
-    public static final String CREATED_ARTISTS = "아티스트 추가 성공 성공";
+    public static final String CREATED_ARTISTS = "아티스트 추가 성공";
     public static final String UPDATE_ARTISTS = "아티스트 정보 수정 성공";
     public static final String DELETE_ARTISTS = "아티스트 삭제 성공";
 

@@ -29,7 +29,7 @@ public class ArtistsController {
         return new ResponseEntity<>(artistsService.selectArtistAll(), HttpStatus.OK);
     }
 
-    @GetMapping("/{artistId}")
+    @GetMapping("/{artistsId}")
     public ResponseEntity getArtistsById(@PathVariable(value = "artistsId") final String _id) {
         if (_id.equals("")) return new ResponseEntity(DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_ARTISTS), HttpStatus.OK);
         return new ResponseEntity(artistsService.findArtistById(_id), HttpStatus.OK);

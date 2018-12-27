@@ -36,7 +36,7 @@ public class ArtistsService {
         try {
             List<Artists> artistsList = artistsDAL.selectArtistAll();
             if (artistsList.size() == 0) {
-                return DefaultRes.res(StatusCode.OK, ResponseMessage.NOT_FOUND_ARTISTS);
+                return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_ARTISTS);
             } else {
                 return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_ARTISTS, artistsList);
             }
@@ -48,12 +48,17 @@ public class ArtistsService {
 
     }
 
+    /**
+     * 아티스트 이름으로 조회
+     * @param _id
+     * @return
+     */
+
     public DefaultRes findArtistById(String _id) {
         try {
             Artists artists = artistsDAL.findArtists(_id);
-
             if (artists == null) {
-                return DefaultRes.res(StatusCode.OK, ResponseMessage.NOT_FOUND_ARTISTS);
+                return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_ARTISTS);
             } else {
                 return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_ARTISTS, artists);
             }
