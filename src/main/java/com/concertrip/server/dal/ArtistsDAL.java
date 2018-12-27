@@ -39,13 +39,22 @@ public class ArtistsDAL {
     public List<Artists> selectArtistAll() {
         return artistsRepository.findAll();
     }
-
+    // _id 로 가져오기
     public Artists findArtists(String _id) {
         Query query = new Query();
         query.addCriteria(Criteria.where("_id").is(_id));
         Artists artists = mongoTemplate.findOne(query, Artists.class);
         return artists;
     }
+
+    //아티스트 name으로 가져오기
+    public Artists findArtistsByName(String name) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("name").is(name));
+        Artists artists = mongoTemplate.findOne(query, Artists.class);
+        return artists;
+    }
+
 
     /**
      * 아티스트 추가

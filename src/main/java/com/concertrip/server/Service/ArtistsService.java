@@ -11,6 +11,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -36,7 +37,7 @@ public class ArtistsService {
         try {
             List<Artists> artistsList = artistsDAL.selectArtistAll();
             if (artistsList.size() == 0) {
-                return DefaultRes.res(StatusCode.OK, ResponseMessage.NOT_FOUND_ARTISTS);
+                return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_ARTISTS);
             } else {
                 return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_ARTISTS, artistsList);
             }
@@ -48,12 +49,17 @@ public class ArtistsService {
 
     }
 
+    /**
+     * 아티스트 이름으로 조회
+     * @param _id
+     * @return
+     */
+
     public DefaultRes findArtistById(String _id) {
         try {
             Artists artists = artistsDAL.findArtists(_id);
-
             if (artists == null) {
-                return DefaultRes.res(StatusCode.OK, ResponseMessage.NOT_FOUND_ARTISTS);
+                return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_ARTISTS);
             } else {
                 return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_ARTISTS, artists);
             }
@@ -72,8 +78,14 @@ public class ArtistsService {
 
         public DefaultRes insertArtist (Artists artists){
             try {
-                artistsDAL.insertArtist(artists);
-                return DefaultRes.res(StatusCode.OK, ResponseMessage.CREATED_ARTISTS);
+                Artists artists1 = artistsDAL.findArtistsByName(artists.getName());
+                if(artists1.getName() == null ) {
+                    artistsDAL.insertArtist(artists);
+                    return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.ALREADY_ARTISTS);
+                }
+                else {
+                    return DefaultRes.res(StatusCode.OK, ResponseMessage.CREATED_ARTISTS);
+                }
             } catch (Exception e) {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 log.error(e.getMessage());
@@ -102,9 +114,16 @@ public class ArtistsService {
          * @return
          */
         public DefaultRes deleteArtist (String _id){
+
             try {
-                artistsDAL.deleteArtist(_id);
-                return DefaultRes.res(StatusCode.OK, ResponseMessage.DELETE_ARTISTS);
+                Artists artists = artistsDAL.findArtists(_id);
+                if(artists == null) {
+                    return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_ARTISTS);
+                }
+                else {
+                    artistsDAL.deleteArtist(_id);
+                    return DefaultRes.res(StatusCode.OK, ResponseMessage.DELETE_ARTISTS);
+                }
             } catch (Exception e) {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 log.error(e.getMessage());

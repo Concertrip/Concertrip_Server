@@ -15,7 +15,6 @@ import java.util.List;
 public interface ArtistsRepository extends MongoRepository<Artists, Integer> {
     List<Artists> findAll();
 
-
     //DB 접근 쿼리 방식 ver 2 by hj
     @Query(value = "{ name : ?0 }", fields = "{ 'name' : 1, 'tag' : 1 }")
     List<ArtistsReq> findByName(String name);
