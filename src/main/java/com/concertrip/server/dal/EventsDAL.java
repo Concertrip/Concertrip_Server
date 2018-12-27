@@ -2,6 +2,7 @@ package com.concertrip.server.dal;
 
 import com.concertrip.server.dao.EventsRepository;
 import com.concertrip.server.domain.Events;
+import com.concertrip.server.model.EventsReq;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -45,6 +46,30 @@ public class EventsDAL {
         return events;
     }
 
+    public List<EventsReq> findByTitle(String title) {
+        Criteria criteria = new Criteria();
+
+        criteria.orOperator(Criteria.where("title").regex(title), Criteria.where("cast").all(title));
+        Query query = new Query(criteria);
+        query.fields().include("_id");
+        query.fields().include("title");
+
+        List<EventsReq> events = mongoTemplate.find(query, EventsReq.class);
+
+        return events;
+    }
+
+    public List<EventsReq> findByTag(String tag) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("tag").all(tag));
+        query.fields().include("_id");
+        query.fields().include("title");
+
+        List<EventsReq> events = mongoTemplate.find(query, EventsReq.class);
+
+        return events;
+    }
+
 
     /**
      * 이벤트 추가
@@ -74,4 +99,5 @@ public class EventsDAL {
         query.addCriteria(Criteria.where("_id").is(_id));
         mongoTemplate.remove(query, "events");
     }
+
 }
