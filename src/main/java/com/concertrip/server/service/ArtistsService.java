@@ -1,4 +1,4 @@
-package com.concertrip.server.Service;
+package com.concertrip.server.service;
 
 import com.concertrip.server.dal.ArtistsDAL;
 import com.concertrip.server.domain.Artists;
