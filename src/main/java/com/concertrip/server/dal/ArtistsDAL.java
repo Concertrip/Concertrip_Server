@@ -2,7 +2,10 @@ package com.concertrip.server.dal;
 
 import com.concertrip.server.dao.ArtistsRepository;
 import com.concertrip.server.domain.Artists;
+import com.concertrip.server.domain.Events;
+import com.concertrip.server.model.ArtistsReq;
 import com.concertrip.server.model.DefaultRes;
+import com.concertrip.server.model.EventsReq;
 import com.concertrip.server.utils.ResponseMessage;
 import com.concertrip.server.utils.StatusCode;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -55,6 +58,13 @@ public class ArtistsDAL {
         return artists;
     }
 
+    public ArtistsReq findArtistsForCal(String _id) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("_id").is(_id));
+        ArtistsReq artists = mongoTemplate.findOne(query, ArtistsReq.class);
+
+        return artists;
+    }
 
     /**
      * 아티스트 추가

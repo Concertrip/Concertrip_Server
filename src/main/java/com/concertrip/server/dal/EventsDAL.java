@@ -46,6 +46,19 @@ public class EventsDAL {
         return events;
     }
 
+    public EventsReq findEventsForCal(String _id) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("_id").is(_id));
+        EventsReq events = mongoTemplate.findOne(query, EventsReq.class);
+        return events;
+    }
+
+    /**
+     * 입력받은 제목이 있는 이벤트 찾기
+     * 12.27 쿼리문 수정
+     * @param title
+     * @return
+     */
     public List<EventsReq> findByTitle(String title) {
         Criteria criteria = new Criteria();
 
@@ -53,17 +66,27 @@ public class EventsDAL {
         Query query = new Query(criteria);
         query.fields().include("_id");
         query.fields().include("title");
+        //query.fields().include("profileImg");
+        //query.fields().include("date");
 
         List<EventsReq> events = mongoTemplate.find(query, EventsReq.class);
 
         return events;
     }
 
+    /**
+     * 입력받은 태그가 속한 이벤트 찾기
+     * 12.27 쿼리문 수정
+     * @param tag
+     * @return
+     */
     public List<EventsReq> findByTag(String tag) {
         Query query = new Query();
         query.addCriteria(Criteria.where("tag").all(tag));
         query.fields().include("_id");
         query.fields().include("title");
+        //query.fields().include("profileImg");
+        //query.fields().include("date");
 
         List<EventsReq> events = mongoTemplate.find(query, EventsReq.class);
 
