@@ -78,8 +78,14 @@ public class ArtistsService {
 
         public DefaultRes insertArtist (Artists artists){
             try {
-                artistsDAL.insertArtist(artists);
-                return DefaultRes.res(StatusCode.OK, ResponseMessage.CREATED_ARTISTS);
+                Artists artists1 = artistsDAL.findArtistsByName(artists.getName());
+                if(artists1.getName() == null ) {
+                    artistsDAL.insertArtist(artists);
+                    return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.ALREADY_ARTISTS);
+                }
+                else {
+                    return DefaultRes.res(StatusCode.OK, ResponseMessage.CREATED_ARTISTS);
+                }
             } catch (Exception e) {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 log.error(e.getMessage());

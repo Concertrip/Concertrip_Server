@@ -12,4 +12,5 @@ import java.util.List;
 
 public interface ArtistsRepository extends MongoRepository<Artists, Integer> {
     List<Artists> findAll();
+
 }
