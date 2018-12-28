@@ -3,6 +3,7 @@ package com.concertrip.server.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -20,14 +21,23 @@ import java.util.Date;
 public class Events implements Serializable {
     @Id
     private String _id;
+    @NonNull
     private String title;
+    @NonNull
     private String profileImg;
     private String backImg;
+    @NonNull
     private String location;
     private String[] tag;
+    @NonNull
     private String[] cast;
+    @NonNull
     private Date[] date;
-    private int price;
+    private String[] seats;
+    private int[] price;
     private String youtubeUrl;
+    private String eventInfoImg;
+    private String ticketImg;
+
 
 }

@@ -50,7 +50,7 @@ public class EventsController {
     }
 
     @DeleteMapping("")
-    public ResponseEntity deleteEvents(@RequestParam("concertIdx") final String _id){
+    public ResponseEntity deleteEvents(@RequestParam(value = "id", defaultValue = "") final String _id){
         if(_id.equals("")) return new ResponseEntity(DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_EVENT), HttpStatus.OK);
 
         return new ResponseEntity<>(eventsService.delete(_id), HttpStatus.OK);
