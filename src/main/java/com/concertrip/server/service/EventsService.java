@@ -6,6 +6,7 @@ import com.concertrip.server.domain.Events;
 import com.concertrip.server.mapper.EventsSubscribeMapper;
 import com.concertrip.server.model.DefaultRes;
 import com.concertrip.server.model.EventsDetailReq;
+import com.concertrip.server.model.EventsSubscribeReq;
 import com.concertrip.server.utils.ResponseMessage;
 import com.concertrip.server.utils.StatusCode;
 import lombok.extern.slf4j.Slf4j;
@@ -132,15 +133,20 @@ public class EventsService {
     }
 
     /**
-     * 이벤트 구독하기
+     * 이벤트 구독하기 및 취소
      *
-     * @param eventIdx
+     * @param eventId
      * @param token
      * @return
      */
-    public DefaultRes subscribe(final String eventIdx, final String token) {
+    public DefaultRes subscribe(final String eventId, final String token) {
         try {
-            eventsSubscribeMapper.subscribe(eventIdx, token);
+            EventsSubscribeReq esReq = eventsSubscribeMapper.isSubscribe(token, eventId);
+            if (esReq == null) {
+                eventsSubscribeMapper.subscribe(eventId, token);
+            } else {
+                eventsSubscribeMapper.unSubscribe(eventId, token);
+            }
             return DefaultRes.res(StatusCode.OK, ResponseMessage.SUBSCRIBE_EVENT);
         } catch (Exception e) {
             return DefaultRes.res(StatusCode.DB_ERROR, ResponseMessage.DB_ERROR);
