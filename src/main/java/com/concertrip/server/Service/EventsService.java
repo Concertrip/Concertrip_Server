@@ -6,6 +6,8 @@ import com.concertrip.server.model.DefaultRes;
 import com.concertrip.server.utils.ResponseMessage;
 import com.concertrip.server.utils.StatusCode;
 import lombok.extern.slf4j.Slf4j;
+import netscape.javascript.JSObject;
+import org.json.simple.JSONObject;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
@@ -54,6 +56,12 @@ public class EventsService {
             if (events == null) {
                 return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_EVENT);
             } else {
+                for (int i = 0; i < events.getCast().length; i++) {
+                    JSONObject cast = new JSONObject();
+
+
+                }
+
                 return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_EVENTS, events);
             }
         } catch (Exception e) {

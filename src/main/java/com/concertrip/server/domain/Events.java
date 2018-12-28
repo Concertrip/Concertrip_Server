@@ -33,7 +33,11 @@ public class Events implements Serializable {
     private String[] cast;
     @NonNull
     private Date[] date;
-    private int price;
+    private String[] seats;
+    private int[] price;
     private String youtubeUrl;
+    private String eventInfoImg;
+    private String ticketImg;
+
 
 }
