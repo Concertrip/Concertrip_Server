@@ -1,6 +1,6 @@
 package com.concertrip.server.api;
 
-import com.concertrip.server.Service.ArtistsService;
+import com.concertrip.server.service.ArtistsService;
 import com.concertrip.server.domain.Artists;
 import com.concertrip.server.model.DefaultRes;
 import com.concertrip.server.utils.ResponseMessage;

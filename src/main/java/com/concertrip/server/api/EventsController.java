@@ -2,13 +2,16 @@ package com.concertrip.server.api;
 
 import com.concertrip.server.domain.Events;
 import com.concertrip.server.model.DefaultRes;
-import com.concertrip.server.Service.EventsService;
+import com.concertrip.server.service.EventsService;
 import com.concertrip.server.utils.ResponseMessage;
 import com.concertrip.server.utils.StatusCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.xml.ws.Response;
+import java.util.Optional;
 
 /**
  * Created hyunjk on 2018-12-25.
@@ -53,4 +56,21 @@ public class EventsController {
         return new ResponseEntity<>(eventsService.delete(_id), HttpStatus.OK);
     }
 
+    @GetMapping("/{eventIdx}/bell")
+    public ResponseEntity subscribeEvents(
+            @RequestHeader (value = "Autorization") final String token,
+            @PathVariable("eventIdx") final String eventIdx) {
+        try {
+            if (eventIdx.isEmpty()) {
+                return new ResponseEntity<>(DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.NOT_FOUND_EVENT), HttpStatus.OK);
+            }
+            if (token.isEmpty()) {
+                return new ResponseEntity<>(DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.NOT_FOUND_USER), HttpStatus.OK);
+            }
+            return new ResponseEntity<>(eventsService.subscribe(eventIdx, token), HttpStatus.OK);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return new ResponseEntity<>(DefaultRes.res(StatusCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR), HttpStatus.OK);
+        }
+    }
 }

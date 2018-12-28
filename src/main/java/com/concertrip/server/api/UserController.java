@@ -1,6 +1,6 @@
 package com.concertrip.server.api;
 
-import com.concertrip.server.Service.UserService;
+import com.concertrip.server.service.UserService;
 import com.concertrip.server.dto.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
