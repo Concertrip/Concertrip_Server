@@ -22,6 +22,12 @@ public class ResponseMessage {
     public static final String UPDATE_ARTISTS = "아티스트 정보 수정 성공";
     public static final String DELETE_ARTISTS = "아티스트 삭제 성공";
 
+    public static final String READ_TICKETS = "티켓 조회 성공";
+    public static final String NOT_FOUND_TICKETS = "티켓을 찾을 수 없습니다.";
+    public static final String CREATED_TICKETS = "티켓 추가 성공";
+    public static final String UPDATE_TICKETS = "티켓 정보 수정 성공";
+    public static final String DELETE_TICKETS = "티켓 삭제 성공";
+
     public static final String SEARCH_SUCCESS = "검색 성공";
     public static final String NOT_FOUND_TAG = "검색 태그를 찾을 수 없습니다.";
 
