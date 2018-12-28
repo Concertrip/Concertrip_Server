@@ -92,13 +92,14 @@ public class ArtistsService {
             log.error(e.getMessage());
             return DefaultRes.res(StatusCode.DB_ERROR, ResponseMessage.DB_ERROR);
         }
+    }
             /**
              * 아티스트 내용 수정
              *
              * @param artists 수정된 아티스트 객체
              * @return
              */
-            public DefaultRes updateArtist (Artists artists){
+            public DefaultRes updateArtist(Artists artists){
                 try {
                     artistsDAL.updateArtist(artists);
                     return DefaultRes.res(StatusCode.OK, ResponseMessage.UPDATE_ARTISTS);
