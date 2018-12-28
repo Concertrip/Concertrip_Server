@@ -2,6 +2,7 @@ package com.concertrip.server.dal;
 
 import com.concertrip.server.dao.EventsRepository;
 import com.concertrip.server.domain.Events;
+import com.concertrip.server.model.EventsDetailReq;
 import com.concertrip.server.model.EventsReq;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -44,6 +45,12 @@ public class EventsDAL {
         query.addCriteria(Criteria.where("_id").is(_id));
         Events events = mongoTemplate.findOne(query, Events.class);
         return events;
+    }
+
+    public EventsDetailReq getEvents(String _id) {
+        Query query = new Query(Criteria.where("_id").is(_id));
+        EventsDetailReq eventsDetail = mongoTemplate.findOne(query, EventsDetailReq.class);
+        return eventsDetail;
     }
 
     public EventsReq findEventsForCal(String _id) {

@@ -1,16 +1,14 @@
 package com.concertrip.server.service;
 
+import com.concertrip.server.dal.ArtistsDAL;
 import com.concertrip.server.dal.EventsDAL;
 import com.concertrip.server.domain.Events;
-import com.concertrip.server.mapper.EventsMapper;
+import com.concertrip.server.mapper.EventsSubscribeMapper;
 import com.concertrip.server.model.DefaultRes;
+import com.concertrip.server.model.EventsDetailReq;
 import com.concertrip.server.utils.ResponseMessage;
 import com.concertrip.server.utils.StatusCode;
 import lombok.extern.slf4j.Slf4j;
-import netscape.javascript.JSObject;
-import org.json.simple.JSONObject;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
@@ -23,12 +21,14 @@ import java.util.List;
 @Slf4j
 @Service
 public class EventsService {
-    private final EventsDAL eventsDal;
-    private final EventsMapper eventsMapper;
+    private final EventsDAL eventsDAL;
+    private final ArtistsDAL artistsDAL;
+    private final EventsSubscribeMapper eventsSubscribeMapper;
 
-    public EventsService(EventsDAL eventsDal, EventsMapper eventsMapper) {
-        this.eventsDal = eventsDal;
-        this.eventsMapper = eventsMapper;
+    public EventsService(EventsDAL eventsDAL, ArtistsDAL artistsDAL, EventsSubscribeMapper eventsSubscribeMapper) {
+        this.eventsDAL = eventsDAL;
+        this.artistsDAL = artistsDAL;
+        this.eventsSubscribeMapper = eventsSubscribeMapper;
     }
 
 
@@ -39,7 +39,7 @@ public class EventsService {
      */
     public DefaultRes selectAll() {
         try {
-            List<Events> eventsList = eventsDal.selectAll();
+            List<Events> eventsList = eventsDAL.selectAll();
             if (eventsList.size() == 0) {
                 return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_EVENT);
             } else {
@@ -54,18 +54,22 @@ public class EventsService {
 
     public DefaultRes findEventsById(String _id) {
         try {
-            Events events = eventsDal.findEvents(_id);
+            EventsDetailReq eventsDetail = eventsDAL.getEvents(_id);
 
-            if (events == null) {
+            if (eventsDetail == null) {
                 return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_EVENT);
             } else {
-                for (int i = 0; i < events.getCast().length; i++) {
-                    JSONObject cast = new JSONObject();
+                String[] castImg = new String[eventsDetail.getCast().length];
+                String[] casts = eventsDetail.getCast();
 
-
+                for (int i = 0; i < casts.length; i++) {
+                    String img = artistsDAL.getArtistsImgByName(casts[i]);
+                    castImg[i] = img;
                 }
 
-                return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_EVENTS, events);
+                eventsDetail.setCastImg(castImg);
+
+                return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_EVENTS, eventsDetail);
             }
         } catch (Exception e) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -83,7 +87,7 @@ public class EventsService {
      */
     public DefaultRes insert(Events events) {
         try {
-            eventsDal.insert(events);
+            eventsDAL.insert(events);
             return DefaultRes.res(StatusCode.OK, ResponseMessage.CREATED_EVENT);
         } catch (Exception e) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -100,7 +104,7 @@ public class EventsService {
      */
     public DefaultRes update(Events events) {
         try {
-            eventsDal.update(events);
+            eventsDAL.update(events);
             return DefaultRes.res(StatusCode.OK, ResponseMessage.UPDATE_EVENT);
         } catch (Exception e) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -117,7 +121,7 @@ public class EventsService {
      */
     public DefaultRes delete(String _id) {
         try {
-            eventsDal.delete(_id);
+            eventsDAL.delete(_id);
 
             return DefaultRes.res(StatusCode.OK, ResponseMessage.DELETE_EVENT);
         } catch (Exception e) {
@@ -127,9 +131,16 @@ public class EventsService {
         }
     }
 
+    /**
+     * 이벤트 구독하기
+     *
+     * @param eventIdx
+     * @param token
+     * @return
+     */
     public DefaultRes subscribe(final String eventIdx, final String token) {
         try {
-            eventsMapper.subscribe(eventIdx, token);
+            eventsSubscribeMapper.subscribe(eventIdx, token);
             return DefaultRes.res(StatusCode.OK, ResponseMessage.SUBSCRIBE_EVENT);
         } catch (Exception e) {
             return DefaultRes.res(StatusCode.DB_ERROR, ResponseMessage.DB_ERROR);
