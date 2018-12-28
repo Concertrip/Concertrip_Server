@@ -3,7 +3,7 @@ package com.concertrip.server.service;
 import com.concertrip.server.dal.ArtistsDAL;
 import com.concertrip.server.dal.EventsDAL;
 import com.concertrip.server.domain.Events;
-import com.concertrip.server.mapper.EventsMapper;
+import com.concertrip.server.mapper.EventsSubscribeMapper;
 import com.concertrip.server.model.DefaultRes;
 import com.concertrip.server.model.EventsDetailReq;
 import com.concertrip.server.utils.ResponseMessage;
@@ -23,12 +23,12 @@ import java.util.List;
 public class EventsService {
     private final EventsDAL eventsDAL;
     private final ArtistsDAL artistsDAL;
-    private final EventsMapper eventsMapper;
+    private final EventsSubscribeMapper eventsSubscribeMapper;
 
-    public EventsService(EventsDAL eventsDAL, ArtistsDAL artistsDAL, EventsMapper eventsMapper) {
+    public EventsService(EventsDAL eventsDAL, ArtistsDAL artistsDAL, EventsSubscribeMapper eventsSubscribeMapper) {
         this.eventsDAL = eventsDAL;
         this.artistsDAL = artistsDAL;
-        this.eventsMapper = eventsMapper;
+        this.eventsSubscribeMapper = eventsSubscribeMapper;
     }
 
 
@@ -131,9 +131,16 @@ public class EventsService {
         }
     }
 
+    /**
+     * 이벤트 구독하기
+     *
+     * @param eventIdx
+     * @param token
+     * @return
+     */
     public DefaultRes subscribe(final String eventIdx, final String token) {
         try {
-            eventsMapper.subscribe(eventIdx, token);
+            eventsSubscribeMapper.subscribe(eventIdx, token);
             return DefaultRes.res(StatusCode.OK, ResponseMessage.SUBSCRIBE_EVENT);
         } catch (Exception e) {
             return DefaultRes.res(StatusCode.DB_ERROR, ResponseMessage.DB_ERROR);
