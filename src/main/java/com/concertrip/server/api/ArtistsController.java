@@ -51,4 +51,22 @@ public class ArtistsController {
         if(_id.equals("")) return new ResponseEntity(DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.NOT_FOUND_ARTISTS), HttpStatus.OK);
         return new ResponseEntity<>(artistsService.deleteArtist(_id), HttpStatus.OK);
     }
+
+    @GetMapping("/{artistId}/bell")
+    public ResponseEntity subscribeEvents(
+            @RequestHeader (value = "Autorization") final String token,
+            @PathVariable("artistId") final String artistId) {
+        try {
+            if (artistId.isEmpty()) {
+                return new ResponseEntity<>(DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.NOT_FOUND_ARTISTS), HttpStatus.OK);
+            }
+            if (token.isEmpty()) {
+                return new ResponseEntity<>(DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.NOT_FOUND_USER), HttpStatus.OK);
+            }
+            return new ResponseEntity<>(artistsService.subscribe(artistId, token), HttpStatus.OK);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return new ResponseEntity<>(DefaultRes.res(StatusCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR), HttpStatus.OK);
+        }
+    }
 }
