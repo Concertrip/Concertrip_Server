@@ -24,10 +24,12 @@ public interface TicketMapper {
     @Select("SELECT * FROM ticket WHERE eventId = #{eventId}")
     Ticket findByEventId(@Param("eventId") final String eventId);
 
+    //티켓 등록
     @Insert("INSERT INTO ticket(serialNum, seat, barcodeNum, title, date, location, eventId, userIdx)" +
             "VALUES(#{ticket.serialNum}, #{ticket.seat}, #{ticket.barcodeNum}, #{ticket.title}, #{ticket.date}, #{ticket.location}, #{ticket.eventId}, #{ticket.userIdx})")
     void save(@Param("ticket")final Ticket ticket);
 
+    //티켓 삭제
     @Delete("DELETE FROM ticket WHERE userIdx = #{userIdx}")
     void deleteByUserIdx(@Param("userIdx")final int userIdx);
 }
