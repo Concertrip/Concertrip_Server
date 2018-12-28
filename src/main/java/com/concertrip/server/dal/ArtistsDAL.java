@@ -58,6 +58,11 @@ public class ArtistsDAL {
         return artists;
     }
 
+    public String getArtistsImgByName(String name) {
+        Artists artists = findArtistsByName(name);
+        return artists.getProfileImg();
+    }
+
     public ArtistsReq findArtistsForCal(String _id) {
         Query query = new Query();
         query.addCriteria(Criteria.where("_id").is(_id));
