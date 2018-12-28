@@ -26,5 +26,15 @@ public class ResponseMessage {
     public static final String SEARCH_SUCCESS = "검색 성공";
     public static final String NOT_FOUND_TAG = "검색 태그를 찾을 수 없습니다.";
 
+    public static final String READ_TOTAL_CALENDAR = "전체 캘린더 검색 성공";
+    public static final String READ_EVENT_CALENDAR = "이벤트 캘린더 검색 성공";
+    public static final String READ_ARTIST_CALENDAR = "아티스트 캘린더 검색 성공";
+
+    public static final String NO_CALENDAR = "캘린더 정보 없음";
+
+    public static final String NOT_FOUND_TOTAL_CALENDAR = "전체 캘린더를 찾을 수 없습니다.";
+    public static final String NOT_FOUND_EVENT_CALENDAR = "이벤트 캘린더를 찾을 수 없습니다.";
+    public static final String NOT_FOUND_ARTIST_CALENDAR = "아티스크 캘린더를 찾을 수 없습니다.";
+
     public static final String DB_ERROR = "데이터베이스 에러";
 }
