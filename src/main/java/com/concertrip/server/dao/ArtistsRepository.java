@@ -21,4 +21,7 @@ public interface ArtistsRepository extends MongoRepository<Artists, Integer> {
 
     @Query(value = "{ tag : { $regex : ?0 } }", fields = "{ 'name' : 1, 'profileImg' : 1, 'tag' : 1 }")
     List<ArtistsReq> findByTag(String tag);
+
+    @Query(value = "{ _id : ?0 }", fields = "{ 'name' : 1 }")
+    String findNameById(String _id);
 }
