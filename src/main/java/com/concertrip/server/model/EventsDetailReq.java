@@ -1,10 +1,12 @@
 package com.concertrip.server.model;
 
+import com.concertrip.server.dto.Precaution;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created hyunjk on 2018-12-28.
@@ -15,17 +17,18 @@ import java.util.Date;
 public class EventsDetailReq {
     @Id
     private String _id;
-    private String title;
+    private boolean isSubscribe;
     private String profileImg;
     private String backImg;
-    private String location;
-    private String[] tag;
-    private String[] cast;
-    private String[] castImg;
-    private Date[] date;
-    private String[] seats;
-    private int[] price;
+    private String name;
+    private int subscribeNum;
     private String youtubeUrl;
+    private String location;
+    private String[] member;
+    private String[] memberImg;
+    private Date[] date;
+    private String[] seatName;
+    private int[] seatPrice;
+    private List<Precaution> precautionList;
     private String eventInfoImg;
-
 }

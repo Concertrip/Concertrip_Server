@@ -2,8 +2,13 @@ package com.concertrip.server.service;
 
 import com.concertrip.server.dal.ArtistsDAL;
 import com.concertrip.server.dal.EventsDAL;
+import com.concertrip.server.dao.ArtistsRepository;
+import com.concertrip.server.dao.EventsRepository;
+import com.concertrip.server.domain.Artists;
 import com.concertrip.server.domain.Events;
+import com.concertrip.server.dto.Precaution;
 import com.concertrip.server.mapper.EventsSubscribeMapper;
+import com.concertrip.server.mapper.PrecautionMapper;
 import com.concertrip.server.model.DefaultRes;
 import com.concertrip.server.model.EventsDetailReq;
 import com.concertrip.server.model.EventsSubscribeReq;
@@ -11,8 +16,10 @@ import com.concertrip.server.utils.ResponseMessage;
 import com.concertrip.server.utils.StatusCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -24,12 +31,18 @@ import java.util.List;
 public class EventsService {
     private final EventsDAL eventsDAL;
     private final ArtistsDAL artistsDAL;
+    private final ArtistsRepository artistsRepository;
+    private final EventsRepository eventsRepository;
     private final EventsSubscribeMapper eventsSubscribeMapper;
+    private final PrecautionMapper precautionMapper;
 
-    public EventsService(EventsDAL eventsDAL, ArtistsDAL artistsDAL, EventsSubscribeMapper eventsSubscribeMapper) {
+    public EventsService(EventsDAL eventsDAL, ArtistsDAL artistsDAL, ArtistsRepository artistsRepository, EventsRepository eventsRepository, EventsSubscribeMapper eventsSubscribeMapper, PrecautionMapper precautionMapper) {
         this.eventsDAL = eventsDAL;
         this.artistsDAL = artistsDAL;
+        this.artistsRepository = artistsRepository;
+        this.eventsRepository = eventsRepository;
         this.eventsSubscribeMapper = eventsSubscribeMapper;
+        this.precautionMapper = precautionMapper;
     }
 
 
@@ -53,25 +66,29 @@ public class EventsService {
         }
     }
 
+    @Transactional
     public DefaultRes findEventsById(String _id) {
         try {
-            EventsDetailReq eventsDetail = eventsDAL.getEvents(_id);
+            EventsDetailReq eventsDetail = eventsRepository.findEvent(_id);
+            String[] memberImg = new String[eventsDetail.getMember().length];
 
-            if (eventsDetail == null) {
-                return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_EVENT);
-            } else {
-                String[] castImg = new String[eventsDetail.getCast().length];
-                String[] casts = eventsDetail.getCast();
-
-                for (int i = 0; i < casts.length; i++) {
-                    String img = artistsDAL.getArtistsImgByName(casts[i]);
-                    castImg[i] = img;
-                }
-
-                eventsDetail.setCastImg(castImg);
-
-                return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_EVENTS, eventsDetail);
+            for (int i = 0; i < memberImg.length; i++) {
+                Artists artists = artistsRepository.findOneByName(eventsDetail.getMember()[i]);
+                memberImg[i] = artists.getProfileImg();
             }
+            eventsDetail.setMemberImg(memberImg);
+            int[] precaution = eventsRepository.getPrecaution(_id).getPrecaution();
+
+            List<Precaution> precautions = new LinkedList<>();
+
+            for(int code : precaution) {
+
+                precautions.add(precautionMapper.getPrecaution(code));
+            }
+
+            eventsDetail.setPrecautionList(precautions);
+
+            return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_EVENTS, eventsDetail);
         } catch (Exception e) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             log.error(e.getMessage());

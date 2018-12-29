@@ -19,7 +19,7 @@ import java.util.Optional;
  */
 @Slf4j
 @RestController
-@RequestMapping("events")
+@RequestMapping("api/event")
 public class EventsController {
     private final EventsService eventsService;
 
@@ -33,9 +33,10 @@ public class EventsController {
         return new ResponseEntity<>(eventsService.selectAll(), HttpStatus.OK);
     }
 
-    @GetMapping("/{eventsId}")
-    public ResponseEntity getEventsById(@PathVariable(value = "eventsId") final String _id) {
-        if (_id.equals("")) return new ResponseEntity(DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_EVENT), HttpStatus.OK);
+    @GetMapping("detail")
+    public ResponseEntity getEventsById(
+            @RequestParam(value = "eventId", defaultValue = "") final String _id) {
+        if (_id.equals("") ) return new ResponseEntity(DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_EVENT), HttpStatus.OK);
         return new ResponseEntity(eventsService.findEventsById(_id), HttpStatus.OK);
     }
 
