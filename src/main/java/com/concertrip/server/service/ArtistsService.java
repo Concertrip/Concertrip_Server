@@ -21,11 +21,9 @@ import java.util.List;
 @Service
 public class ArtistsService {
     private final ArtistsDAL artistsDAL;
-    private final ArtistsSubscribeMapper artistsSubscribeMapper;
 
-    public ArtistsService(ArtistsDAL artistsDAL, ArtistsSubscribeMapper artistsSubscribeMapper) {
+    public ArtistsService(ArtistsDAL artistsDAL) {
         this.artistsDAL = artistsDAL;
-        this.artistsSubscribeMapper = artistsSubscribeMapper;
     }
 
     /**
@@ -133,27 +131,5 @@ public class ArtistsService {
             return DefaultRes.res(StatusCode.DB_ERROR, ResponseMessage.DB_ERROR);
         }
     }
-
-    /**
-     * 아티스트 구독 및 취소
-     *
-     * @param artistId
-     * @param token    사용자 판별 토큰
-     * @return
-     */
-    public DefaultRes subscribe(final String artistId, final String token) {
-        try {
-            ArtistsSubscribeReq asReq = artistsSubscribeMapper.isSubscribe(token, artistId);
-            if (asReq == null) {
-                artistsSubscribeMapper.subscribe(artistId, token);
-            } else {
-                artistsSubscribeMapper.unSubscribe(token, artistId);
-            }
-            return DefaultRes.res(StatusCode.OK, ResponseMessage.SUBSCRIBE_EVENT);
-        } catch (Exception e) {
-            return DefaultRes.res(StatusCode.DB_ERROR, ResponseMessage.DB_ERROR);
-        }
-    }
-
 }
 

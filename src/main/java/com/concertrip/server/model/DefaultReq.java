@@ -8,5 +8,6 @@ import lombok.Data;
  */
 @Data
 public class DefaultReq {
+    private String[] member;
     private int[] precaution;
 }
