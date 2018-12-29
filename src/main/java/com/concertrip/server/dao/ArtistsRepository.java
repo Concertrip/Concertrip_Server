@@ -12,7 +12,7 @@ import java.util.List;
  */
 
 
-public interface ArtistsRepository extends MongoRepository<Artists, Integer> {
+public interface ArtistsRepository extends MongoRepository<Artists, String> {
     List<Artists> findAll();
 
     //DB 접근 쿼리 방식 ver 2 by hj
@@ -24,4 +24,7 @@ public interface ArtistsRepository extends MongoRepository<Artists, Integer> {
 
     @Query(value = "{ _id : ?0 }", fields = "{ 'name' : 1 }")
     String findNameById(String _id);
+
+    @Query(value = "{ name : ?0 }")
+    Artists findOneByName(String name);
 }

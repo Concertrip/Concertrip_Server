@@ -93,66 +93,67 @@ public class ArtistsService {
             return DefaultRes.res(StatusCode.DB_ERROR, ResponseMessage.DB_ERROR);
         }
     }
-            /**
-             * 아티스트 내용 수정
-             *
-             * @param artists 수정된 아티스트 객체
-             * @return
-             */
-            public DefaultRes updateArtist(Artists artists){
-                try {
-                    artistsDAL.updateArtist(artists);
-                    return DefaultRes.res(StatusCode.OK, ResponseMessage.UPDATE_ARTISTS);
-                } catch (Exception e) {
-                    TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-                    log.error(e.getMessage());
-                    return DefaultRes.res(StatusCode.DB_ERROR, ResponseMessage.DB_ERROR);
-                }
-            }
 
-            /**
-             * 아티스트 삭제
-             *
-             * @param _id 이벤트 객체 id
-             * @return
-             */
-            public DefaultRes deleteArtist (String _id){
-
-                try {
-                    Artists artists = artistsDAL.findArtists(_id);
-                    if (artists == null) {
-                        return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_ARTISTS);
-                    } else {
-                        artistsDAL.deleteArtist(_id);
-                        return DefaultRes.res(StatusCode.OK, ResponseMessage.DELETE_ARTISTS);
-                    }
-                } catch (Exception e) {
-                    TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-                    log.error(e.getMessage());
-                    return DefaultRes.res(StatusCode.DB_ERROR, ResponseMessage.DB_ERROR);
-                }
-            }
-
-            /**
-             * 아티스트 구독 및 취소
-             *
-             * @param artistId
-             * @param token 사용자 판별 토큰
-             * @return
-             */
-            public DefaultRes subscribe ( final String artistId, final String token){
-                try {
-                    ArtistsSubscribeReq asReq = artistsSubscribeMapper.isSubscribe(token, artistId);
-                    if (asReq == null) {
-                        artistsSubscribeMapper.subscribe(artistId, token);
-                    } else {
-                        artistsSubscribeMapper.unSubscribe(token, artistId);
-                    }
-                    return DefaultRes.res(StatusCode.OK, ResponseMessage.SUBSCRIBE_EVENT);
-                } catch (Exception e) {
-                    return DefaultRes.res(StatusCode.DB_ERROR, ResponseMessage.DB_ERROR);
-                }
-            }
-
+    /**
+     * 아티스트 내용 수정
+     *
+     * @param artists 수정된 아티스트 객체
+     * @return
+     */
+    public DefaultRes updateArtist(Artists artists) {
+        try {
+            artistsDAL.updateArtist(artists);
+            return DefaultRes.res(StatusCode.OK, ResponseMessage.UPDATE_ARTISTS);
+        } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            log.error(e.getMessage());
+            return DefaultRes.res(StatusCode.DB_ERROR, ResponseMessage.DB_ERROR);
         }
+    }
+
+    /**
+     * 아티스트 삭제
+     *
+     * @param _id 이벤트 객체 id
+     * @return
+     */
+    public DefaultRes deleteArtist(String _id) {
+
+        try {
+            Artists artists = artistsDAL.findArtists(_id);
+            if (artists == null) {
+                return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_ARTISTS);
+            } else {
+                artistsDAL.deleteArtist(_id);
+                return DefaultRes.res(StatusCode.OK, ResponseMessage.DELETE_ARTISTS);
+            }
+        } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            log.error(e.getMessage());
+            return DefaultRes.res(StatusCode.DB_ERROR, ResponseMessage.DB_ERROR);
+        }
+    }
+
+    /**
+     * 아티스트 구독 및 취소
+     *
+     * @param artistId
+     * @param token    사용자 판별 토큰
+     * @return
+     */
+    public DefaultRes subscribe(final String artistId, final String token) {
+        try {
+            ArtistsSubscribeReq asReq = artistsSubscribeMapper.isSubscribe(token, artistId);
+            if (asReq == null) {
+                artistsSubscribeMapper.subscribe(artistId, token);
+            } else {
+                artistsSubscribeMapper.unSubscribe(token, artistId);
+            }
+            return DefaultRes.res(StatusCode.OK, ResponseMessage.SUBSCRIBE_EVENT);
+        } catch (Exception e) {
+            return DefaultRes.res(StatusCode.DB_ERROR, ResponseMessage.DB_ERROR);
+        }
+    }
+
+}
 
