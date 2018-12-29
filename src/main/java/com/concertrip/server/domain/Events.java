@@ -22,22 +22,18 @@ public class Events implements Serializable {
     @Id
     private String _id;
     @NonNull
-    private String title;
+    private String name;
     @NonNull
     private String profileImg;
     private String backImg;
     @NonNull
     private String location;
-    private String[] tag;
-    @NonNull
-    private String[] cast;
-    @NonNull
+    private String[] member;
     private Date[] date;
-    private String[] seats;
-    private int[] price;
-    private String youtubeUrl;
+    private String[] seatName;
+    private String[] seatPrice;
     private String eventInfoImg;
     private String ticketImg;
-
-
+    private int[] precaution;
+    private String[] filter;
 }
