@@ -40,13 +40,12 @@ public class EventsDAL {
     }
 
 
-    public Events findEvents(String _id) {
-        Query query = new Query();
-        query.addCriteria(Criteria.where("_id").is(_id));
-        Events events = mongoTemplate.findOne(query, Events.class);
-        return events;
-    }
-
+    /**
+     * 특정 이벤트 가져오기
+     *
+     * @param _id
+     * @return
+     */
     public EventsDetailReq getEvents(String _id) {
         Query query = new Query(Criteria.where("_id").is(_id));
         EventsDetailReq eventsDetail = mongoTemplate.findOne(query, EventsDetailReq.class);
