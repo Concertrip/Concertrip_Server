@@ -16,7 +16,7 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection="artist")
+@Document(collection="artists")
 public class Artists implements Serializable {
     @Id
     private String _id;

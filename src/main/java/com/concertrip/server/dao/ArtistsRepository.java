@@ -1,6 +1,7 @@
 package com.concertrip.server.dao;
 
 import com.concertrip.server.domain.Artists;
+import com.concertrip.server.model.ArtistDetailReq;
 import com.concertrip.server.model.ArtistsReq;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
@@ -27,4 +28,13 @@ public interface ArtistsRepository extends MongoRepository<Artists, String> {
 
     @Query(value = "{ name : ?0 }")
     Artists findOneByName(String name);
+
+    //아티스트 상세페이지
+    @Query(value = "{ _id : ?0 } ")
+    ArtistDetailReq findArtist(String _id);
+
+    //아티스트 리스트
+    //@Query(value = "{ _id : ?0 } ")
+    //ArtistsReq findArtistList(String _id);
+
 }
