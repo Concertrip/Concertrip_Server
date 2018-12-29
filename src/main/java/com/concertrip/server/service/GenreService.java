@@ -7,6 +7,7 @@ import com.concertrip.server.utils.ResponseMessage;
 import com.concertrip.server.utils.StatusCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 
@@ -36,6 +37,18 @@ public class GenreService {
         try {
             Genre ret = genreRepository.save(genre);
             return DefaultRes.res(StatusCode.OK, ResponseMessage.CREATED_ARTISTS, ret);
+        } catch (Exception e) {
+            return DefaultRes.res(StatusCode.DB_ERROR, ResponseMessage.DB_ERROR);
+        }
+    }
+
+    public DefaultRes findById(String _id) {
+        try {
+            Genre ret = genreRepository.findBy_idEquals(_id);
+            if (ObjectUtils.isEmpty(ret)) {
+                return DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.NOT_FOUND_ARTISTS);
+            }
+            return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_ARTISTS, ret);
         } catch (Exception e) {
             return DefaultRes.res(StatusCode.DB_ERROR, ResponseMessage.DB_ERROR);
         }

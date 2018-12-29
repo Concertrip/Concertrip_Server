@@ -24,4 +24,9 @@ public class GenreController {
         return new ResponseEntity<>(genreService.findAll(), HttpStatus.OK);
     }
 
+    @GetMapping("/detail")
+    public ResponseEntity findAllById(@RequestParam(value = "id") final String _id) {
+        return new ResponseEntity<>(genreService.findById(_id), HttpStatus.OK);
+    }
+
 }

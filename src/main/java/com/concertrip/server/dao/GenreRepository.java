@@ -9,4 +9,6 @@ public interface GenreRepository extends MongoRepository<Genre, Integer> {
     List<Genre> findAll();
 
     Genre save(Genre genre);
+
+    Genre findBy_idEquals(String _id);
 }
