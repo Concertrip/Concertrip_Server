@@ -42,6 +42,7 @@ public class ArtistsDAL {
     public List<Artists> selectArtistAll() {
         return artistsRepository.findAll();
     }
+
     // _id 로 가져오기
     public Artists findArtists(String _id) {
         Query query = new Query();
