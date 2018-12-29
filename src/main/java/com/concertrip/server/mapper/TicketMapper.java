@@ -4,6 +4,7 @@ import com.concertrip.server.dto.Ticket;
 import org.apache.ibatis.annotations.*;
 import org.springframework.web.bind.annotation.DeleteMapping;
 
+import java.security.SecureRandom;
 import java.util.List;
 
 /**
@@ -16,7 +17,7 @@ public interface TicketMapper {
     @Select("SELECT * FROM ticket")
     List<Ticket> findAll();
 
-    //회원 이름으로 조회
+    //회원으로 티켓조회 (token으로 가져와서)
     @Select("SELECT * FROM ticket WHERE userIdx = #{userIdx}")
     Ticket findByUserIdx(@Param("userIdx") final int userIdx);
 

@@ -14,15 +14,6 @@ import java.util.List;
 //조건이 매우 단순한 경우 쉽게 데이터 베이스에 접근함
 public interface EventsRepository extends MongoRepository<Events, Integer> {
     List<Events> findAll();
-
- //   @Query(value = "{ name : ?0 }", fields = "{ 'name' : 1, 'tag' : 1 }")
- //  List<ArtistsReq> findByName(String name);
-
- //   @Query(value = "{ tag : { $regex : ?0 } }", fields = "{ 'name' : 1, 'tag' : 1 }")
-  //  List<ArtistsReq> findByTag(String tag);
-
-  //  @Query(value = "{ title : ?0}", fields = "{")
-   // List<EventsReq> findByTitle(String title)
 }
 
 

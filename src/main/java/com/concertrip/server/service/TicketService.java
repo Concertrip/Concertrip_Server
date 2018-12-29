@@ -2,6 +2,7 @@ package com.concertrip.server.service;
 
 import com.concertrip.server.dto.Ticket;
 import com.concertrip.server.mapper.TicketMapper;
+import com.concertrip.server.mapper.UserMapper;
 import com.concertrip.server.model.DefaultRes;
 import com.concertrip.server.utils.ResponseMessage;
 import com.concertrip.server.utils.StatusCode;
@@ -20,9 +21,11 @@ import java.util.List;
 @Service
 public class TicketService {
     private final TicketMapper ticketMapper;
+    private final UserMapper userMapper;
 
-    public TicketService(TicketMapper ticketMapper) {
+    public TicketService(TicketMapper ticketMapper, UserMapper userMapper) {
         this.ticketMapper = ticketMapper;
+        this.userMapper = userMapper;
     }
     //모든 티켓 조회
     public DefaultRes getAllTicket() {
@@ -38,6 +41,14 @@ public class TicketService {
         return DefaultRes.res(StatusCode.OK,ResponseMessage.READ_TICKETS, ticket);
     }
 
+    //token으로 티켓 조회
+    public DefaultRes findUserIdxByToken(final String userId){
+        final int userIdx = userMapper.findUserIdxByToken(userId);
+        final Ticket ticket  = ticketMapper.findByUserIdx(userIdx);
+        if(ticket == null) return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_TICKETS);
+        return DefaultRes.res(StatusCode.OK,ResponseMessage.READ_TICKETS, ticket);
+    }
+
     //eventId로 티켓 조회
     public DefaultRes findByeventId(final String eventId){
         final Ticket ticket  = ticketMapper.findByEventId(eventId);
@@ -45,7 +56,7 @@ public class TicketService {
         return DefaultRes.res(StatusCode.OK,ResponseMessage.READ_TICKETS, ticket);
     }
 
-    @Transactional
+    //티켓 등록
     public DefaultRes saveTicket(final Ticket ticket){
         try {
             ticketMapper.save(ticket);

@@ -14,4 +14,7 @@ public interface UserMapper {
     @Insert("INSERT INTO user(id, password, name) VALUES(#{user.id}, #{user.password}, #{user.name})")
     void save(@Param("user") final User user);
 
+    @Select("SELETE userIdx FROM user WHERE userId = #{userId}")
+    int findUserIdxByToken(@Param("userId") final String userId);
+
 }

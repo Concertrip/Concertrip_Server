@@ -16,7 +16,7 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection="artists")
+@Document(collection="artist")
 public class Artists implements Serializable {
     @Id
     private String _id;
@@ -26,5 +26,7 @@ public class Artists implements Serializable {
     @NonNull
     private String name;
     private String youtubeUrl;
-    private String[] tag;
+    private String[] filter;
+    private String[] member;
+
 }
