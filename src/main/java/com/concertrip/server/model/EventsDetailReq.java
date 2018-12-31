@@ -17,15 +17,14 @@ import java.util.List;
 public class EventsDetailReq {
     @Id
     private String _id;
-    private boolean isSubscribe;
+    private boolean isSubscribe = false;
     private String profileImg;
     private String backImg;
     private String name;
     private int subscribeNum;
     private String youtubeUrl;
     private String location;
-    private String[] member;
-    private String[] memberImg;
+    private List<CommonListReq> memberList;
     private Date[] date;
     private String[] seatName;
     private int[] seatPrice;

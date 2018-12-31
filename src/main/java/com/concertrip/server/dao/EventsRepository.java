@@ -20,6 +20,9 @@ public interface EventsRepository extends MongoRepository<Events, Integer> {
     @Query(value = "{ _id : ?0 }", fields = "{ 'precaution' : 1, '_id' : 0 }")
     DefaultReq getPrecaution(String _id);
 
+    @Query(value = "{ _id : ?0 }", fields = "{ 'member' : 1, '_id' : 0 }")
+    DefaultReq getMember(String _id);
+
     @Query(value = "{ _id : ?0 } ")
     EventsDetailReq findEvent(String _id);
 

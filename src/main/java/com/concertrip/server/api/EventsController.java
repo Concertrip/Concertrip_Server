@@ -56,22 +56,4 @@ public class EventsController {
 
         return new ResponseEntity<>(eventsService.delete(_id), HttpStatus.OK);
     }
-
-    @GetMapping("/{eventIdx}/bell")
-    public ResponseEntity subscribeEvents(
-            @RequestHeader (value = "Autorization") final String token,
-            @PathVariable("eventIdx") final String eventId) {
-        try {
-            if (eventId.isEmpty()) {
-                return new ResponseEntity<>(DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.NOT_FOUND_EVENT), HttpStatus.OK);
-            }
-            if (token.isEmpty()) {
-                return new ResponseEntity<>(DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.NOT_FOUND_USER), HttpStatus.OK);
-            }
-            return new ResponseEntity<>(eventsService.subscribe(eventId, token), HttpStatus.OK);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            return new ResponseEntity<>(DefaultRes.res(StatusCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR), HttpStatus.OK);
-        }
-    }
 }

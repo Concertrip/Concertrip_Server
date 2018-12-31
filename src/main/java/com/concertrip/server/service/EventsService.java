@@ -7,8 +7,8 @@ import com.concertrip.server.dao.EventsRepository;
 import com.concertrip.server.domain.Artists;
 import com.concertrip.server.domain.Events;
 import com.concertrip.server.dto.Precaution;
-import com.concertrip.server.mapper.EventsSubscribeMapper;
 import com.concertrip.server.mapper.PrecautionMapper;
+import com.concertrip.server.model.CommonListReq;
 import com.concertrip.server.model.DefaultRes;
 import com.concertrip.server.model.EventsDetailReq;
 import com.concertrip.server.model.EventsSubscribeReq;
@@ -33,15 +33,13 @@ public class EventsService {
     private final ArtistsDAL artistsDAL;
     private final ArtistsRepository artistsRepository;
     private final EventsRepository eventsRepository;
-    private final EventsSubscribeMapper eventsSubscribeMapper;
     private final PrecautionMapper precautionMapper;
 
-    public EventsService(EventsDAL eventsDAL, ArtistsDAL artistsDAL, ArtistsRepository artistsRepository, EventsRepository eventsRepository, EventsSubscribeMapper eventsSubscribeMapper, PrecautionMapper precautionMapper) {
+    public EventsService(EventsDAL eventsDAL, ArtistsDAL artistsDAL, ArtistsRepository artistsRepository, EventsRepository eventsRepository, PrecautionMapper precautionMapper) {
         this.eventsDAL = eventsDAL;
         this.artistsDAL = artistsDAL;
         this.artistsRepository = artistsRepository;
         this.eventsRepository = eventsRepository;
-        this.eventsSubscribeMapper = eventsSubscribeMapper;
         this.precautionMapper = precautionMapper;
     }
 
@@ -70,13 +68,13 @@ public class EventsService {
     public DefaultRes findEventsById(String _id) {
         try {
             EventsDetailReq eventsDetail = eventsRepository.findEvent(_id);
-            String[] memberImg = new String[eventsDetail.getMember().length];
+            String[] member = eventsRepository.getMember(_id).getMember();
+            List<CommonListReq> memberList = new LinkedList<>();
 
-            for (int i = 0; i < memberImg.length; i++) {
-                Artists artists = artistsRepository.findOneByName(eventsDetail.getMember()[i]);
-                memberImg[i] = artists.getProfileImg();
+            for (int i = 0; i < member.length; i++) {
+                memberList.add(artistsRepository.getArtistInfo(member[i]));
             }
-            eventsDetail.setMemberImg(memberImg);
+            eventsDetail.setMemberList(memberList);
             int[] precaution = eventsRepository.getPrecaution(_id).getPrecaution();
 
             List<Precaution> precautions = new LinkedList<>();
@@ -145,27 +143,6 @@ public class EventsService {
         } catch (Exception e) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             log.error(e.getMessage());
-            return DefaultRes.res(StatusCode.DB_ERROR, ResponseMessage.DB_ERROR);
-        }
-    }
-
-    /**
-     * 이벤트 구독하기 및 취소
-     *
-     * @param eventId
-     * @param token
-     * @return
-     */
-    public DefaultRes subscribe(final String eventId, final String token) {
-        try {
-            EventsSubscribeReq esReq = eventsSubscribeMapper.isSubscribe(token, eventId);
-            if (esReq == null) {
-                eventsSubscribeMapper.subscribe(eventId, token);
-            } else {
-                eventsSubscribeMapper.unSubscribe(eventId, token);
-            }
-            return DefaultRes.res(StatusCode.OK, ResponseMessage.SUBSCRIBE_EVENT);
-        } catch (Exception e) {
             return DefaultRes.res(StatusCode.DB_ERROR, ResponseMessage.DB_ERROR);
         }
     }
