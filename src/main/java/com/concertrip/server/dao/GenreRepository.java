@@ -1,7 +1,9 @@
 package com.concertrip.server.dao;
 
 import com.concertrip.server.domain.Genre;
+import com.concertrip.server.model.CommonListReq;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
 
 import java.util.List;
 
@@ -11,6 +13,12 @@ public interface GenreRepository extends MongoRepository<Genre, Integer> {
     Genre save(Genre genre);
 
     Genre findBy_idEquals(String _id);
+
+    @Query(value = "{ filter : { $regex : ?0 } }", fields = "{ 'name' : 1, 'profileImg' : 1 }")
+    List<CommonListReq> findByFilter(String name);
+
+    @Query(value = "{ _id : ?0 } ", fields = "{ 'name' : 1, 'profileImg' : 1, 'filter' : 1 }")
+    CommonListReq findGenreById(String _id);
 
     Genre findGenreBy_idEquals(String _id);
 }

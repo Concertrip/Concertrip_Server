@@ -1,11 +1,12 @@
 package com.concertrip.server.service;
 
-import com.concertrip.server.dal.EventsDAL;
 import com.concertrip.server.dao.ArtistsRepository;
+import com.concertrip.server.dao.EventsRepository;
+import com.concertrip.server.dao.GenreRepository;
 import com.concertrip.server.dto.Search;
-import com.concertrip.server.model.ArtistsReq;
+import com.concertrip.server.mapper.SubscribeMapper;
+import com.concertrip.server.model.CommonListReq;
 import com.concertrip.server.model.DefaultRes;
-import com.concertrip.server.model.EventsReq;
 import com.concertrip.server.utils.ResponseMessage;
 import com.concertrip.server.utils.StatusCode;
 import lombok.extern.slf4j.Slf4j;
@@ -21,43 +22,47 @@ import java.util.List;
 @Slf4j
 @Service
 public class SearchService {
-    private final EventsDAL eventsDal;
+    private final EventsRepository eventsRepository;
     private final ArtistsRepository artistsRepository;
+    private final GenreRepository genreRepository;
+    private final SubscribeService subscribeService;
 
-
-    public SearchService(EventsDAL eventsDAL, ArtistsRepository artistsRepository) {
-        this.eventsDal = eventsDAL;
+    public SearchService(EventsRepository eventsRepository, ArtistsRepository artistsRepository, GenreRepository genreRepository, SubscribeService subscribeService) {
+        this.eventsRepository = eventsRepository;
         this.artistsRepository = artistsRepository;
+        this.genreRepository = genreRepository;
+        this.subscribeService = subscribeService;
     }
 
-    public DefaultRes search(String tag) {
+    public DefaultRes search(int idx, String tag) {
         try {
-            List<EventsReq> events = eventsDal.findByTitle(tag);
-            List<EventsReq> eventsTag = eventsDal.findByTag(tag);
+            //이벤트에서 찾기
+            List<CommonListReq> eventsFilter = eventsRepository.findByFilter(tag);
+            setSubscribe(eventsFilter, "event", idx);
 
-            for (EventsReq e : eventsTag) {
-                events.add(e);
-            }
+            //가수에서 찾기
+            List<CommonListReq> artistsFilter = artistsRepository.findByFilter(tag);
+            setSubscribe(eventsFilter, "artist", idx);
 
-            List<ArtistsReq> artists = artistsRepository.findByName(tag);
-            List<ArtistsReq> artistsTag = artistsRepository.findByTag(tag);
+            //장르에서 찾기
+            List<CommonListReq> genresFilter = genreRepository.findByFilter(tag);
+            setSubscribe(eventsFilter, "genre", idx);
 
-            for (ArtistsReq a : artistsTag) {
-                artists.add(a);
-            }
-
-            Search search = new Search();
-            search.setEvents(events);
-            search.setArtists(artists);
-
-            if (search.getEvents().size() == 0 && search.getArtists().size() == 0)
+            if (eventsFilter.size() == 0 && artistsFilter.size() == 0 && genresFilter.size() == 0)
                 return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_TAG);
 
-            return DefaultRes.res(StatusCode.OK, ResponseMessage.SEARCH_SUCCESS, search);
+            return DefaultRes.res(StatusCode.OK, ResponseMessage.SEARCH_SUCCESS, new Search(artistsFilter, eventsFilter, genresFilter));
         } catch (Exception e) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             log.error(e.getMessage());
             return DefaultRes.res(StatusCode.DB_ERROR, ResponseMessage.DB_ERROR);
         }
+    }
+
+    public void setSubscribe(List<CommonListReq> filterList, String type, int idx) {
+        for (CommonListReq cReq : filterList) {
+            cReq.setSubscribe(subscribeService.isSubscribe(idx, type, cReq.get_id()));
+        }
+
     }
 }

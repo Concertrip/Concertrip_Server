@@ -27,8 +27,7 @@ public interface SubscribeMapper {
     @Select("SELECT * FROM subscribe WHERE userIdx = #{userIdx} AND type = #{type} AND objIdx = #{objIdx}")
     Subscribe isSubscribe(@Param("userIdx") final int userIdx, @Param("type") final String type, @Param("objIdx") final String objIdx);
 
-
-    @Insert("INSERT INTO subscribe(userIdx, type, objIdx) VALUES (#{userIdx}, #{type}, #{objIdx}")
+    @Insert("INSERT INTO subscribe(userIdx, type, objIdx) VALUES (#{userIdx}, #{type}, #{objIdx})")
     void subscribe(@Param("userIdx") final int userIdx, @Param("type") final String type, @Param("objIdx") final String objIdx);
 
     @Delete("DELETE FROM subscribe WHERE userIdx = #{userIdx} AND type = #{type} AND objIdx = #{objIdx}")

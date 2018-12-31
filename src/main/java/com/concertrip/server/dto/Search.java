@@ -1,9 +1,7 @@
 package com.concertrip.server.dto;
 
-import com.concertrip.server.domain.Artists;
-import com.concertrip.server.domain.Events;
-import com.concertrip.server.model.ArtistsReq;
-import com.concertrip.server.model.EventsReq;
+import com.concertrip.server.model.CommonListReq;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,7 +13,9 @@ import java.util.List;
  */
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class Search {
-    private List<ArtistsReq> artists;
-    private List<EventsReq> events;
+    private List<CommonListReq> artists;
+    private List<CommonListReq> events;
+    private List<CommonListReq> genres;
 }
