@@ -3,6 +3,7 @@ package com.concertrip.server.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -14,11 +15,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @AllArgsConstructor
 @Document(collection="genres")
-public class Genres {
+public class Genre {
     @Id
     private String _id;
     private String profileImg;
     private String backImg;
+    @NonNull
     private String name;
     private String youtubeUrl;
 }

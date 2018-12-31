@@ -37,8 +37,11 @@ public class UserService {
     @Transactional
     public DefaultRes save(final User user) {
         try {
+            //TODO: need refactoring
             userMapper.save(user);
-            return DefaultRes.res(StatusCode.CREATED, ResponseMessage.CREATED_USER, user.getId());
+            User res = userMapper.findUserById(user.getId());
+            log.info(res.getUserIdx() + "");
+            return DefaultRes.res(StatusCode.CREATED, ResponseMessage.CREATED_USER, res.getUserIdx() + "");
         } catch (Exception e) {
             //Rollback
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
