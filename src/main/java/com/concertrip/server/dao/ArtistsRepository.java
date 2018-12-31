@@ -17,17 +17,20 @@ public interface ArtistsRepository extends MongoRepository<Artists, String> {
     List<Artists> findAll();
 
     //DB 접근 쿼리 방식 ver 2 by hj
-    @Query(value = "{ name : ?0 }", fields = "{ 'name' : 1, 'profileImg' : 1, 'tag' : 1 }")
-    List<ArtistsReq> findByName(String name);
+    @Query(value = "{ name : ?0 }", fields = "{ 'name' : 1, 'profileImg' : 1, 'filter' : 1 }")
+    List<CommonListReq> findByName(String name);
 
-    @Query(value = "{ tag : { $regex : ?0 } }", fields = "{ 'name' : 1, 'profileImg' : 1, 'tag' : 1 }")
-    List<ArtistsReq> findByTag(String tag);
+    @Query(value = "{ filter : { $regex : ?0 } }", fields = "{ 'name' : 1, 'profileImg' : 1, 'filter' : 1 }")
+    List<CommonListReq> findByFilter(String tag);
+
+    @Query(value = "{ member : { $regex : ?0 } }", fields = "{ 'name' : 1, 'profileImg' : 1, 'filter' : 1 }")
+    List<CommonListReq> findByMember(String name);
 
     @Query(value = "{ name : ?0 }", fields = "{ 'name' : 1, 'profileImg' : 1 }")
-    CommonListReq getArttistInfo(String name);
+    CommonListReq getArtistInfo(String name);
 
-    @Query(value = "{ _id : ?0 }", fields = "{ 'name' : 1 }")
-    String findNameById(String _id);
+    @Query(value = "{ _id : ?0 }", fields = "{ 'name' : 1, 'profileImg' : 1, 'filter' : 1 }")
+    CommonListReq findArtistById(String _id);
 
     @Query(value = "{ name : ?0 }")
     Artists findOneByName(String name);

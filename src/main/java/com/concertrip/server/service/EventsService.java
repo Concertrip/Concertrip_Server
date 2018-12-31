@@ -4,14 +4,12 @@ import com.concertrip.server.dal.ArtistsDAL;
 import com.concertrip.server.dal.EventsDAL;
 import com.concertrip.server.dao.ArtistsRepository;
 import com.concertrip.server.dao.EventsRepository;
-import com.concertrip.server.domain.Artists;
 import com.concertrip.server.domain.Events;
 import com.concertrip.server.dto.Precaution;
 import com.concertrip.server.mapper.PrecautionMapper;
 import com.concertrip.server.model.CommonListReq;
 import com.concertrip.server.model.DefaultRes;
 import com.concertrip.server.model.EventsDetailReq;
-import com.concertrip.server.model.EventsSubscribeReq;
 import com.concertrip.server.utils.ResponseMessage;
 import com.concertrip.server.utils.StatusCode;
 import lombok.extern.slf4j.Slf4j;
@@ -72,7 +70,7 @@ public class EventsService {
             List<CommonListReq> memberList = new LinkedList<>();
 
             for (int i = 0; i < member.length; i++) {
-                memberList.add(artistsRepository.getArttistInfo(member[i]));
+                memberList.add(artistsRepository.getArtistInfo(member[i]));
             }
             eventsDetail.setMemberList(memberList);
             int[] precaution = eventsRepository.getPrecaution(_id).getPrecaution();
