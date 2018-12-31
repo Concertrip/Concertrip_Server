@@ -8,6 +8,8 @@ import com.concertrip.server.model.DefaultRes;
 import com.concertrip.server.model.EventsReq;
 import com.concertrip.server.utils.ResponseMessage;
 import com.concertrip.server.utils.StatusCode;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -42,6 +44,7 @@ public class ArtistsDAL {
     public List<Artists> selectArtistAll() {
         return artistsRepository.findAll();
     }
+
     // _id 로 가져오기
     public Artists findArtists(String _id) {
         Query query = new Query();

@@ -1,16 +1,21 @@
 package com.concertrip.server.service;
 
 import com.concertrip.server.dal.ArtistsDAL;
+import com.concertrip.server.dao.ArtistsRepository;
+import com.concertrip.server.dao.EventsRepository;
 import com.concertrip.server.domain.Artists;
 import com.concertrip.server.mapper.ArtistsSubscribeMapper;
-import com.concertrip.server.model.ArtistsSubscribeReq;
-import com.concertrip.server.model.DefaultRes;
+import com.concertrip.server.model.*;
 import com.concertrip.server.utils.ResponseMessage;
 import com.concertrip.server.utils.StatusCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -21,9 +26,13 @@ import java.util.List;
 @Service
 public class ArtistsService {
     private final ArtistsDAL artistsDAL;
+    private final ArtistsRepository artistsRepository;
 
-    public ArtistsService(ArtistsDAL artistsDAL) {
+
+    public ArtistsService(ArtistsDAL artistsDAL, ArtistsRepository artistsRepository) {
         this.artistsDAL = artistsDAL;
+        this.artistsRepository = artistsRepository;
+
     }
 
     /**
@@ -54,13 +63,58 @@ public class ArtistsService {
      * @return
      */
 
-    public DefaultRes findArtistById(String _id) {
+    public DefaultRes findArtistByName(String _id) {
         try {
             Artists artists = artistsDAL.findArtists(_id);
             if (artists == null) {
                 return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_ARTISTS);
             } else {
                 return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_ARTISTS, artists);
+            }
+        } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            log.error(e.getMessage());
+            return DefaultRes.res(StatusCode.DB_ERROR, ResponseMessage.DB_ERROR);
+        }
+    }
+
+    /**
+     * 아티스트 상세 페이지 조회
+     */
+    @Transactional
+    public DefaultRes findArtistById(String _id) {
+        try {
+            ArtistDetailReq artistDetailReq = artistsRepository.findArtist(_id);
+            Artists artists = artistsRepository.findArtistsBy_id(_id);
+            String[] members = artists.getMember();
+            log.info(members.length + "");
+            List<CommonListReq> commonListReqList = new ArrayList<>();
+
+            for (String member:members) {
+                log.info(member);
+                commonListReqList.add(artistsRepository.findArtistsByName(member));
+            }
+            artistDetailReq.setMemberList(commonListReqList);
+
+            return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_ARTISTS, artistDetailReq);
+        } catch (Exception e){
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            log.error(e.getMessage());
+            return DefaultRes.res(StatusCode.DB_ERROR, ResponseMessage.DB_ERROR);
+        }
+    }
+
+    /**
+     * 아티스트 리스트 조회
+     */
+    public DefaultRes findArtistInfo(String name) {
+        try{
+            List<CommonListReq> artistsReqList = artistsRepository.findArtistListByName(name);
+            if (artistsReqList.equals("")) return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_ARTISTS);
+            else {
+                log.info("bbbbbbbbbbbb");
+                log.info(artistsReqList.toString());
+                return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_ARTISTS, artistsReqList);
             }
         } catch (Exception e) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();

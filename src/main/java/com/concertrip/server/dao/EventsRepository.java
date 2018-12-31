@@ -16,15 +16,6 @@ import java.util.List;
 public interface EventsRepository extends MongoRepository<Events, Integer> {
     List<Events> findAll();
 
- //   @Query(value = "{ name : ?0 }", fields = "{ 'name' : 1, 'tag' : 1 }")
- //  List<ArtistsReq> findByName(String name);
-
- //   @Query(value = "{ tag : { $regex : ?0 } }", fields = "{ 'name' : 1, 'tag' : 1 }")
-  //  List<ArtistsReq> findByTag(String tag);
-
-  //  @Query(value = "{ title : ?0}", fields = "{")
-   // List<EventsReq> findByTitle(String title)
-
 
     @Query(value = "{ _id : ?0 }", fields = "{ 'precaution' : 1, '_id' : 0 }")
     DefaultReq getPrecaution(String _id);
@@ -36,7 +27,6 @@ public interface EventsRepository extends MongoRepository<Events, Integer> {
     EventsDetailReq findEvent(String _id);
 
     List<Events> findAllByFilterIn(String filter);
-
 
 }
 

@@ -26,5 +26,7 @@ public class Artists implements Serializable {
     @NonNull
     private String name;
     private String youtubeUrl;
-    private String[] tag;
+    private String[] filter;
+    private String[] member;
+
 }

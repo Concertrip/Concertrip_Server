@@ -72,7 +72,7 @@ public class EventsService {
             List<CommonListReq> memberList = new LinkedList<>();
 
             for (int i = 0; i < member.length; i++) {
-                memberList.add(artistsRepository.getArttistInfo(member[i]));
+                memberList.add(artistsRepository.getArtistInfo(member[i]));
             }
             eventsDetail.setMemberList(memberList);
             int[] precaution = eventsRepository.getPrecaution(_id).getPrecaution();
