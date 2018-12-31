@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -85,6 +86,9 @@ public class ArtistsService {
     public DefaultRes findArtistById(String _id) {
         try {
             ArtistDetailReq artistDetailReq = artistsRepository.findArtist(_id);
+            if(ObjectUtils.isEmpty(artistDetailReq)) {
+                return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_ARTISTS);
+            }
             Artists artists = artistsRepository.findArtistsBy_id(_id);
             String[] members = artists.getMember();
             log.info(members.length + "");
@@ -95,7 +99,6 @@ public class ArtistsService {
                 commonListReqList.add(artistsRepository.findArtistsByName(member));
             }
             artistDetailReq.setMemberList(commonListReqList);
-
             return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_ARTISTS, artistDetailReq);
         } catch (Exception e){
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();

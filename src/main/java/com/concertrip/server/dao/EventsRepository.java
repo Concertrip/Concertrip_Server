@@ -14,8 +14,8 @@ import java.util.List;
  */
 //조건이 매우 단순한 경우 쉽게 데이터 베이스에 접근함
 public interface EventsRepository extends MongoRepository<Events, Integer> {
-    List<Events> findAll();
 
+    List<Events> findAll();
 
     @Query(value = "{ _id : ?0 }", fields = "{ 'precaution' : 1, '_id' : 0 }")
     DefaultReq getPrecaution(String _id);

@@ -19,7 +19,7 @@ public interface TicketMapper {
 
     //회원으로 티켓조회 (token으로 가져와서)
     @Select("SELECT * FROM ticket WHERE userIdx = #{userIdx}")
-    Ticket findByUserIdx(@Param("userIdx") final int userIdx);
+    List<Ticket> findByUserIdx(@Param("userIdx") final int userIdx);
 
     //티켓 이름으로 조회
     @Select("SELECT * FROM ticket WHERE eventId = #{eventId}")

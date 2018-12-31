@@ -17,7 +17,7 @@ import static com.concertrip.server.model.DefaultRes.FAIL_DEFAULT_RES;
 
 @Slf4j
 @RestController
-@RequestMapping("tickets")
+@RequestMapping("api/ticket")
 public class TicketController {
     private final TicketService ticketService;
 
@@ -25,10 +25,21 @@ public class TicketController {
         this.ticketService = ticketService;
     }
 
+    //사용자가 가지고 있는 모든 티켓 조회
     @GetMapping("")
-    public ResponseEntity getUserTicket(@RequestParam("userIdx") final int userIdx) {
+    public ResponseEntity getUserTicket(@RequestParam(value = "userIdx", defaultValue = "") final int userIdx) {
         try{
-            if (userIdx<1) return new ResponseEntity<>(ticketService.getAllTicket(), HttpStatus.OK);
+            return new ResponseEntity<>(ticketService.findByuserIdx(userIdx), HttpStatus.OK);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return new ResponseEntity<>(FAIL_DEFAULT_RES, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    //티켓 상세보기
+    @GetMapping("detail")
+    public ResponseEntity getUserTicketDetail(@RequestParam(value = "userIdx") final int userIdx) {
+        try{
+            //if (userIdx<1) return new ResponseEntity<>(ticketService.getAllTicket(), HttpStatus.OK);
             return new ResponseEntity<>(ticketService.findByuserIdx(userIdx), HttpStatus.OK);
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -36,16 +47,6 @@ public class TicketController {
         }
     }
 
-    /*@GetMapping("")
-    public ResponseEntity getUserTicket(@RequestParam("userId") final String userId) {
-        try{
-            if (userId.equals("")) return new ResponseEntity<>(ticketService.getAllTicket(), HttpStatus.OK);
-            return new ResponseEntity<>(ticketService.findUserIdxByToken(userId), HttpStatus.OK);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            return new ResponseEntity<>(FAIL_DEFAULT_RES, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }*/
 
     @PostMapping("")
     public ResponseEntity saveTicket(@RequestBody final Ticket ticket) {
