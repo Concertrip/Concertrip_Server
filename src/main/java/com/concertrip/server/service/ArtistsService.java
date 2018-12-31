@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,12 +28,13 @@ import java.util.List;
 public class ArtistsService {
     private final ArtistsDAL artistsDAL;
     private final ArtistsRepository artistsRepository;
+    private final EventsRepository eventsRepository;
 
 
-    public ArtistsService(ArtistsDAL artistsDAL, ArtistsRepository artistsRepository) {
+    public ArtistsService(ArtistsDAL artistsDAL, ArtistsRepository artistsRepository, EventsRepository eventsRepository) {
         this.artistsDAL = artistsDAL;
         this.artistsRepository = artistsRepository;
-
+        this.eventsRepository = eventsRepository;
     }
 
     /**
@@ -80,11 +82,15 @@ public class ArtistsService {
 
     /**
      * 아티스트 상세 페이지 조회
+     * 할일 : 아티스트repo에서 다가오는 콘서트 추가해줘야함
      */
     @Transactional
     public DefaultRes findArtistById(String _id) {
         try {
             ArtistDetailReq artistDetailReq = artistsRepository.findArtist(_id);
+            if(ObjectUtils.isEmpty(artistDetailReq)) {
+                return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_ARTISTS);
+            }
             Artists artists = artistsRepository.findArtistsBy_id(_id);
             String[] members = artists.getMember();
             log.info(members.length + "");
@@ -95,7 +101,6 @@ public class ArtistsService {
                 commonListReqList.add(artistsRepository.findArtistsByName(member));
             }
             artistDetailReq.setMemberList(commonListReqList);
-
             return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_ARTISTS, artistDetailReq);
         } catch (Exception e){
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();

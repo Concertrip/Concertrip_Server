@@ -6,11 +6,14 @@ import com.concertrip.server.mapper.UserMapper;
 import com.concertrip.server.model.DefaultRes;
 import com.concertrip.server.utils.ResponseMessage;
 import com.concertrip.server.utils.StatusCode;
+import javafx.scene.input.DataFormat;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -29,24 +32,24 @@ public class TicketService {
     }
     //모든 티켓 조회
     public DefaultRes getAllTicket() {
-        final List<Ticket> ticketList = ticketMapper.findAll();
+        final List<Ticket> ticketList = ticketMapper.findByDate();
         if(ticketList.isEmpty()) return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_TICKETS);
         return DefaultRes.res(StatusCode.OK,ResponseMessage.READ_TICKETS,ticketList);
     }
 
     //userIdx로 티켓 조회
     public DefaultRes findByuserIdx(final int userIdx){
-        final Ticket ticket  = ticketMapper.findByUserIdx(userIdx);
-        if(ticket == null) return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_TICKETS);
-        return DefaultRes.res(StatusCode.OK,ResponseMessage.READ_TICKETS, ticket);
+        final List<Ticket> ticketList  = ticketMapper.findByUserIdx(userIdx);
+        if(userIdx < 1 || ticketList == null) return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_TICKETS);
+        return DefaultRes.res(StatusCode.OK,ResponseMessage.READ_TICKETS, ticketList);
     }
 
     //token으로 티켓 조회
     public DefaultRes findUserIdxByToken(final String userId){
         final int userIdx = userMapper.findUserIdxByToken(userId);
-        final Ticket ticket  = ticketMapper.findByUserIdx(userIdx);
-        if(ticket == null) return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_TICKETS);
-        return DefaultRes.res(StatusCode.OK,ResponseMessage.READ_TICKETS, ticket);
+        final List<Ticket> ticketList  = ticketMapper.findByUserIdx(userIdx);
+        if(ticketList == null) return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_TICKETS);
+        return DefaultRes.res(StatusCode.OK,ResponseMessage.READ_TICKETS, ticketList);
     }
 
     //eventId로 티켓 조회
@@ -69,8 +72,8 @@ public class TicketService {
     }
     //티켓 삭제
     public DefaultRes deleteByuserIdx(final int userIdx) {
-        final Ticket ticket = ticketMapper.findByUserIdx(userIdx);
-        if (ticket == null) return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_TICKETS);
+        final List<Ticket> ticketList = ticketMapper.findByUserIdx(userIdx);
+        if (ticketList == null) return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_TICKETS);
         try {
             ticketMapper.deleteByUserIdx(userIdx);
             return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.DELETE_TICKETS);

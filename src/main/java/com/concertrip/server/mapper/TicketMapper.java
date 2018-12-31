@@ -19,11 +19,15 @@ public interface TicketMapper {
 
     //회원으로 티켓조회 (token으로 가져와서)
     @Select("SELECT * FROM ticket WHERE userIdx = #{userIdx}")
-    Ticket findByUserIdx(@Param("userIdx") final int userIdx);
+    List<Ticket> findByUserIdx(@Param("userIdx") final int userIdx);
 
     //티켓 이름으로 조회
     @Select("SELECT * FROM ticket WHERE eventId = #{eventId}")
     Ticket findByEventId(@Param("eventId") final String eventId);
+
+    // 티켓 시간순으로 가져오기
+    @Select("SELECT * FROM ticket ORDER BY date DESC")
+    List<Ticket> findByDate();
 
     //티켓 등록
     @Insert("INSERT INTO ticket(serialNum, seat, barcodeNum, title, date, location, eventId, userIdx)" +
