@@ -2,19 +2,10 @@ package com.concertrip.server.dal;
 
 import com.concertrip.server.dao.ArtistsRepository;
 import com.concertrip.server.domain.Artists;
-import com.concertrip.server.domain.Events;
-import com.concertrip.server.model.ArtistsReq;
-import com.concertrip.server.model.DefaultRes;
-import com.concertrip.server.model.EventsReq;
-import com.concertrip.server.utils.ResponseMessage;
-import com.concertrip.server.utils.StatusCode;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.annotations.Select;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.List;
 
@@ -45,10 +36,10 @@ public class ArtistsDAL {
         return artistsRepository.findAll();
     }
 
-    // _id 로 가져오기
+    // id 로 가져오기
     public Artists findArtists(String _id) {
         Query query = new Query();
-        query.addCriteria(Criteria.where("_id").is(_id));
+        query.addCriteria(Criteria.where("id").is(_id));
         Artists artists = mongoTemplate.findOne(query, Artists.class);
         return artists;
     }
@@ -58,19 +49,6 @@ public class ArtistsDAL {
         Query query = new Query();
         query.addCriteria(Criteria.where("name").is(name));
         Artists artists = mongoTemplate.findOne(query, Artists.class);
-        return artists;
-    }
-
-    public String getArtistsImgByName(String name) {
-        Artists artists = findArtistsByName(name);
-        return artists.getProfileImg();
-    }
-
-    public ArtistsReq findArtistsForCal(String _id) {
-        Query query = new Query();
-        query.addCriteria(Criteria.where("_id").is(_id));
-        ArtistsReq artists = mongoTemplate.findOne(query, ArtistsReq.class);
-
         return artists;
     }
 
@@ -98,7 +76,7 @@ public class ArtistsDAL {
      */
     public void deleteArtist(String _id) {
             Query query = new Query();
-            query.addCriteria(Criteria.where("_id").is(_id));
+            query.addCriteria(Criteria.where("id").is(_id));
             mongoTemplate.remove(query, "artists");
     }
 

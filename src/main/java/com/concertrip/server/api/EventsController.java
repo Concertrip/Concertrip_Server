@@ -33,26 +33,27 @@ public class EventsController {
         return new ResponseEntity<>(eventsService.selectAll(), HttpStatus.OK);
     }
 
+    //TODO
     @GetMapping("detail")
     public ResponseEntity getEventsById(
-            @RequestParam(value = "eventId", defaultValue = "") final String _id) {
-        if (_id.equals("") ) return new ResponseEntity(DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_EVENT), HttpStatus.OK);
-        return new ResponseEntity(eventsService.findEventsById(_id), HttpStatus.OK);
+            @RequestParam(value = "id", defaultValue = "") final String _id) {
+        if (_id.equals("") ) return new ResponseEntity<>(DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_EVENT), HttpStatus.OK);
+        return new ResponseEntity<>(eventsService.findEventsById(_id), HttpStatus.OK);
     }
 
     @PostMapping("")
     public ResponseEntity addEvents(@RequestBody final Events events){
-        return new ResponseEntity(eventsService.insert(events), HttpStatus.OK);
+        return new ResponseEntity<>(eventsService.insert(events), HttpStatus.OK);
     }
 
     @PutMapping("")
     public ResponseEntity updateEvents(@RequestBody final Events events){
-        return new ResponseEntity(eventsService.update(events), HttpStatus.OK);
+        return new ResponseEntity<>(eventsService.update(events), HttpStatus.OK);
     }
 
     @DeleteMapping("")
     public ResponseEntity deleteEvents(@RequestParam(value = "id", defaultValue = "") final String _id){
-        if(_id.equals("")) return new ResponseEntity(DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_EVENT), HttpStatus.OK);
+        if(_id.equals("")) return new ResponseEntity<>(DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_EVENT), HttpStatus.OK);
 
         return new ResponseEntity<>(eventsService.delete(_id), HttpStatus.OK);
     }

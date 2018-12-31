@@ -24,38 +24,28 @@ public class ArtistsController {
         this.artistsService = artistsService;
     }
 
-//    @GetMapping("")
-//    public ResponseEntity getAllArtists() {
-//        return new ResponseEntity<>(artistsService.selectArtistAll(), HttpStatus.OK);
-//    }
-
-    @GetMapping("")
-    public ResponseEntity getArtistInfo(@RequestParam(value = "name", defaultValue = "")final String name) {
-        if (name.equals("")) return new ResponseEntity(DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_ARTISTS), HttpStatus.OK);
-        return new ResponseEntity(artistsService.findArtistInfo(name), HttpStatus.OK);
-    }
-
+    //TODO: 다가오는 이벤트 리스트 추가
     @GetMapping("detail")
-    public ResponseEntity getArtistsById(@RequestParam(value = "_id", defaultValue = "") final String _id) {
-        if (_id.equals("")) return new ResponseEntity(DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_ARTISTS), HttpStatus.OK);
-        return new ResponseEntity(artistsService.findArtistById(_id), HttpStatus.OK);
+    public ResponseEntity getArtistsById(@RequestParam(value = "id", defaultValue = "") final String _id) {
+        if (_id.equals("")) return new ResponseEntity<>(DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_ARTISTS), HttpStatus.OK);
+        return new ResponseEntity<>(artistsService.findArtistById(_id), HttpStatus.OK);
     }
 
     @PostMapping("")
     public ResponseEntity addArtists(@RequestBody final Artists artists) {
-        return new ResponseEntity(artistsService.insertArtist(artists), HttpStatus.OK);
+        return new ResponseEntity<>(artistsService.insertArtist(artists), HttpStatus.OK);
     }
 
     @PutMapping("")
     public ResponseEntity updateArtists(@RequestBody final Artists artists) {
         artistsService.updateArtist(artists);
-        return new ResponseEntity(artistsService.updateArtist(artists), HttpStatus.OK);
+        return new ResponseEntity<>(artistsService.updateArtist(artists), HttpStatus.OK);
     }
 
     @DeleteMapping("")
-    public ResponseEntity deleteArtists(@RequestParam(value = "_id", defaultValue = "") final String _id) {
-        if(_id.equals("")) return new ResponseEntity(DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.NOT_FOUND_ARTISTS), HttpStatus.OK);
-        return new ResponseEntity<>(artistsService.deleteArtist(_id), HttpStatus.OK);
+    public ResponseEntity deleteArtists(@RequestParam(value = "id", defaultValue = "") final String id) {
+        if(id.equals("")) return new ResponseEntity<>(DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.NOT_FOUND_ARTISTS), HttpStatus.OK);
+        return new ResponseEntity<>(artistsService.deleteArtist(id), HttpStatus.OK);
     }
 
 }

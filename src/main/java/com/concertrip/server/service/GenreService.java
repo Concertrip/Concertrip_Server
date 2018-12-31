@@ -3,7 +3,7 @@ package com.concertrip.server.service;
 import com.concertrip.server.dao.EventsRepository;
 import com.concertrip.server.dao.GenreRepository;
 import com.concertrip.server.domain.Genre;
-import com.concertrip.server.mapper.GenreSubscribeMapper;
+import com.concertrip.server.mapper.SubscribeMapper;
 import com.concertrip.server.model.CommonListReq;
 import com.concertrip.server.model.DefaultRes;
 import com.concertrip.server.model.GenreDetailReq;
@@ -20,13 +20,19 @@ import java.util.List;
 @Service
 public class GenreService {
     private final GenreRepository genreRepository;
-    private final GenreSubscribeMapper genreSubscribeMapper;
     private final EventsRepository eventsRepository;
+    private final SubscribeMapper subscribeMapper;
+    private final SubscribeService subscribeService;
 
-    public GenreService(GenreRepository genreRepository, GenreSubscribeMapper genreSubscribeMapper, EventsRepository eventsRepository) {
+    public GenreService(
+            GenreRepository genreRepository,
+            EventsRepository eventsRepository,
+            SubscribeMapper subscribeMapper,
+            SubscribeService subscribeService) {
         this.genreRepository = genreRepository;
-        this.genreSubscribeMapper = genreSubscribeMapper;
         this.eventsRepository = eventsRepository;
+        this.subscribeMapper = subscribeMapper;
+        this.subscribeService = subscribeService;
     }
 
     public DefaultRes findAll() {
@@ -61,7 +67,7 @@ public class GenreService {
         }
     }
 
-    public DefaultRes findById(final String _id, final String token) {
+    public DefaultRes findById(final String _id, final Integer token) {
         try {
             GenreDetailReq genreDetailReq = new GenreDetailReq();
             Genre genre = genreRepository.findBy_idEquals(_id);
@@ -73,23 +79,14 @@ public class GenreService {
             genreDetailReq.setProfileImg(genre.getProfileImg());
             genreDetailReq.setBackImg(genre.getBackImg());
             genreDetailReq.setYoutubeUrl(genre.getYoutubeUrl());
-            genreDetailReq.setSubscribeNum(genreSubscribeMapper.getSubscribeNum("genre", genre.get_id()));
-            genreDetailReq.setIsSubscribe(genreSubscribeMapper.checkSubscribe("genre", genre.get_id(), token) > 0);
+            genreDetailReq.setSubscribeNum(subscribeMapper.subscribeNum("genre", _id));
+            genreDetailReq.setIsSubscribe(subscribeService.isSubscribe(token, "genre", _id));
             List<CommonListReq> eventsList = eventsRepository.findAllByFilterIn(genre.getCode());
             genreDetailReq.setEventList(eventsList);
+            genreDetailReq.setSubscribeNum(subscribeMapper.subscribeNum("genre", _id));
 
             return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_ARTISTS, genreDetailReq);
         } catch (Exception e) {
-            return DefaultRes.res(StatusCode.DB_ERROR, ResponseMessage.DB_ERROR);
-        }
-    }
-
-    public DefaultRes subscribe(final String _id, final String token) {
-        try {
-            genreSubscribeMapper.subscribe(_id, token);
-            return DefaultRes.res(StatusCode.OK, ResponseMessage.SUBSCRIBE);
-        } catch (Exception e) {
-            log.error(e.getMessage());
             return DefaultRes.res(StatusCode.DB_ERROR, ResponseMessage.DB_ERROR);
         }
     }

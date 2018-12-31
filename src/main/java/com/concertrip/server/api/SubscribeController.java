@@ -27,6 +27,7 @@ public class SubscribeController {
         this.subscribeService = subscribeService;
     }
 
+    //TODO: 만드는중
     @GetMapping("artist")
     public ResponseEntity subscribeArtistList(@RequestHeader(value = "Authorization") final int token) {
         return new ResponseEntity<>(subscribeService.subscribeList(token, "artist"), HttpStatus.OK);
@@ -36,13 +37,13 @@ public class SubscribeController {
     public ResponseEntity subscribeArtist(@RequestHeader(value = "Authorization") final int token,
                                        @RequestBody final SubscribeReq subscribeReq) {
         try {
-            if (subscribeReq.get_id().equals("")) {
+            if (subscribeReq.getId().equals("")) {
                 return new ResponseEntity<>(DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.NOT_FOUND_ARTISTS), HttpStatus.OK);
             }
             if (token == -1) {
                 return new ResponseEntity<>(DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.NOT_FOUND_USER), HttpStatus.OK);
             }
-            return new ResponseEntity<>(subscribeService.subscribe(token, "artist", subscribeReq.get_id()), HttpStatus.OK);
+            return new ResponseEntity<>(subscribeService.subscribe(token, "artist", subscribeReq.getId()), HttpStatus.OK);
         } catch (Exception e) {
             log.error(e.getMessage());
             return new ResponseEntity<>(DefaultRes.res(StatusCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR), HttpStatus.OK);
@@ -53,13 +54,13 @@ public class SubscribeController {
     public ResponseEntity subscribeEvent(@RequestHeader(value = "Authorization") final int token,
                                          @RequestBody final SubscribeReq subscribeReq) {
         try {
-            if (subscribeReq.get_id().equals("")) {
+            if (subscribeReq.getId().equals("")) {
                 return new ResponseEntity<>(DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.NOT_FOUND_EVENT), HttpStatus.OK);
             }
             if (token == -1) {
                 return new ResponseEntity<>(DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.NOT_FOUND_USER), HttpStatus.OK);
             }
-            return new ResponseEntity<>(subscribeService.subscribe(token, "event", subscribeReq.get_id()), HttpStatus.OK);
+            return new ResponseEntity<>(subscribeService.subscribe(token, "event", subscribeReq.getId()), HttpStatus.OK);
         } catch (Exception e) {
             log.error(e.getMessage());
             return new ResponseEntity<>(DefaultRes.res(StatusCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR), HttpStatus.OK);
@@ -70,13 +71,13 @@ public class SubscribeController {
     public ResponseEntity subscribeGenre(@RequestHeader(value = "Authorization") final int token,
                                          @RequestBody final SubscribeReq subscribeReq) {
         try {
-            if (subscribeReq.get_id().equals("")) {
+            if (subscribeReq.getId().equals("")) {
                 return new ResponseEntity<>(DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.NOT_FOUND_GENRE), HttpStatus.OK);
             }
             if (token == -1) {
                 return new ResponseEntity<>(DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.NOT_FOUND_USER), HttpStatus.OK);
             }
-            return new ResponseEntity<>(subscribeService.subscribe(token, "genre", subscribeReq.get_id()), HttpStatus.OK);
+            return new ResponseEntity<>(subscribeService.subscribe(token, "genre", subscribeReq.getId()), HttpStatus.OK);
         } catch (Exception e) {
             log.error(e.getMessage());
             return new ResponseEntity<>(DefaultRes.res(StatusCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR), HttpStatus.OK);

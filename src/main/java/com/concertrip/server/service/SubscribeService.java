@@ -38,6 +38,10 @@ public class SubscribeService {
     }
 
 
+    public Boolean isSubscribe(final Integer userIdx, String type, String objIdx) {
+        return subscribeMapper.isSubscribe(userIdx, type, objIdx) > 0;
+    }
+
     /**
      * 구독하기 / 구독취소
      *
@@ -46,7 +50,6 @@ public class SubscribeService {
      * @param objIdx
      * @return
      */
-
     public DefaultRes subscribe(final int token, final String type, final String objIdx) {
         try {
             if (isSubscribe(token, type, objIdx)) {
@@ -58,47 +61,6 @@ public class SubscribeService {
             }
         } catch (Exception e) {
             return DefaultRes.res(StatusCode.DB_ERROR, ResponseMessage.DB_ERROR);
-        }
-    }
-
-
-    /**
-     * 구독 여부 확인
-     *
-     * @param token
-     * @param type
-     * @param objIdx
-     * @return
-     */
-
-    public boolean isSubscribe(final int token, final String type, final String objIdx) {
-        try {
-            log.info("isSub Mapper");
-            log.info(type + objIdx);
-            Subscribe subscribe = subscribeMapper.isSubscribe(token, type, objIdx);
-            log.info("-----------------");
-            log.info(subscribe.getId());
-            if (subscribe == null) return false;
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-
-    /**
-     * 구독자수 알려주기
-     *
-     * @param type
-     * @param objIdx
-     * @return
-     */
-
-    public int subscribeNum(final String type, final String objIdx) {
-        try {
-            return subscribeMapper.subscribeNum(type, objIdx).size();
-        } catch (Exception e) {
-            return -1;
         }
     }
 

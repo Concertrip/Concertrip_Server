@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class SubscribeReq {
-    private String _id;
+    private String id;
 }

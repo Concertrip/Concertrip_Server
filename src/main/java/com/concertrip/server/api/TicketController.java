@@ -15,6 +15,7 @@ import static com.concertrip.server.model.DefaultRes.FAIL_DEFAULT_RES;
  * Created by HYEON on 2018-12-28.
  */
 
+//TODO
 @Slf4j
 @RestController
 @RequestMapping("api/ticket")

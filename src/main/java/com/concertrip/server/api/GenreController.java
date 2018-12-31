@@ -20,24 +20,17 @@ public class GenreController {
         return new ResponseEntity<>(genreService.save(genre), HttpStatus.OK);
     }
 
+    //TODO: 구독 여부
     @GetMapping("/all")
     public ResponseEntity findAll() {
         return new ResponseEntity<>(genreService.findAll(), HttpStatus.OK);
     }
 
+    //TODO: 토큰 타입 확인, 다가오는 이벤트 리스트 추가
     @GetMapping("/detail")
     public ResponseEntity findById(
-            @RequestHeader (value = "Authorization") final String token,
+            @RequestHeader (value = "Authorization") final Integer token,
             @RequestParam(value = "id") final String _id) {
         return new ResponseEntity<>(genreService.findById(_id, token), HttpStatus.OK);
     }
-
-    @PostMapping("/sub")
-    public ResponseEntity subscribe(
-            @RequestHeader (value = "Authorization") final String token,
-            @RequestBody final SubscribeReq subscribeReq
-    ) {
-        return new ResponseEntity<>(genreService.subscribe(subscribeReq.get_id(), token), HttpStatus.OK);
-    }
-
 }

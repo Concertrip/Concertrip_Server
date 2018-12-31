@@ -40,7 +40,6 @@ public class UserService {
             //TODO: need refactoring
             userMapper.save(user);
             User res = userMapper.findUserById(user.getId());
-            log.info(res.getUserIdx() + "");
             return DefaultRes.res(StatusCode.CREATED, ResponseMessage.CREATED_USER, res.getUserIdx() + "");
         } catch (Exception e) {
             //Rollback

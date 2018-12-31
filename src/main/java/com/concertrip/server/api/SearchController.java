@@ -23,12 +23,13 @@ public class SearchController {
         this.searchService = searchService;
     }
 
+    //TODO
     @GetMapping("")
     public ResponseEntity getEventsById(@RequestHeader(value = "Authorization") final int token,
                                         @RequestParam("tag") final String tag) {
-        if (tag.equals("")) return new ResponseEntity(DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_TAG), HttpStatus.OK);
+        if (tag.equals("")) return new ResponseEntity<>(DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_TAG), HttpStatus.OK);
 
 
-        return new ResponseEntity(searchService.search(token, tag), HttpStatus.OK);
+        return new ResponseEntity<>(searchService.search(token, tag), HttpStatus.OK);
     }
 }

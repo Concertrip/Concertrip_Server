@@ -4,7 +4,6 @@ import com.concertrip.server.dal.ArtistsDAL;
 import com.concertrip.server.dao.ArtistsRepository;
 import com.concertrip.server.dao.EventsRepository;
 import com.concertrip.server.domain.Artists;
-import com.concertrip.server.mapper.ArtistsSubscribeMapper;
 import com.concertrip.server.model.*;
 import com.concertrip.server.utils.ResponseMessage;
 import com.concertrip.server.utils.StatusCode;
@@ -15,8 +14,6 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -38,90 +35,26 @@ public class ArtistsService {
     }
 
     /**
-     * 전체 아티스트 정보 가져오기
-     *
-     * @return DefaultRes
-     */
-    public DefaultRes selectArtistAll() {
-        try {
-            List<Artists> artistsList = artistsDAL.selectArtistAll();
-            if (artistsList.size() == 0) {
-                return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_ARTISTS);
-            } else {
-                return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_ARTISTS, artistsList);
-            }
-        } catch (Exception e) {
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            log.error(e.getMessage());
-            return DefaultRes.res(StatusCode.DB_ERROR, ResponseMessage.DB_ERROR);
-        }
-
-    }
-
-    /**
-     * 아티스트 이름으로 조회
-     *
-     * @param _id
-     * @return
-     */
-
-    public DefaultRes findArtistByName(String _id) {
-        try {
-            Artists artists = artistsDAL.findArtists(_id);
-            if (artists == null) {
-                return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_ARTISTS);
-            } else {
-                return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_ARTISTS, artists);
-            }
-        } catch (Exception e) {
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            log.error(e.getMessage());
-            return DefaultRes.res(StatusCode.DB_ERROR, ResponseMessage.DB_ERROR);
-        }
-    }
-
-    /**
      * 아티스트 상세 페이지 조회
      * 할일 : 아티스트repo에서 다가오는 콘서트 추가해줘야함
      */
     @Transactional
-    public DefaultRes findArtistById(String _id) {
+    public DefaultRes findArtistById(String id) {
         try {
-            ArtistDetailReq artistDetailReq = artistsRepository.findArtist(_id);
+            ArtistDetailReq artistDetailReq = artistsRepository.findArtistDetailById(id);
             if(ObjectUtils.isEmpty(artistDetailReq)) {
                 return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_ARTISTS);
             }
-            Artists artists = artistsRepository.findArtistsBy_id(_id);
+            Artists artists = artistsRepository.findArtistsBy_id(id);
             String[] members = artists.getMember();
-            log.info(members.length + "");
             List<CommonListReq> commonListReqList = new ArrayList<>();
 
             for (String member:members) {
-                log.info(member);
                 commonListReqList.add(artistsRepository.findArtistsByName(member));
             }
             artistDetailReq.setMemberList(commonListReqList);
             return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_ARTISTS, artistDetailReq);
         } catch (Exception e){
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            log.error(e.getMessage());
-            return DefaultRes.res(StatusCode.DB_ERROR, ResponseMessage.DB_ERROR);
-        }
-    }
-
-    /**
-     * 아티스트 리스트 조회
-     */
-    public DefaultRes findArtistInfo(String name) {
-        try{
-            List<CommonListReq> artistsReqList = artistsRepository.findArtistListByName(name);
-            if (artistsReqList.equals("")) return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_ARTISTS);
-            else {
-                log.info("bbbbbbbbbbbb");
-                log.info(artistsReqList.toString());
-                return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_ARTISTS, artistsReqList);
-            }
-        } catch (Exception e) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             log.error(e.getMessage());
             return DefaultRes.res(StatusCode.DB_ERROR, ResponseMessage.DB_ERROR);

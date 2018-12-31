@@ -26,5 +26,4 @@ public class ArtistDetailReq {
     private String youtubeUrl;
     private List<CommonListReq> memberList;
     private List<Events> eventsList;
-
 }

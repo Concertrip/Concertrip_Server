@@ -27,11 +27,11 @@ public class SearchService {
     private final GenreRepository genreRepository;
     private final SubscribeService subscribeService;
 
-    public SearchService(EventsRepository eventsRepository, ArtistsRepository artistsRepository, GenreRepository genreRepository, SubscribeService subscribeService) {
+    public SearchService(EventsRepository eventsRepository, ArtistsRepository artistsRepository, GenreRepository genreRepository, SubscribeService subscribeService1) {
         this.eventsRepository = eventsRepository;
         this.artistsRepository = artistsRepository;
         this.genreRepository = genreRepository;
-        this.subscribeService = subscribeService;
+        this.subscribeService = subscribeService1;
     }
 
     public DefaultRes search(int idx, String tag) {

@@ -47,14 +47,14 @@ public class EventsDAL {
      * @return
      */
     public EventsDetailReq getEvents(String _id) {
-        Query query = new Query(Criteria.where("_id").is(_id));
+        Query query = new Query(Criteria.where("id").is(_id));
         EventsDetailReq eventsDetail = mongoTemplate.findOne(query, EventsDetailReq.class);
         return eventsDetail;
     }
 
     public EventsReq findEventsForCal(String _id) {
         Query query = new Query();
-        query.addCriteria(Criteria.where("_id").is(_id));
+        query.addCriteria(Criteria.where("id").is(_id));
         EventsReq events = mongoTemplate.findOne(query, EventsReq.class);
         return events;
     }
@@ -70,7 +70,7 @@ public class EventsDAL {
 
         criteria.orOperator(Criteria.where("title").regex(title), Criteria.where("cast").all(title));
         Query query = new Query(criteria);
-        query.fields().include("_id");
+        query.fields().include("id");
         query.fields().include("title");
         //query.fields().include("profileImg");
         //query.fields().include("date");
@@ -89,7 +89,7 @@ public class EventsDAL {
     public List<EventsReq> findByTag(String tag) {
         Query query = new Query();
         query.addCriteria(Criteria.where("tag").all(tag));
-        query.fields().include("_id");
+        query.fields().include("id");
         query.fields().include("title");
         //query.fields().include("profileImg");
         //query.fields().include("date");
@@ -125,7 +125,7 @@ public class EventsDAL {
      */
     public void delete(String _id) {
         Query query = new Query();
-        query.addCriteria(Criteria.where("_id").is(_id));
+        query.addCriteria(Criteria.where("id").is(_id));
         mongoTemplate.remove(query, "events");
     }
 

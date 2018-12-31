@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.repository.Query;
 
 import java.util.List;
 
-public interface GenreRepository extends MongoRepository<Genre, Integer> {
+public interface GenreRepository extends MongoRepository<Genre, String> {
     List<Genre> findAll();
 
     Genre save(Genre genre);
@@ -17,7 +17,7 @@ public interface GenreRepository extends MongoRepository<Genre, Integer> {
     @Query(value = "{ filter : { $regex : ?0 } }", fields = "{ 'name' : 1, 'profileImg' : 1 }")
     List<CommonListReq> findByFilter(String name);
 
-    @Query(value = "{ _id : ?0 } ", fields = "{ 'name' : 1, 'profileImg' : 1, 'filter' : 1 }")
+    @Query(value = "{ id : ?0 } ", fields = "{ 'name' : 1, 'profileImg' : 1, 'filter' : 1 }")
     CommonListReq findGenreById(String _id);
 
     Genre findGenreBy_idEquals(String _id);

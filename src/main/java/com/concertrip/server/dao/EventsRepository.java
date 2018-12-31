@@ -27,16 +27,16 @@ public interface EventsRepository extends MongoRepository<Events, String> {
     @Query(value = "{ member : { $regex : ?0 } }", fields = "{ 'name' : 1, 'profileImg' : 1, 'filter' : 1 }")
     List<CommonListReq> findByMember(String name);
 
-    @Query(value = "{ _id : ?0 }", fields = "{ 'precaution' : 1, '_id' : 0 }")
+    @Query(value = "{ id : ?0 }", fields = "{ 'precaution' : 1, 'id' : 0 }")
     DefaultReq getPrecaution(String _id);
 
-    @Query(value = "{ _id : ?0 }", fields = "{ 'member' : 1, '_id' : 0 }")
+    @Query(value = "{ id : ?0 }", fields = "{ 'member' : 1, 'id' : 0 }")
     DefaultReq getMember(String _id);
 
-    @Query(value = "{ _id : ?0 } ")
+    @Query(value = "{ id : ?0 } ")
     EventsDetailReq findEvent(String _id);
 
-    @Query(value = "{ _id : ?0 } ", fields = "{ 'name' : 1, 'profileImg' : 1, 'filter' : 1 }")
+    @Query(value = "{ id : ?0 } ", fields = "{ 'name' : 1, 'profileImg' : 1, 'filter' : 1 }")
     CommonListReq findEventList(String _id);
 
     List<CommonListReq> findAllByFilterIn(String filter);
