@@ -8,8 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
-
 @Slf4j
 @RestController
 @RequestMapping("/api/genre")
@@ -28,8 +26,10 @@ public class GenreController {
     }
 
     @GetMapping("/detail")
-    public ResponseEntity findAllById(@RequestParam(value = "id") final String _id) {
-        return new ResponseEntity<>(genreService.findById(_id), HttpStatus.OK);
+    public ResponseEntity findById(
+            @RequestHeader (value = "Authorization") final String token,
+            @RequestParam(value = "id") final String _id) {
+        return new ResponseEntity<>(genreService.findById(_id, token), HttpStatus.OK);
     }
 
     @PostMapping("/sub")

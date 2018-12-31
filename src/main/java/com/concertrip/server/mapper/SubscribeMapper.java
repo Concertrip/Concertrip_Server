@@ -19,7 +19,7 @@ public interface SubscribeMapper {
     List<Subscribe> getUserSubscribe(@Param("userIdx") final int userIdx, @Param("type") final String type);
 
     @Select("SELECT * FROM subscribe WHERE type = #{type} AND objIdx = #{objIdx}")
-    List<Subscribe> subscribeNum(@Param("type") final int type, @Param("objIdx") final String objIdx);
+    List<Subscribe> subscribeNum(@Param("type") final String type, @Param("objIdx") final String objIdx);
 
     @Select("SELECT * FROM subscribe WHERE userIdx = #{userIdx} AND type = #{type} AND objIdx = #{objIdx}")
     Subscribe isSubscribe(@Param("userIdx") final int userIdx, @Param("type") final String type, @Param("objIdx") final String objIdx);

@@ -35,6 +35,8 @@ public interface EventsRepository extends MongoRepository<Events, Integer> {
     @Query(value = "{ _id : ?0 } ")
     EventsDetailReq findEvent(String _id);
 
+    List<Events> findAllByFilterIn(String filter);
+
 
 }
 

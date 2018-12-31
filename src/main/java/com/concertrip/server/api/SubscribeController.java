@@ -33,7 +33,7 @@ public class SubscribeController {
             if (token.isEmpty()) {
                 return new ResponseEntity<>(DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.NOT_FOUND_USER), HttpStatus.OK);
             }
-            return new ResponseEntity<>(subscribeService.subscribe(token, "artist", artistId), HttpStatus.OK);
+            return new ResponseEntity<>(subscribeService.subscribe(Integer.parseInt(token), "artist", artistId), HttpStatus.OK);
         } catch (Exception e) {
             log.error(e.getMessage());
             return new ResponseEntity<>(DefaultRes.res(StatusCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR), HttpStatus.OK);
@@ -50,7 +50,7 @@ public class SubscribeController {
             if (token.isEmpty()) {
                 return new ResponseEntity<>(DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.NOT_FOUND_USER), HttpStatus.OK);
             }
-            return new ResponseEntity<>(subscribeService.subscribe(token, "event", eventId), HttpStatus.OK);
+            return new ResponseEntity<>(subscribeService.subscribe(Integer.parseInt(token), "event", eventId), HttpStatus.OK);
         } catch (Exception e) {
             log.error(e.getMessage());
             return new ResponseEntity<>(DefaultRes.res(StatusCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR), HttpStatus.OK);
@@ -67,7 +67,7 @@ public class SubscribeController {
             if (token.isEmpty()) {
                 return new ResponseEntity<>(DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.NOT_FOUND_USER), HttpStatus.OK);
             }
-            return new ResponseEntity<>(subscribeService.subscribe(token, "genre", genreId), HttpStatus.OK);
+            return new ResponseEntity<>(subscribeService.subscribe(Integer.parseInt(token), "genre", genreId), HttpStatus.OK);
         } catch (Exception e) {
             log.error(e.getMessage());
             return new ResponseEntity<>(DefaultRes.res(StatusCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR), HttpStatus.OK);
