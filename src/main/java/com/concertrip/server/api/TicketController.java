@@ -25,8 +25,8 @@ public class TicketController {
         this.ticketService = ticketService;
     }
 
-    //사용자가 가지고 있는 모든 티켓 조회
-    @GetMapping("")
+    //사용자가 가지고 있는 모든 티켓 조회  findByDate
+    /*@GetMapping("")
     public ResponseEntity getUserTicket(@RequestParam(value = "userIdx", defaultValue = "") final int userIdx) {
         try{
             return new ResponseEntity<>(ticketService.findByuserIdx(userIdx), HttpStatus.OK);
@@ -34,7 +34,17 @@ public class TicketController {
             log.error(e.getMessage());
             return new ResponseEntity<>(FAIL_DEFAULT_RES, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }*/
+    @GetMapping("")
+    public ResponseEntity getUserTicket() {
+        try{
+            return new ResponseEntity<>(ticketService.getAllTicket(), HttpStatus.OK);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return new ResponseEntity<>(FAIL_DEFAULT_RES, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
+
     //티켓 상세보기
     @GetMapping("detail")
     public ResponseEntity getUserTicketDetail(@RequestParam(value = "userIdx") final int userIdx) {

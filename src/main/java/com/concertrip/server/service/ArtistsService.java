@@ -28,12 +28,13 @@ import java.util.List;
 public class ArtistsService {
     private final ArtistsDAL artistsDAL;
     private final ArtistsRepository artistsRepository;
+    private final EventsRepository eventsRepository;
 
 
-    public ArtistsService(ArtistsDAL artistsDAL, ArtistsRepository artistsRepository) {
+    public ArtistsService(ArtistsDAL artistsDAL, ArtistsRepository artistsRepository, EventsRepository eventsRepository) {
         this.artistsDAL = artistsDAL;
         this.artistsRepository = artistsRepository;
-
+        this.eventsRepository = eventsRepository;
     }
 
     /**
@@ -81,6 +82,7 @@ public class ArtistsService {
 
     /**
      * 아티스트 상세 페이지 조회
+     * 할일 : 아티스트repo에서 다가오는 콘서트 추가해줘야함
      */
     @Transactional
     public DefaultRes findArtistById(String _id) {

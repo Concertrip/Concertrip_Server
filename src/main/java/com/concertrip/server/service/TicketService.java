@@ -6,11 +6,14 @@ import com.concertrip.server.mapper.UserMapper;
 import com.concertrip.server.model.DefaultRes;
 import com.concertrip.server.utils.ResponseMessage;
 import com.concertrip.server.utils.StatusCode;
+import javafx.scene.input.DataFormat;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -29,7 +32,7 @@ public class TicketService {
     }
     //모든 티켓 조회
     public DefaultRes getAllTicket() {
-        final List<Ticket> ticketList = ticketMapper.findAll();
+        final List<Ticket> ticketList = ticketMapper.findByDate();
         if(ticketList.isEmpty()) return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_TICKETS);
         return DefaultRes.res(StatusCode.OK,ResponseMessage.READ_TICKETS,ticketList);
     }
