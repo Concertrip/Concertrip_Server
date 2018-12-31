@@ -17,7 +17,6 @@ import java.util.List;
 public interface EventsRepository extends MongoRepository<Events, Integer> {
     List<Events> findAll();
 
-
     @Query(value = "{ _id : ?0 }", fields = "{ 'precaution' : 1, '_id' : 0 }")
     DefaultReq getPrecaution(String _id);
 

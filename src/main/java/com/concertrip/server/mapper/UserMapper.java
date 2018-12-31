@@ -14,8 +14,8 @@ public interface UserMapper {
     @Insert("INSERT INTO user(id, password, name) VALUES(#{user.id}, #{user.password}, #{user.name})")
     void save(@Param("user") final User user);
 
-    @Select("SELETE userIdx FROM user WHERE userId = #{userId}")
-    int findUserIdxByToken(@Param("userId") final String userId);
+    @Select("SELECT userIdx FROM user WHERE id = #{userId}")
+    Integer findUserIdxByToken(@Param("userId") final String userId);
 
     @Select("SELECT * FROM user WHERE id=#{userId} LIMIT 1")
     User findUserById(@Param("userId") final String userId);

@@ -17,7 +17,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection="event")
+@Document(collection="events")
 public class Events implements Serializable {
     @Id
     private String _id;

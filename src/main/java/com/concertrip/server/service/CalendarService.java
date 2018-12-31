@@ -3,20 +3,22 @@ package com.concertrip.server.service;
 import com.concertrip.server.dal.ArtistsDAL;
 import com.concertrip.server.dal.EventsDAL;
 import com.concertrip.server.dao.ArtistsRepository;
+import com.concertrip.server.dao.GenreRepository;
 import com.concertrip.server.domain.Artists;
+import com.concertrip.server.domain.Genre;
+import com.concertrip.server.dto.Subscribe;
 import com.concertrip.server.mapper.ArtistsSubscribeMapper;
 import com.concertrip.server.mapper.EventsSubscribeMapper;
+import com.concertrip.server.mapper.SubscribeMapper;
 import com.concertrip.server.model.*;
 import com.concertrip.server.utils.ResponseMessage;
 import com.concertrip.server.utils.StatusCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created hyunjk on 2018-12-27.
@@ -30,13 +32,25 @@ public class CalendarService {
     private final ArtistsSubscribeMapper artistsSubscribeMapper;
     private final EventsDAL eventsDAL;
     private final EventsSubscribeMapper eventsSubscribeMapper;
+    private final SubscribeMapper subscribeMapper;
+    private final GenreRepository genreRepository;
 
-    public CalendarService(ArtistsDAL artistsDAL, ArtistsRepository artistsRepository, ArtistsSubscribeMapper artistsSubscribeMapper, EventsDAL eventsDAL, EventsSubscribeMapper eventsSubscribeMapper) {
+    public CalendarService(
+            ArtistsDAL artistsDAL,
+            ArtistsRepository artistsRepository,
+            ArtistsSubscribeMapper artistsSubscribeMapper,
+            EventsDAL eventsDAL,
+            EventsSubscribeMapper eventsSubscribeMapper,
+            SubscribeMapper subscribeMapper,
+            GenreRepository genreRepository
+    ) {
         this.artistsDAL = artistsDAL;
         this.artistsRepository = artistsRepository;
         this.artistsSubscribeMapper = artistsSubscribeMapper;
         this.eventsDAL = eventsDAL;
         this.eventsSubscribeMapper = eventsSubscribeMapper;
+        this.subscribeMapper = subscribeMapper;
+        this.genreRepository = genreRepository;
     }
 
 
@@ -180,5 +194,34 @@ public class CalendarService {
         }
 
         return eventsCal;
+    }
+
+    public DefaultRes getCalendarTab(Integer userIdx) {
+        try {
+            List<Subscribe> subscribeList = subscribeMapper.findAllByUserIdx(userIdx);
+            List<CalendarTabReq> calendarTabReqList = new ArrayList<>();
+            for (Subscribe subscribe : subscribeList) {
+                String type = subscribe.getType();
+                if (type.equals("genre")) {
+                    CalendarTabReq calendarTabReq = new CalendarTabReq();
+                    String id = subscribe.getObjIdx();
+                    calendarTabReq.set_id(id);
+                    calendarTabReq.setType(type);
+                    calendarTabReq.setName(genreRepository.findGenreBy_idEquals(id).getName());
+                    calendarTabReqList.add(calendarTabReq);
+                } else if (type.equals("artist")) {
+                    CalendarTabReq calendarTabReq = new CalendarTabReq();
+                    String id = subscribe.getObjIdx();
+                    calendarTabReq.set_id(id);
+                    calendarTabReq.setType(type);
+                    calendarTabReq.setName(artistsRepository.findArtist(id).getName());
+                    calendarTabReqList.add(calendarTabReq);
+                }
+            }
+            return DefaultRes.res(StatusCode.OK, ResponseMessage.TEST_OK, calendarTabReqList);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.TEST_FAIL);
+        }
     }
 }

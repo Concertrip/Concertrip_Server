@@ -49,4 +49,8 @@ public class UserService {
             return DefaultRes.res(StatusCode.DB_ERROR, ResponseMessage.DB_ERROR);
         }
     }
+
+    public Integer getUserIdxByToken(final String token) {
+        return userMapper.findUserIdxByToken(token);
+    }
 }
