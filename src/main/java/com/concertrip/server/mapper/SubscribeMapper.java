@@ -19,13 +19,12 @@ public interface SubscribeMapper {
     List<Subscribe> getUserSubscribe(@Param("userIdx") final int userIdx, @Param("type") final String type);
 
     @Select("SELECT * FROM subscribe WHERE type = #{type} AND objIdx = #{objIdx}")
-    List<Subscribe> subscribeNum(@Param("type") final int type, @Param("objIdx") final String objIdx);
+    List<Subscribe> subscribeNum(@Param("type") final String type, @Param("objIdx") final String objIdx);
 
     @Select("SELECT * FROM subscribe WHERE userIdx = #{userIdx} AND type = #{type} AND objIdx = #{objIdx}")
     Subscribe isSubscribe(@Param("userIdx") final int userIdx, @Param("type") final String type, @Param("objIdx") final String objIdx);
 
-
-    @Insert("INSERT INTO subscribe(userIdx, type, objIdx) VALUES (#{userIdx}, #{type}, #{objIdx}")
+    @Insert("INSERT INTO subscribe(userIdx, type, objIdx) VALUES (#{userIdx}, #{type}, #{objIdx})")
     void subscribe(@Param("userIdx") final int userIdx, @Param("type") final String type, @Param("objIdx") final String objIdx);
 
     @Delete("DELETE FROM subscribe WHERE userIdx = #{userIdx} AND type = #{type} AND objIdx = #{objIdx}")

@@ -1,6 +1,7 @@
 package com.concertrip.server.api;
 
 import com.concertrip.server.model.DefaultRes;
+import com.concertrip.server.model.SubscribeReq;
 import com.concertrip.server.service.SubscribeService;
 import com.concertrip.server.utils.ResponseMessage;
 import com.concertrip.server.utils.StatusCode;
@@ -23,17 +24,22 @@ public class SubscribeController {
         this.subscribeService = subscribeService;
     }
 
+    @GetMapping("artist")
+    public ResponseEntity subscribeArtistList(@RequestHeader(value = "Authorization") final int token) {
+        return new ResponseEntity<>(subscribeService.subscribeList(token, "artist"), HttpStatus.OK);
+    }
+
     @PostMapping("artist")
-    public ResponseEntity subscribeArtist(@RequestHeader(value = "Authorization") final String token,
-                                       @RequestBody final String artistId) {
+    public ResponseEntity subscribeArtist(@RequestHeader(value = "Authorization") final int token,
+                                       @RequestBody final SubscribeReq subscribeReq) {
         try {
-            if (artistId.isEmpty()) {
+            if (subscribeReq.get_id().equals("")) {
                 return new ResponseEntity<>(DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.NOT_FOUND_ARTISTS), HttpStatus.OK);
             }
-            if (token.isEmpty()) {
+            if (token == -1) {
                 return new ResponseEntity<>(DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.NOT_FOUND_USER), HttpStatus.OK);
             }
-            return new ResponseEntity<>(subscribeService.subscribe(token, "artist", artistId), HttpStatus.OK);
+            return new ResponseEntity<>(subscribeService.subscribe(token, "artist", subscribeReq.get_id()), HttpStatus.OK);
         } catch (Exception e) {
             log.error(e.getMessage());
             return new ResponseEntity<>(DefaultRes.res(StatusCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR), HttpStatus.OK);
@@ -41,16 +47,16 @@ public class SubscribeController {
     }
 
     @PostMapping("event")
-    public ResponseEntity subscribeEvent(@RequestHeader(value = "Autorization") final String token,
-                                       @PathVariable final String eventId) {
+    public ResponseEntity subscribeEvent(@RequestHeader(value = "Authorization") final int token,
+                                         @RequestBody final SubscribeReq subscribeReq) {
         try {
-            if (eventId.isEmpty()) {
+            if (subscribeReq.get_id().equals("")) {
                 return new ResponseEntity<>(DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.NOT_FOUND_EVENT), HttpStatus.OK);
             }
-            if (token.isEmpty()) {
+            if (token == -1) {
                 return new ResponseEntity<>(DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.NOT_FOUND_USER), HttpStatus.OK);
             }
-            return new ResponseEntity<>(subscribeService.subscribe(token, "event", eventId), HttpStatus.OK);
+            return new ResponseEntity<>(subscribeService.subscribe(token, "event", subscribeReq.get_id()), HttpStatus.OK);
         } catch (Exception e) {
             log.error(e.getMessage());
             return new ResponseEntity<>(DefaultRes.res(StatusCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR), HttpStatus.OK);
@@ -58,16 +64,16 @@ public class SubscribeController {
     }
 
     @PostMapping("genre")
-    public ResponseEntity subscribeGenre(@RequestHeader(value = "Autorization") final String token,
-                                         @PathVariable final String genreId) {
+    public ResponseEntity subscribeGenre(@RequestHeader(value = "Authorization") final int token,
+                                         @RequestBody final SubscribeReq subscribeReq) {
         try {
-            if (genreId.isEmpty()) {
+            if (subscribeReq.get_id().equals("")) {
                 return new ResponseEntity<>(DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.NOT_FOUND_GENRE), HttpStatus.OK);
             }
-            if (token.isEmpty()) {
+            if (token == -1) {
                 return new ResponseEntity<>(DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.NOT_FOUND_USER), HttpStatus.OK);
             }
-            return new ResponseEntity<>(subscribeService.subscribe(token, "genre", genreId), HttpStatus.OK);
+            return new ResponseEntity<>(subscribeService.subscribe(token, "genre", subscribeReq.get_id()), HttpStatus.OK);
         } catch (Exception e) {
             log.error(e.getMessage());
             return new ResponseEntity<>(DefaultRes.res(StatusCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR), HttpStatus.OK);

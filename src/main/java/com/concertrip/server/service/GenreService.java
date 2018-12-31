@@ -60,7 +60,7 @@ public class GenreService {
     public DefaultRes subscribe(final String _id, final String token) {
         try {
             genreSubscribeMapper.subscribe(_id, token);
-            return DefaultRes.res(StatusCode.OK, ResponseMessage.SUBSCRIBE_EVENT);
+            return DefaultRes.res(StatusCode.OK, ResponseMessage.SUBSCRIBE);
         } catch (Exception e) {
             log.error(e.getMessage());
             return DefaultRes.res(StatusCode.DB_ERROR, ResponseMessage.DB_ERROR);
