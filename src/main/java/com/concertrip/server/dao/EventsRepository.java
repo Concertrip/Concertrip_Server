@@ -1,6 +1,7 @@
 package com.concertrip.server.dao;
 
 import com.concertrip.server.domain.Events;
+import com.concertrip.server.model.CommonListReq;
 import com.concertrip.server.model.DefaultReq;
 import com.concertrip.server.model.EventsDetailReq;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -26,7 +27,7 @@ public interface EventsRepository extends MongoRepository<Events, Integer> {
     @Query(value = "{ _id : ?0 } ")
     EventsDetailReq findEvent(String _id);
 
-    List<Events> findAllByFilterIn(String filter);
+    List<CommonListReq> findAllByFilterIn(String filter);
 
 }
 

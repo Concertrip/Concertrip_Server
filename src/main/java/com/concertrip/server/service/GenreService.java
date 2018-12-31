@@ -2,7 +2,6 @@ package com.concertrip.server.service;
 
 import com.concertrip.server.dao.EventsRepository;
 import com.concertrip.server.dao.GenreRepository;
-import com.concertrip.server.domain.Events;
 import com.concertrip.server.domain.Genre;
 import com.concertrip.server.mapper.GenreSubscribeMapper;
 import com.concertrip.server.model.CommonListReq;
@@ -76,11 +75,8 @@ public class GenreService {
             genreDetailReq.setYoutubeUrl(genre.getYoutubeUrl());
             genreDetailReq.setSubscribeNum(genreSubscribeMapper.getSubscribeNum("genre", genre.get_id()));
             genreDetailReq.setIsSubscribe(genreSubscribeMapper.checkSubscribe("genre", genre.get_id(), token) > 0);
-            List<Events> eventsList = eventsRepository.findAllByFilterIn("힙합");
-            log.info(eventsList.size() + " - events size");
-            for (Events e: eventsList) {
-                log.info(e.toString());
-            }
+            List<CommonListReq> eventsList = eventsRepository.findAllByFilterIn(genre.getCode());
+            genreDetailReq.setEventList(eventsList);
 
             return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_ARTISTS, genreDetailReq);
         } catch (Exception e) {

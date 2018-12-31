@@ -23,4 +23,6 @@ public class Genre {
     @NonNull
     private String name;
     private String youtubeUrl;
+    @NonNull
+    private String code;
 }
