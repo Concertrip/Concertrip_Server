@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("artists")
+@RequestMapping("api/artist")
 public class ArtistsController {
     private final ArtistsService artistsService;
 
@@ -24,13 +24,19 @@ public class ArtistsController {
         this.artistsService = artistsService;
     }
 
+//    @GetMapping("")
+//    public ResponseEntity getAllArtists() {
+//        return new ResponseEntity<>(artistsService.selectArtistAll(), HttpStatus.OK);
+//    }
+
     @GetMapping("")
-    public ResponseEntity getAllArtists() {
-        return new ResponseEntity<>(artistsService.selectArtistAll(), HttpStatus.OK);
+    public ResponseEntity getArtistInfo(@RequestParam(value = "name", defaultValue = "")final String name) {
+        if (name.equals("")) return new ResponseEntity(DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_ARTISTS), HttpStatus.OK);
+        return new ResponseEntity(artistsService.findArtistInfo(name), HttpStatus.OK);
     }
 
-    @GetMapping("/{artistsId}")
-    public ResponseEntity getArtistsById(@PathVariable(value = "artistsId") final String _id) {
+    @GetMapping("detail")
+    public ResponseEntity getArtistsById(@RequestParam(value = "_id", defaultValue = "") final String _id) {
         if (_id.equals("")) return new ResponseEntity(DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_ARTISTS), HttpStatus.OK);
         return new ResponseEntity(artistsService.findArtistById(_id), HttpStatus.OK);
     }
@@ -47,7 +53,7 @@ public class ArtistsController {
     }
 
     @DeleteMapping("")
-    public ResponseEntity deleteArtists(@RequestParam(value = "id", defaultValue = "") final String _id) {
+    public ResponseEntity deleteArtists(@RequestParam(value = "_id", defaultValue = "") final String _id) {
         if(_id.equals("")) return new ResponseEntity(DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.NOT_FOUND_ARTISTS), HttpStatus.OK);
         return new ResponseEntity<>(artistsService.deleteArtist(_id), HttpStatus.OK);
     }

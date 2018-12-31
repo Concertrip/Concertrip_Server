@@ -26,15 +26,27 @@ public class TicketController {
     }
 
     @GetMapping("")
-    public ResponseEntity getTicket(@RequestParam("eventId") final String eventId) {
+    public ResponseEntity getUserTicket(@RequestParam("userIdx") final int userIdx) {
         try{
-            if (eventId.isEmpty()) return new ResponseEntity<>(ticketService.getAllTicket(), HttpStatus.OK);
-            return new ResponseEntity<>(ticketService.findByeventId(eventId), HttpStatus.OK);
+            if (userIdx<1) return new ResponseEntity<>(ticketService.getAllTicket(), HttpStatus.OK);
+            return new ResponseEntity<>(ticketService.findByuserIdx(userIdx), HttpStatus.OK);
         } catch (Exception e) {
             log.error(e.getMessage());
             return new ResponseEntity<>(FAIL_DEFAULT_RES, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    /*@GetMapping("")
+    public ResponseEntity getUserTicket(@RequestParam("userId") final String userId) {
+        try{
+            if (userId.equals("")) return new ResponseEntity<>(ticketService.getAllTicket(), HttpStatus.OK);
+            return new ResponseEntity<>(ticketService.findUserIdxByToken(userId), HttpStatus.OK);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return new ResponseEntity<>(FAIL_DEFAULT_RES, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }*/
+
     @PostMapping("")
     public ResponseEntity saveTicket(@RequestBody final Ticket ticket) {
         try {

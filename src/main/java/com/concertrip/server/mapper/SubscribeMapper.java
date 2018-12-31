@@ -15,6 +15,9 @@ public interface SubscribeMapper {
     @Select("SELECT * FROM subscribe WHERE userIdx = #{userIdx}")
     List<Subscribe> getUserAllSubscribe(@Param("userIdx") final int userIdx);
 
+    @Select("SELECT * FROM subscribe WHERE userIdx = #{userIdx}")
+    List<Subscribe> findAllByUserIdx(@Param("userIdx") final Integer userIdx);
+
     @Select("SELECT * FROM subscribe WHERE userIdx = #{userIdx} AND type = #{type}")
     List<Subscribe> getUserSubscribe(@Param("userIdx") final int userIdx, @Param("type") final String type);
 

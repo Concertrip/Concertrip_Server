@@ -1,3 +1,4 @@
+
 package com.concertrip.server.api;
 
 import com.concertrip.server.model.DefaultRes;
@@ -10,10 +11,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 /**
  * Created hyunjk on 2018-12-29.
  * Github : https://github.com/hyunjkluz
  */
+
 @Slf4j
 @RestController
 @RequestMapping("api/subscribe")
@@ -80,3 +83,4 @@ public class SubscribeController {
         }
     }
 }
+

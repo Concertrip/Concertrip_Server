@@ -19,4 +19,6 @@ public interface GenreRepository extends MongoRepository<Genre, Integer> {
 
     @Query(value = "{ _id : ?0 } ", fields = "{ 'name' : 1, 'profileImg' : 1, 'filter' : 1 }")
     CommonListReq findGenreById(String _id);
+
+    Genre findGenreBy_idEquals(String _id);
 }

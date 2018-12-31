@@ -1,3 +1,4 @@
+
 package com.concertrip.server.service;
 
 import com.concertrip.server.dao.ArtistsRepository;
@@ -15,10 +16,12 @@ import org.springframework.stereotype.Service;
 import java.util.LinkedList;
 import java.util.List;
 
+
 /**
  * Created hyunjk on 2018-12-29.
  * Github : https://github.com/hyunjkluz
  */
+
 @Slf4j
 @Service
 public class SubscribeService {
@@ -34,6 +37,7 @@ public class SubscribeService {
         this.subscribeMapper = subscribeMapper;
     }
 
+
     /**
      * 구독하기 / 구독취소
      *
@@ -42,6 +46,7 @@ public class SubscribeService {
      * @param objIdx
      * @return
      */
+
     public DefaultRes subscribe(final int token, final String type, final String objIdx) {
         try {
             if (isSubscribe(token, type, objIdx)) {
@@ -56,6 +61,7 @@ public class SubscribeService {
         }
     }
 
+
     /**
      * 구독 여부 확인
      *
@@ -64,6 +70,7 @@ public class SubscribeService {
      * @param objIdx
      * @return
      */
+
     public boolean isSubscribe(final int token, final String type, final String objIdx) {
         try {
             log.info("isSub Mapper");
@@ -78,6 +85,7 @@ public class SubscribeService {
         }
     }
 
+
     /**
      * 구독자수 알려주기
      *
@@ -85,6 +93,7 @@ public class SubscribeService {
      * @param objIdx
      * @return
      */
+
     public int subscribeNum(final String type, final String objIdx) {
         try {
             return subscribeMapper.subscribeNum(type, objIdx).size();
@@ -127,3 +136,4 @@ public class SubscribeService {
 
 
 }
+

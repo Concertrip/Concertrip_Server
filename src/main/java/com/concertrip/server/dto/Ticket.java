@@ -11,13 +11,11 @@ import java.util.Date;
 @NotNull
 @Data
 public class Ticket {
-    private int ticketIdx;
-    private int serialNum;
-    private String seat;
-    private int barcodeNum;
-    private String title;
-    private Date date;
+    private int _id;
+    private String name;
     private String location;
-    private String eventId;
+    private Date date;
+    private String seat;
     private int userIdx;
+    private String eventId;
 }

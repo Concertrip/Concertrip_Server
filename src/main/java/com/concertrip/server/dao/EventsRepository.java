@@ -36,8 +36,11 @@ public interface EventsRepository extends MongoRepository<Events, String> {
     @Query(value = "{ _id : ?0 } ")
     EventsDetailReq findEvent(String _id);
 
-    @Query(value = "{ _id : ?0 } ", fields = "{ 'name' : 1, 'profileImg' : 1, 'filter' : 1 }")
+    @Query(value = "{ _id : ?0 } ", fields = "{ 'name' : 1, 'profileImg' : 1, 'filter' : 1 }"
     CommonListReq findEventList(String _id);
+
+    List<CommonListReq> findAllByFilterIn(String filter);
+
 }
 
 
