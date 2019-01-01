@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.util.ObjectUtils;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -68,6 +69,9 @@ public class EventsService {
     public DefaultRes findEventsById(final Integer token, final String _id) {
         try {
             EventsDetailReq eventsDetail = eventsRepository.findEventsDetailById(_id);
+            if (ObjectUtils.isEmpty(eventsDetail)) {
+                return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_EVENT);
+            }
             Events events = eventsRepository.findEventsBy_id(_id);
             String[] members = events.getMember();
             List<CommonListReq> memberList = new LinkedList<>();
