@@ -39,8 +39,12 @@ public class SubscribeService {
     }
 
 
-    public Boolean isSubscribe(final Integer userIdx, String type, String objIdx) {
+    public Boolean isSubscribe(final Integer userIdx, final String type, final String objIdx) {
         return subscribeMapper.isSubscribe(userIdx, type, objIdx) > 0;
+    }
+
+    public Integer subscribeNum(final String type, final String objIdx) {
+        return subscribeMapper.subscribeNum(type, objIdx);
     }
 
     /**

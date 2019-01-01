@@ -32,13 +32,15 @@ public class EventsService {
     private final ArtistsRepository artistsRepository;
     private final EventsRepository eventsRepository;
     private final PrecautionMapper precautionMapper;
+    private final SubscribeService subscribeService;
 
-    public EventsService(EventsDAL eventsDAL, ArtistsDAL artistsDAL, ArtistsRepository artistsRepository, EventsRepository eventsRepository, PrecautionMapper precautionMapper) {
+    public EventsService(EventsDAL eventsDAL, ArtistsDAL artistsDAL, ArtistsRepository artistsRepository, EventsRepository eventsRepository, PrecautionMapper precautionMapper, SubscribeService subscribeService) {
         this.eventsDAL = eventsDAL;
         this.artistsDAL = artistsDAL;
         this.artistsRepository = artistsRepository;
         this.eventsRepository = eventsRepository;
         this.precautionMapper = precautionMapper;
+        this.subscribeService = subscribeService;
     }
 
 
@@ -63,26 +65,27 @@ public class EventsService {
     }
 
     @Transactional
-    public DefaultRes findEventsById(String _id) {
+    public DefaultRes findEventsById(final Integer token, final String _id) {
         try {
-            EventsDetailReq eventsDetail = eventsRepository.findEvent(_id);
-            String[] member = eventsRepository.getMember(_id).getMember();
+            EventsDetailReq eventsDetail = eventsRepository.findEventsDetailById(_id);
+            Events events = eventsRepository.findEventsBy_id(_id);
+            String[] members = events.getMember();
             List<CommonListReq> memberList = new LinkedList<>();
 
-            for (int i = 0; i < member.length; i++) {
-                memberList.add(artistsRepository.getArtistInfo(member[i]));
+            for (String member : members) {
+                memberList.add(artistsRepository.getArtistInfo(member));
             }
             eventsDetail.setMemberList(memberList);
-            int[] precaution = eventsRepository.getPrecaution(_id).getPrecaution();
 
+            int[] precaution = events.getPrecaution();
             List<Precaution> precautions = new LinkedList<>();
-
             for(int code : precaution) {
-
                 precautions.add(precautionMapper.getPrecaution(code));
             }
-
             eventsDetail.setPrecautionList(precautions);
+
+            eventsDetail.setSubscribe(subscribeService.isSubscribe(token, "event", _id));
+            eventsDetail.setSubscribeNum(subscribeService.subscribeNum("event", _id));
 
             return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_EVENTS, eventsDetail);
         } catch (Exception e) {

@@ -33,12 +33,12 @@ public class EventsController {
         return new ResponseEntity<>(eventsService.selectAll(), HttpStatus.OK);
     }
 
-    //TODO
     @GetMapping("detail")
     public ResponseEntity getEventsById(
+            @RequestHeader(value = "Authorization") final Integer token,
             @RequestParam(value = "id", defaultValue = "") final String _id) {
         if (_id.equals("") ) return new ResponseEntity<>(DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_EVENT), HttpStatus.OK);
-        return new ResponseEntity<>(eventsService.findEventsById(_id), HttpStatus.OK);
+        return new ResponseEntity<>(eventsService.findEventsById(token, _id), HttpStatus.OK);
     }
 
     @PostMapping("")
