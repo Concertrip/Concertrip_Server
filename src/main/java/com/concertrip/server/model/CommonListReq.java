@@ -13,5 +13,5 @@ public class CommonListReq {
     private String _id;
     private String name;
     private String profileImg;
-    private boolean subscribe;
+    private boolean subscribe = false;
 }

@@ -17,7 +17,7 @@ import java.util.List;
 public class EventsDetailReq {
     @Id
     private String _id;
-    private boolean isSubscribe = false;
+    private boolean subscribe = false;
     private String profileImg;
     private String backImg;
     private String name;

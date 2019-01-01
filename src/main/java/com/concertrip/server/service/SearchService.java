@@ -48,7 +48,7 @@ public class SearchService {
             searchResult.setGenres(searchGenre(idx, tag));
 
             if (searchResult.getArtists().size() == 0 && searchResult.getEvents().size() == 0 && searchResult.getGenres().size() == 0)
-                return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_TAG);
+                return DefaultRes.res(StatusCode.NO_CONTENT, ResponseMessage.NO_CONTENT, searchResult);
 
             return DefaultRes.res(StatusCode.OK, ResponseMessage.SEARCH_SUCCESS, searchResult);
         } catch (Exception e) {
