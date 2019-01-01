@@ -4,6 +4,7 @@ package com.concertrip.server.service;
 import com.concertrip.server.dao.ArtistsRepository;
 import com.concertrip.server.dao.EventsRepository;
 import com.concertrip.server.dao.GenreRepository;
+import com.concertrip.server.domain.Artists;
 import com.concertrip.server.dto.Subscribe;
 import com.concertrip.server.mapper.SubscribeMapper;
 import com.concertrip.server.model.CommonListReq;
@@ -67,25 +68,23 @@ public class SubscribeService {
     public DefaultRes subscribeList(final int idx, final String type) {
         try {
             List<Subscribe> subIdList = subscribeMapper.getUserSubscribe(idx, type);
-            log.info("--------" + subIdList.size());
             List<CommonListReq> subList = new LinkedList<>();
 
             if (type.equals("artist")) {
-                log.info("artist here!!");
                 for (Subscribe s : subIdList) {
-                    CommonListReq cReq = artistsRepository.findArtistById(s.getId());
+                    CommonListReq cReq = artistsRepository.findArtistById(s.getObjIdx());
                     cReq.setSubscribe(true);
                     subList.add(cReq);
                 }
             } else if (type.equals("event")) {
                 for (Subscribe s : subIdList) {
-                    CommonListReq cReq = eventsRepository.findEventList(s.getId());
+                    CommonListReq cReq = eventsRepository.findEventList(s.getObjIdx());
                     cReq.setSubscribe(true);
                     subList.add(cReq);
                 }
             } else {
                 for (Subscribe s : subIdList) {
-                    CommonListReq cReq = genreRepository.findGenreById(s.getId());
+                    CommonListReq cReq = genreRepository.findGenreById(s.getObjIdx());
                     cReq.setSubscribe(true);
                     subList.add(cReq);
                 }

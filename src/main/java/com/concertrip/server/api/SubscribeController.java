@@ -27,10 +27,19 @@ public class SubscribeController {
         this.subscribeService = subscribeService;
     }
 
-    //TODO: 만드는중
     @GetMapping("artist")
     public ResponseEntity subscribeArtistList(@RequestHeader(value = "Authorization") final int token) {
         return new ResponseEntity<>(subscribeService.subscribeList(token, "artist"), HttpStatus.OK);
+    }
+
+    @GetMapping("event")
+    public ResponseEntity subscribeEventList(@RequestHeader(value = "Authorization") final int token) {
+        return new ResponseEntity<>(subscribeService.subscribeList(token, "event"), HttpStatus.OK);
+    }
+
+    @GetMapping("genre")
+    public ResponseEntity subscribeGenreList(@RequestHeader(value = "Authorization") final int token) {
+        return new ResponseEntity<>(subscribeService.subscribeList(token, "genre"), HttpStatus.OK);
     }
 
     @PostMapping("artist")

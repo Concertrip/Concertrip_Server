@@ -36,22 +36,21 @@ public class SearchService {
 
     public DefaultRes search(int idx, String tag) {
         try {
-            //이벤트에서 찾기
-            List<CommonListReq> eventsFilter = eventsRepository.findByFilter(tag);
-            setSubscribe(eventsFilter, "event", idx);
+            Search searchResult = new Search();
 
             //가수에서 찾기
-            List<CommonListReq> artistsFilter = artistsRepository.findByFilter(tag);
-            setSubscribe(eventsFilter, "artist", idx);
+            searchResult.setArtists(searchArtist(idx, tag));
+
+            //이벤트에서 찾기
+            searchResult.setEvents(searchEvent(idx, tag));
 
             //장르에서 찾기
-            List<CommonListReq> genresFilter = genreRepository.findByFilter(tag);
-            setSubscribe(eventsFilter, "genre", idx);
+            searchResult.setGenres(searchGenre(idx, tag));
 
-            if (eventsFilter.size() == 0 && artistsFilter.size() == 0 && genresFilter.size() == 0)
+            if (searchResult.getArtists().size() == 0 && searchResult.getEvents().size() == 0 && searchResult.getGenres().size() == 0)
                 return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_TAG);
 
-            return DefaultRes.res(StatusCode.OK, ResponseMessage.SEARCH_SUCCESS, new Search(artistsFilter, eventsFilter, genresFilter));
+            return DefaultRes.res(StatusCode.OK, ResponseMessage.SEARCH_SUCCESS, searchResult);
         } catch (Exception e) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             log.error(e.getMessage());
@@ -65,4 +64,31 @@ public class SearchService {
         }
 
     }
+
+    public List<CommonListReq> searchEvent(int idx, String tag) {
+        List<CommonListReq> eventsFilter = eventsRepository.findByFilter(tag);
+        setSubscribe(eventsFilter, "event",idx);
+
+        return eventsFilter;
+    }
+
+    public List<CommonListReq> searchArtist(int idx, String tag) {
+        List<CommonListReq> artistsFilter = artistsRepository.findByFilter(tag);
+        setSubscribe(artistsFilter, "artist", idx);
+
+        return artistsFilter;
+    }
+
+    public List<CommonListReq> searchGenre(int idx, String tag) {
+        List<CommonListReq> genresFilter = genreRepository.findByFilter(tag);
+        setSubscribe(genresFilter, "genre", idx);
+
+        return genresFilter;
+    }
+
+
+
+
+
+
 }
