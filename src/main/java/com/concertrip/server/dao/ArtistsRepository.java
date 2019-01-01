@@ -35,7 +35,6 @@ public interface ArtistsRepository extends MongoRepository<Artists, String> {
     @Query(value = "{ name : ?0 }", fields = "{ 'name' : 1, 'profileImg' : 1 }")
     CommonListReq getArtistInfo(String name);
 
-    @Query(value = "{ id : ?0 }", fields = "{ 'name' : 1, 'profileImg' : 1, 'filter' : 1 }")
+    @Query(value = "{ _id : ?0 }")
     CommonListReq findArtistById(String _id);
-
 }
