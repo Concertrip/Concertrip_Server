@@ -7,6 +7,7 @@ import com.concertrip.server.model.EventsDetailReq;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -24,8 +25,9 @@ public interface EventsRepository extends MongoRepository<Events, String> {
     @Query(value = "{ filter : { $regex : ?0 } }", fields = "{ 'name' : 1, 'profileImg' : 1, 'filter' : 1 }")
     List<CommonListReq> findByFilter(String tag);
 
-    @Query(value = "{ member : { $regex : ?0 } }", fields = "{ 'name' : 1, 'profileImg' : 1, 'filter' : 1 }")
-    List<CommonListReq> findByMember(String name);
+    @Query(value = "{ $and : [ { member : { $regex : ?0 } } , { date : { $elemMatch : { $gte :  ?1, $lte :  ?2} } } ] }",
+            fields = "{ 'name' : 1, 'profileImg' : 1, 'filter' : 1 }")
+    List<CommonListReq> findEventForCalendar(String name, Date startDate, Date endDate);
 
     @Query(value = "{ _id : ?0 }", fields = "{ 'precaution' : 1, 'id' : 0 }")
     DefaultReq getPrecaution(String _id);
@@ -40,6 +42,8 @@ public interface EventsRepository extends MongoRepository<Events, String> {
     CommonListReq findEventList(String _id);
 
     List<CommonListReq> findAllByFilterIn(String filter);
+
+
 
 }
 

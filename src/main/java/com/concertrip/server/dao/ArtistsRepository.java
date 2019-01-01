@@ -2,6 +2,7 @@ package com.concertrip.server.dao;
 
 import com.concertrip.server.domain.Artists;
 import com.concertrip.server.model.ArtistDetailReq;
+import com.concertrip.server.model.CalendarTabReq;
 import com.concertrip.server.model.CommonListReq;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
@@ -37,4 +38,7 @@ public interface ArtistsRepository extends MongoRepository<Artists, String> {
 
     @Query(value = "{ _id : ?0 }")
     CommonListReq findArtistById(String _id);
+
+    @Query(value = "{ _id : ?0 }")
+    CalendarTabReq findArtistsTabById(String _id);
 }
