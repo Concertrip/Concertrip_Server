@@ -30,31 +30,18 @@ public class TicketService {
         this.ticketMapper = ticketMapper;
         this.userMapper = userMapper;
     }
-    //모든 티켓 조회
-    public DefaultRes getAllTicket() {
-        final List<Ticket> ticketList = ticketMapper.findByDate();
-        if(ticketList.isEmpty()) return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_TICKETS);
-        return DefaultRes.res(StatusCode.OK,ResponseMessage.READ_TICKETS,ticketList);
-    }
 
-    //userIdx로 티켓 조회
+    //userIdx로 티켓 조회 사용하는중
     public DefaultRes findByuserIdx(final int userIdx){
         final List<Ticket> ticketList  = ticketMapper.findByUserIdx(userIdx);
         if(userIdx < 1 || ticketList == null) return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_TICKETS);
         return DefaultRes.res(StatusCode.OK,ResponseMessage.READ_TICKETS, ticketList);
     }
 
-    //token으로 티켓 조회
-    public DefaultRes findUserIdxByToken(final String userId){
-        final int userIdx = userMapper.findUserIdxByToken(userId);
+    //1개의 티켓 상세 조회
+    public DefaultRes findByEventId(final int userIdx, final String _id){
         final List<Ticket> ticketList  = ticketMapper.findByUserIdx(userIdx);
-        if(ticketList == null) return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_TICKETS);
-        return DefaultRes.res(StatusCode.OK,ResponseMessage.READ_TICKETS, ticketList);
-    }
-
-    //eventId로 티켓 조회
-    public DefaultRes findByeventId(final String eventId){
-        final Ticket ticket  = ticketMapper.findByEventId(eventId);
+        final Ticket ticket  = ticketMapper.findByEventId(_id);
         if(ticket == null) return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_TICKETS);
         return DefaultRes.res(StatusCode.OK,ResponseMessage.READ_TICKETS, ticket);
     }

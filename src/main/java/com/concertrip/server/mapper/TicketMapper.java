@@ -13,21 +13,14 @@ import java.util.List;
 
 @Mapper
 public interface TicketMapper {
-    //모든 티켓 조회
-    @Select("SELECT * FROM ticket")
-    List<Ticket> findAll();
 
     //회원으로 티켓조회 (token으로 가져와서)
-    @Select("SELECT * FROM ticket WHERE userIdx = #{userIdx}")
+    @Select("SELECT * FROM ticket WHERE userIdx = #{userIdx} ORDER BY date DESC")
     List<Ticket> findByUserIdx(@Param("userIdx") final int userIdx);
 
-    //티켓 이름으로 조회
-    @Select("SELECT * FROM ticket WHERE eventId = #{eventId}")
-    Ticket findByEventId(@Param("eventId") final String eventId);
-
-    // 티켓 시간순으로 가져오기
-    @Select("SELECT * FROM ticket ORDER BY date DESC")
-    List<Ticket> findByDate();
+    //티켓 _id로 조회
+    @Select("SELECT * FROM ticket WHERE _id = #{_id} ORDER BY date DESC")
+    Ticket findByEventId(@Param("_id") final String _id);
 
     //티켓 등록
     @Insert("INSERT INTO ticket(serialNum, seat, barcodeNum, title, date, location, eventId, userIdx)" +
