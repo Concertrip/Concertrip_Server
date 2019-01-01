@@ -22,12 +22,6 @@ public interface TicketMapper {
     @Select("SELECT * FROM ticket WHERE _id = #{_id} ORDER BY date DESC")
     Ticket findByEventId(@Param("_id") final String _id);
 
-    // 티켓 시간순으로 가져오기
-    @Select("SELECT * FROM ticket ORDER BY date DESC")
-    List<Ticket> findByDate();
-
-
-
     //티켓 등록
     @Insert("INSERT INTO ticket(serialNum, seat, barcodeNum, title, date, location, eventId, userIdx)" +
             "VALUES(#{ticket.serialNum}, #{ticket.seat}, #{ticket.barcodeNum}, #{ticket.title}, #{ticket.date}, #{ticket.location}, #{ticket.eventId}, #{ticket.userIdx})")
