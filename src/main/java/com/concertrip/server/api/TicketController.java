@@ -29,7 +29,7 @@ public class TicketController {
 
     //사용자가 가지고 있는 모든 티켓 조회  findByDate
     @GetMapping("")
-    public ResponseEntity getUserTicket(@RequestParam(value = "userIdx", defaultValue = "") final int userIdx) {
+    public ResponseEntity getUserTicket(@RequestHeader(value = "Authorization") final int userIdx) {
         try{
             return new ResponseEntity<>(ticketService.findByuserIdx(userIdx), HttpStatus.OK);
         } catch (Exception e) {
