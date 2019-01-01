@@ -15,7 +15,7 @@ import java.util.List;
 
 public interface ArtistsRepository extends MongoRepository<Artists, String> {
     //아티스트 상세페이지
-    @Query(value = "{ id : ?0 }")
+    @Query(value = "{ _id : ?0 }")
     ArtistDetailReq findArtistDetailById(String _id);
 
     Artists findArtistsBy_id(String _id);
