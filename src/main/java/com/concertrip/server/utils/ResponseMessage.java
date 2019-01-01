@@ -59,4 +59,6 @@ public class ResponseMessage {
     public static final String TEST_OK = "테스트 성공";
     public static final String TEST_FAIL = "테스트 실패";
 
+    public static final String NO_CONTENT = "데이터 없음";
+
 }

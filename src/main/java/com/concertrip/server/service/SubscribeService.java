@@ -13,6 +13,7 @@ import com.concertrip.server.utils.ResponseMessage;
 import com.concertrip.server.utils.StatusCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -39,8 +40,12 @@ public class SubscribeService {
     }
 
 
-    public Boolean isSubscribe(final Integer userIdx, String type, String objIdx) {
+    public Boolean isSubscribe(final Integer userIdx, final String type, final String objIdx) {
         return subscribeMapper.isSubscribe(userIdx, type, objIdx) > 0;
+    }
+
+    public Integer subscribeNum(final String type, final String objIdx) {
+        return subscribeMapper.subscribeNum(type, objIdx);
     }
 
     /**
@@ -71,26 +76,40 @@ public class SubscribeService {
             List<CommonListReq> subList = new LinkedList<>();
 
             if (type.equals("artist")) {
+                log.info(subIdList.toString());
                 for (Subscribe s : subIdList) {
                     CommonListReq cReq = artistsRepository.findArtistById(s.getObjIdx());
+                    if (ObjectUtils.isEmpty(cReq)) {
+                        continue;
+                    }
                     cReq.setSubscribe(true);
                     subList.add(cReq);
                 }
             } else if (type.equals("event")) {
                 for (Subscribe s : subIdList) {
                     CommonListReq cReq = eventsRepository.findEventList(s.getObjIdx());
+                    if (ObjectUtils.isEmpty(cReq)) {
+                        continue;
+                    }
                     cReq.setSubscribe(true);
                     subList.add(cReq);
                 }
             } else {
                 for (Subscribe s : subIdList) {
                     CommonListReq cReq = genreRepository.findGenreById(s.getObjIdx());
+                    if (ObjectUtils.isEmpty(cReq)) {
+                        continue;
+                    }
                     cReq.setSubscribe(true);
                     subList.add(cReq);
                 }
             }
+            if (subList.size() == 0) {
+                return DefaultRes.res(StatusCode.NO_CONTENT, ResponseMessage.NO_CONTENT, subList);
+            }
             return DefaultRes.res(StatusCode.OK, ResponseMessage.SEARCH_SUCCESS, subList);
         } catch (Exception e) {
+            log.error(e.getMessage());
             return DefaultRes.res(StatusCode.DB_ERROR, ResponseMessage.DB_ERROR);
         }
     }
