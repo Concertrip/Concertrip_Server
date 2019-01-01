@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 import static com.concertrip.server.model.DefaultRes.FAIL_DEFAULT_RES;
@@ -27,19 +28,10 @@ public class TicketController {
     }
 
     //사용자가 가지고 있는 모든 티켓 조회  findByDate
-    /*@GetMapping("")
+    @GetMapping("")
     public ResponseEntity getUserTicket(@RequestParam(value = "userIdx", defaultValue = "") final int userIdx) {
         try{
             return new ResponseEntity<>(ticketService.findByuserIdx(userIdx), HttpStatus.OK);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            return new ResponseEntity<>(FAIL_DEFAULT_RES, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }*/
-    @GetMapping("")
-    public ResponseEntity getUserTicket() {
-        try{
-            return new ResponseEntity<>(ticketService.getAllTicket(), HttpStatus.OK);
         } catch (Exception e) {
             log.error(e.getMessage());
             return new ResponseEntity<>(FAIL_DEFAULT_RES, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -48,10 +40,10 @@ public class TicketController {
 
     //티켓 상세보기
     @GetMapping("detail")
-    public ResponseEntity getUserTicketDetail(@RequestParam(value = "userIdx") final int userIdx) {
+    public ResponseEntity getUserTicketDetail(@RequestHeader(value = "Authorization") final int userIdx,
+                                              @RequestParam(value = "id", defaultValue = "") final String _id) {
         try{
-            //if (userIdx<1) return new ResponseEntity<>(ticketService.getAllTicket(), HttpStatus.OK);
-            return new ResponseEntity<>(ticketService.findByuserIdx(userIdx), HttpStatus.OK);
+            return new ResponseEntity<>(ticketService.findByEventId(userIdx, _id), HttpStatus.OK);
         } catch (Exception e) {
             log.error(e.getMessage());
             return new ResponseEntity<>(FAIL_DEFAULT_RES, HttpStatus.INTERNAL_SERVER_ERROR);
