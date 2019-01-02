@@ -12,6 +12,7 @@ import com.concertrip.server.utils.StatusCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 
@@ -36,6 +37,9 @@ public class SearchService {
 
     public DefaultRes search(int idx, String tag) {
         try {
+            if (ObjectUtils.isEmpty(idx)) {
+                return DefaultRes.res(401, ResponseMessage.EMPTY_TOKEN);
+            }
             Search searchResult = new Search();
 
             //가수에서 찾기

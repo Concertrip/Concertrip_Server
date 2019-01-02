@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.util.ObjectUtils;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -33,6 +34,9 @@ public class TicketService {
 
     //userIdx로 티켓 조회 사용하는중
     public DefaultRes findByuserIdx(final int userIdx){
+        if (ObjectUtils.isEmpty(userIdx)) {
+            return DefaultRes.res(401, ResponseMessage.EMPTY_TOKEN);
+        }
         final List<Ticket> ticketList  = ticketMapper.findByUserIdx(userIdx);
         if(userIdx < 1 || ticketList == null) return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_TICKETS);
         return DefaultRes.res(StatusCode.OK,ResponseMessage.READ_TICKETS, ticketList);
@@ -40,6 +44,9 @@ public class TicketService {
 
     //1개의 티켓 상세 조회
     public DefaultRes findByEventId(final int userIdx, final String _id){
+        if (ObjectUtils.isEmpty(userIdx)) {
+            return DefaultRes.res(401, ResponseMessage.EMPTY_TOKEN);
+        }
         final List<Ticket> ticketList  = ticketMapper.findByUserIdx(userIdx);
         final Ticket ticket  = ticketMapper.findByEventId(_id);
         if(ticket == null) return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_TICKETS);
@@ -59,6 +66,9 @@ public class TicketService {
     }
     //티켓 삭제
     public DefaultRes deleteByuserIdx(final int userIdx) {
+        if (ObjectUtils.isEmpty(userIdx)) {
+            return DefaultRes.res(401, ResponseMessage.EMPTY_TOKEN);
+        }
         final List<Ticket> ticketList = ticketMapper.findByUserIdx(userIdx);
         if (ticketList == null) return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_TICKETS);
         try {

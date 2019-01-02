@@ -39,8 +39,11 @@ public class ArtistsService {
      * 할일 : 아티스트repo에서 다가오는 콘서트 추가해줘야함
      */
     @Transactional
-    public DefaultRes findArtistById(String id) {
+    public DefaultRes findArtistById(String id, final Integer token) {
         try {
+            if (ObjectUtils.isEmpty(token)) {
+                return DefaultRes.res(401, ResponseMessage.EMPTY_TOKEN);
+            }
             ArtistDetailReq artistDetailReq = artistsRepository.findArtistDetailById(id);
             if(ObjectUtils.isEmpty(artistDetailReq)) {
                 return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_ARTISTS);

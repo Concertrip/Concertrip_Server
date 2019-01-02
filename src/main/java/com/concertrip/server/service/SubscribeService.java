@@ -58,6 +58,9 @@ public class SubscribeService {
      */
     public DefaultRes subscribe(final int token, final String type, final String objIdx) {
         try {
+            if (ObjectUtils.isEmpty(token)) {
+                return DefaultRes.res(401, ResponseMessage.EMPTY_TOKEN);
+            }
             if (isSubscribe(token, type, objIdx)) {
                 subscribeMapper.unSubscribe(token, type, objIdx);
                 return DefaultRes.res(StatusCode.OK, ResponseMessage.UNSUBSCRIBE);
@@ -72,6 +75,9 @@ public class SubscribeService {
 
     public DefaultRes subscribeList(final int idx, final String type) {
         try {
+            if (ObjectUtils.isEmpty(idx)) {
+                return DefaultRes.res(401, ResponseMessage.EMPTY_TOKEN);
+            }
             List<Subscribe> subIdList = subscribeMapper.getUserSubscribe(idx, type);
             List<CommonListReq> subList = new LinkedList<>();
 

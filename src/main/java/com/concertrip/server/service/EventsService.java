@@ -68,6 +68,9 @@ public class EventsService {
     @Transactional
     public DefaultRes findEventsById(final Integer token, final String _id) {
         try {
+            if (ObjectUtils.isEmpty(token)) {
+                return DefaultRes.res(401, ResponseMessage.EMPTY_TOKEN);
+            }
             EventsDetailReq eventsDetail = eventsRepository.findEventsDetailById(_id);
             if (ObjectUtils.isEmpty(eventsDetail)) {
                 return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_EVENT);

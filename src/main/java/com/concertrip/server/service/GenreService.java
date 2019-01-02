@@ -69,6 +69,9 @@ public class GenreService {
 
     public DefaultRes findById(final String _id, final Integer token) {
         try {
+            if (ObjectUtils.isEmpty(token)) {
+                return DefaultRes.res(401, ResponseMessage.EMPTY_TOKEN);
+            }
             GenreDetailReq genreDetailReq = new GenreDetailReq();
             Genre genre = genreRepository.findBy_idEquals(_id);
             if (ObjectUtils.isEmpty(genre)) {

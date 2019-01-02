@@ -26,9 +26,11 @@ public class ArtistsController {
 
     //TODO: 다가오는 이벤트 리스트 추가
     @GetMapping("detail")
-    public ResponseEntity getArtistsById(@RequestParam(value = "id", defaultValue = "") final String _id) {
+    public ResponseEntity getArtistsById(
+            @RequestHeader(value = "Authorization") final Integer token,
+            @RequestParam(value = "id", defaultValue = "") final String _id) {
         if (_id.equals("")) return new ResponseEntity<>(DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_ARTISTS), HttpStatus.OK);
-        return new ResponseEntity<>(artistsService.findArtistById(_id), HttpStatus.OK);
+        return new ResponseEntity<>(artistsService.findArtistById(_id, token), HttpStatus.OK);
     }
 
     @PostMapping("")
