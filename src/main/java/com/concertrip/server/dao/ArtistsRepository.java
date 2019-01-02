@@ -27,7 +27,7 @@ public interface ArtistsRepository extends MongoRepository<Artists, String> {
 
     List<Artists> findAll();
 
-    @Query(value = "{ filter : { $regex : ?0 } }", fields = "{ 'name' : 1, 'profileImg' : 1, 'filter' : 1 }")
+    @Query(value = "{ filter : { $regex : ?0, $options : 'i' } }", fields = "{ 'name' : 1, 'profileImg' : 1, 'filter' : 1 }")
     List<CommonListReq> findByFilter(String tag);
 
     @Query(value = "{ name : ?0 }", fields = "{ 'name' : 1, 'profileImg' : 1}")

@@ -23,7 +23,7 @@ public interface EventsRepository extends MongoRepository<Events, String> {
     @Query(value = "{ name : ?0 }", fields = "{ 'name' : 1, 'profileImg' : 1, 'filter' : 1 }")
     List<CommonListReq> findByName(String name);
 
-    @Query(value = "{ filter : { $regex : ?0 } }", fields = "{ 'name' : 1, 'profileImg' : 1, 'filter' : 1 }")
+    @Query(value = "{ filter : { $regex : ?0 }, $options : 'i' }", fields = "{ 'name' : 1, 'profileImg' : 1, 'filter' : 1 }")
     List<CommonListReq> findByFilter(String tag);
 
     @Query(value = "{ $and : [ { _id : ?0 } , { date : { $elemMatch : { $gte :  ?1, $lte :  ?2} } } ] }",
