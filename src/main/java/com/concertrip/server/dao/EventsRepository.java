@@ -1,6 +1,7 @@
 package com.concertrip.server.dao;
 
 import com.concertrip.server.domain.Events;
+import com.concertrip.server.model.CalendarReq;
 import com.concertrip.server.model.CommonListReq;
 import com.concertrip.server.model.DefaultReq;
 import com.concertrip.server.model.EventsDetailReq;
@@ -25,9 +26,17 @@ public interface EventsRepository extends MongoRepository<Events, String> {
     @Query(value = "{ filter : { $regex : ?0 } }", fields = "{ 'name' : 1, 'profileImg' : 1, 'filter' : 1 }")
     List<CommonListReq> findByFilter(String tag);
 
+    @Query(value = "{ $and : [ { _id : ?0 } , { date : { $elemMatch : { $gte :  ?1, $lte :  ?2} } } ] }",
+            fields = "{ 'name' : 1, 'profileImg' : 1, 'date' : 1 }")
+    CalendarReq findEventForEventCalendar(String id, Date startDate, Date endDate);
+
     @Query(value = "{ $and : [ { member : { $regex : ?0 } } , { date : { $elemMatch : { $gte :  ?1, $lte :  ?2} } } ] }",
-            fields = "{ 'name' : 1, 'profileImg' : 1, 'filter' : 1 }")
-    List<CommonListReq> findEventForCalendar(String name, Date startDate, Date endDate);
+            fields = "{ 'name' : 1, 'profileImg' : 1, 'date' : 1 }")
+    List<CalendarReq> findEventForArtistCalendar(String name, Date startDate, Date endDate);
+
+    @Query(value = "{ $and : [ { filter : { $regex : ?0 } } , { date : { $elemMatch : { $gte :  ?1, $lte :  ?2} } } ] }",
+            fields = "{ 'name' : 1, 'profileImg' : 1, 'date' : 1 }")
+    List<CalendarReq> findEventForGenreCalendar(String name, Date startDate, Date endDate);
 
     @Query(value = "{ _id : ?0 }", fields = "{ 'precaution' : 1, 'id' : 0 }")
     DefaultReq getPrecaution(String _id);
