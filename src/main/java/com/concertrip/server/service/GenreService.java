@@ -86,7 +86,7 @@ public class GenreService {
             genreDetailReq.setBackImg(genre.getBackImg());
             genreDetailReq.setYoutubeUrl(genre.getYoutubeUrl());
             genreDetailReq.setSubscribeNum(subscribeService.subscribeNum("genre", _id));
-            genreDetailReq.setIsSubscribe(subscribeService.isSubscribe(token, "genre", _id));
+            genreDetailReq.setSubscribe(subscribeService.isSubscribe(token, "genre", _id));
             List<CommonListReq> eventsList = searchService.searchEvent(token, genre.getCode());
             genreDetailReq.setEventList(eventsList);
 
