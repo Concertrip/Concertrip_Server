@@ -44,7 +44,7 @@ public class CalendarController {
                                           @RequestParam(value = "id", defaultValue = "") final String id,
                                           @RequestParam(value = "year") final Integer year,
                                           @RequestParam(value = "month") final Integer month) {
-        if (token.equals("") || type.equals("") || id.equals("") || year == null || month == null) {
+        if (token.equals("") || type.equals("") || year == null || month == null) {
             return new ResponseEntity<>(DefaultRes.res(StatusCode.UNAUTHORIZED, ResponseMessage.EMPTY_TOKEN), HttpStatus.OK);
         } else {
             if (type.equals("all")) {
@@ -76,7 +76,7 @@ public class CalendarController {
                                           @RequestParam(value = "year") final Integer year,
                                           @RequestParam(value = "month") final Integer month,
                                           @RequestParam(value = "day") final Integer day) {
-        if (token.equals("") || type.equals("") || id.equals("") || year == null || month == null || day == null) {
+        if (token.equals("") || type.equals("") || year == null || month == null || day == null) {
             return new ResponseEntity<>(DefaultRes.res(StatusCode.UNAUTHORIZED, ResponseMessage.EMPTY_TOKEN), HttpStatus.OK);
         } else {
             if (type.equals("all")) {
