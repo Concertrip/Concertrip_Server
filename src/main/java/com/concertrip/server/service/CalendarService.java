@@ -95,13 +95,16 @@ public class CalendarService {
 
             //구독한 이벤트 불러오기
             List<Subscribe> subscribeList = subscribeMapper.getUserAllSubscribe(userIdx);
+            log.info("size ------------ " + subscribeList.size());
             List<CalendarReq> allCalendar = new LinkedList<>();
             CalendarReq calendarReq = new CalendarReq();
 
 
             for (Subscribe s : subscribeList) {
+                log.info(s.getType());
                 if (s.getType().equals("event")) {
                     calendarReq = eventsRepository.findEventForEventCalendar(s.getObjIdx(), standardDate[0], standardDate[1]);
+                    if (calendarReq == null)    continue;
                     calendarReq.setSubscribe(subscribeService.isSubscribe(userIdx, "event", calendarReq.get_id()));
                     allCalendar.add(calendarReq);
                 } else if (s.getType().equals("artist")) {
@@ -109,6 +112,7 @@ public class CalendarService {
                     List<CalendarReq> artistCalendar  = eventsRepository.findEventForArtistCalendar(artists.getName(), standardDate[0], standardDate[1]);
 
                     for (CalendarReq cReq : artistCalendar) {
+                        if (calendarReq == null)    continue;
                         cReq.setSubscribe(subscribeService.isSubscribe(userIdx, "event", cReq.get_id()));
                         allCalendar.add(cReq);
                     }
@@ -118,6 +122,7 @@ public class CalendarService {
                     List<CalendarReq> genreCalendar = eventsRepository.findEventForGenreCalendar(genre.getCode(), standardDate[0], standardDate[1]);
 
                     for (CalendarReq cReq : genreCalendar) {
+                        if (calendarReq == null)    continue;
                         cReq.setSubscribe(subscribeService.isSubscribe(userIdx, "evnet", cReq.get_id()));
                         allCalendar.add(cReq);
                     }
@@ -157,6 +162,7 @@ public class CalendarService {
             }
 
             for (CalendarReq cReq : eventCalendar) {
+                if (cReq == null)    continue;
                 cReq.setSubscribe(subscribeService.isSubscribe(userIdx, "event", cReq.get_id()));
             }
 
@@ -183,6 +189,7 @@ public class CalendarService {
 
 
             for (CalendarReq cReq : artistCalendar) {
+                if (cReq == null)    continue;
                 log.info(cReq.getName());
                 cReq.setSubscribe(subscribeService.isSubscribe(userIdx, "event", cReq.get_id()));
             }
@@ -209,6 +216,7 @@ public class CalendarService {
             List<CalendarReq> genreCalendar = eventsRepository.findEventForGenreCalendar(genre.getCode(), standardDate[0], standardDate[1]);
 
             for (CalendarReq cReq : genreCalendar) {
+                if (cReq == null)    continue;
                 cReq.setSubscribe(subscribeService.isSubscribe(userIdx, "event", cReq.get_id()));
             }
 
