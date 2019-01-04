@@ -14,7 +14,7 @@ public interface GenreRepository extends MongoRepository<Genre, String> {
 
     Genre findBy_idEquals(String _id);
 
-    @Query(value = "{ filter : { $regex : ?0 }, $options : 'i' }", fields = "{ 'name' : 1, 'profileImg' : 1 }")
+    @Query(value = "{ filter : { $regex : ?0 } }", fields = "{ 'name' : 1, 'profileImg' : 1 }")
     List<CommonListReq> findByFilter(String name);
 
     @Query(value = "{ _id : ?0 } ", fields = "{ 'name' : 1, 'profileImg' : 1, 'filter' : 1 }")
