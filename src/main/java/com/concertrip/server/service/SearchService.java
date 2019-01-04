@@ -69,6 +69,12 @@ public class SearchService {
 
     }
 
+    public void setGroup(List<CommonListReq> filterList) {
+        for (CommonListReq commonListReq : filterList) {
+            commonListReq.setGroup(artistsRepository.findArtistsBy_id(commonListReq.get_id()).getMember().length != 0);
+        }
+    }
+
     public List<CommonListReq> searchEvent(int idx, String tag) {
         List<CommonListReq> eventsFilter = eventsRepository.findByFilter(tag);
         setSubscribe(eventsFilter, "event",idx);
@@ -79,6 +85,7 @@ public class SearchService {
     public List<CommonListReq> searchArtist(int idx, String tag) {
         List<CommonListReq> artistsFilter = artistsRepository.findByFilter(tag);
         setSubscribe(artistsFilter, "artist", idx);
+        setGroup(artistsFilter);
 
         return artistsFilter;
     }

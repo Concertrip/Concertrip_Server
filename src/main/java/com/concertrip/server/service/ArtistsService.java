@@ -59,7 +59,6 @@ public class ArtistsService {
             for (String member:members) {
                 commonListReqList.add(artistsRepository.findArtistsByName(member));
             }
-            artistDetailReq.setMemberList(commonListReqList);
 
             String name = artists.getName();
             artistDetailReq.setEventsList(searchService.searchEvent(token, name));

@@ -14,4 +14,6 @@ public class CommonListReq {
     private String name;
     private String profileImg;
     private boolean subscribe = false;
+    private String[] tag;
+    private Boolean group = false;
 }
