@@ -47,6 +47,16 @@ public class CalendarService {
         try {
             List<Subscribe> subscribeList = subscribeMapper.getUserAllSubscribe(userIdx);
             List<CalendarTabReq> calendarTabReqList = new ArrayList<>();
+            CalendarTabReq all = new CalendarTabReq();
+            all.set_id("all");
+            all.setType("all");
+            all.setName("모두");
+            calendarTabReqList.add(all);
+            CalendarTabReq mvp = new CalendarTabReq();
+            mvp.set_id("mvp");
+            mvp.setType("mvp");
+            mvp.setName("내 공연");
+            calendarTabReqList.add(mvp);
             for (Subscribe subscribe : subscribeList) {
                 String type = subscribe.getType();
                 if (type.equals("genre")) {
@@ -54,18 +64,20 @@ public class CalendarService {
                     String id = subscribe.getObjIdx();
                     calendarTabReq.set_id(id);
                     calendarTabReq.setType(type);
-                    calendarTabReq.setName(genreRepository.findGenreBy_idEquals(id).getCode());
+                    String code = genreRepository.findGenreBy_idEquals(id).getCode();
+                    calendarTabReq.setName(code);
                     calendarTabReqList.add(calendarTabReq);
                 } else if (type.equals("artist")) {
                     CalendarTabReq calendarTabReq = new CalendarTabReq();
                     String id = subscribe.getObjIdx();
                     calendarTabReq.set_id(id);
                     calendarTabReq.setType(type);
-                    calendarTabReq.setName(artistsRepository.findArtistDetailById(id).getName());
+                    String name = artistsRepository.findArtistDetailById(id).getName();
+                    calendarTabReq.setName(name);
                     calendarTabReqList.add(calendarTabReq);
                 }
             }
-            return DefaultRes.res(StatusCode.OK, ResponseMessage.TEST_OK, calendarTabReqList);
+            return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_SUCCESS, calendarTabReqList);
         } catch (Exception e) {
             log.error(e.getMessage());
             return DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.TEST_FAIL);

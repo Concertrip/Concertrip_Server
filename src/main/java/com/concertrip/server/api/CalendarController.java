@@ -31,9 +31,6 @@ public class CalendarController {
             if (token == null) {
                 return new ResponseEntity<>(DefaultRes.res(StatusCode.UNAUTHORIZED, ResponseMessage.EMPTY_TOKEN), HttpStatus.OK);
             }
-            if (token == null) {
-                return new ResponseEntity<>(DefaultRes.res(StatusCode.UNAUTHORIZED, ResponseMessage.INVALID_TOKEN), HttpStatus.OK);
-            }
             return new ResponseEntity<>(calendarService.getCalendarTab(token), HttpStatus.OK);
         } catch (Exception e) {
             log.error(e.getMessage());

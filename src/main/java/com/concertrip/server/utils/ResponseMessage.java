@@ -63,4 +63,5 @@ public class ResponseMessage {
     public static final String NO_CONTENT = "데이터 없음";
     public static final String NULL_VALUE = "필요한 값 없음";
 
+    public static final String READ_SUCCESS = "조회 성공";
 }
