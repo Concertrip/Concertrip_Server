@@ -14,6 +14,7 @@ import com.concertrip.server.utils.ResponseMessage;
 import com.concertrip.server.utils.StatusCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -158,11 +159,17 @@ public class CalendarService {
             List<CalendarReq> eventCalendar = new LinkedList<>();
 
             for (Subscribe s : eventSubscribeList) {
-                eventCalendar.add(eventsRepository.findEventForEventCalendar(s.getObjIdx(), standardDate[0], standardDate[1]));
+                CalendarReq calendarReq = eventsRepository.findEventForEventCalendar(s.getObjIdx(), standardDate[0], standardDate[1]);
+                if (ObjectUtils.isEmpty(calendarReq)) {
+                    continue;
+                }
+                eventCalendar.add(calendarReq);
             }
 
             for (CalendarReq cReq : eventCalendar) {
-                if (cReq == null)    continue;
+                if (cReq == null) {
+                    continue;
+                }
                 cReq.setSubscribe(subscribeService.isSubscribe(userIdx, "event", cReq.get_id()));
             }
 
