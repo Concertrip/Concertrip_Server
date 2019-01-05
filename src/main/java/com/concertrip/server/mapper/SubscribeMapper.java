@@ -23,6 +23,10 @@ public interface SubscribeMapper {
     @Select("SELECT COUNT(id) FROM subscribe WHERE userIdx = #{userIdx} AND type = #{type} AND objIdx = #{objIdx}")
     Integer isSubscribe(@Param("userIdx") final int userIdx, @Param("type") final String type, @Param("objIdx") final String objIdx);
 
+    //푸시알림 구현하기 위해서
+    @Select("SELECT * FROM subscribe WHERE type = #{type} AND objIdx = #{objIdx}")
+    List<Subscribe> getSubscribeTypeObj(@Param("type") final String type, @Param("objIdx") final String objIdx);
+
     @Insert("INSERT INTO subscribe(userIdx, type, objIdx) VALUES (#{userIdx}, #{type}, #{objIdx})")
     void subscribe(@Param("userIdx") final int userIdx, @Param("type") final String type, @Param("objIdx") final String objIdx);
 

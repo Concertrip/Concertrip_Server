@@ -19,7 +19,7 @@ public class DefaultRes<T> {
         this.status = status;
         this.message = message;
         this.data = null;
-    }
+}
 
     public static<T> DefaultRes<T> res(final int status, final String message) {
         return res(status, message, null);
