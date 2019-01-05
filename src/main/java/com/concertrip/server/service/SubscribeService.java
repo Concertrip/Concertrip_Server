@@ -4,16 +4,12 @@ package com.concertrip.server.service;
 import com.concertrip.server.dao.ArtistsRepository;
 import com.concertrip.server.dao.EventsRepository;
 import com.concertrip.server.dao.GenreRepository;
-<<<<<<< HEAD
-=======
 import com.concertrip.server.domain.Artists;
 import com.concertrip.server.domain.Events;
 import com.concertrip.server.domain.Genre;
->>>>>>> 05692288013c2a81a4826f8b07eca129cb4c5e16
 import com.concertrip.server.dto.Subscribe;
 import com.concertrip.server.fcm.FcmService;
 import com.concertrip.server.mapper.SubscribeMapper;
-import com.concertrip.server.mapper.UserMapper;
 import com.concertrip.server.model.CommonListReq;
 import com.concertrip.server.model.DefaultRes;
 import com.concertrip.server.utils.ResponseMessage;
@@ -136,7 +132,6 @@ public class SubscribeService {
         }
     }
 
-<<<<<<< HEAD
     //푸시알림
     public DefaultRes pushList(final String type, final String objIdx) {
         try {
@@ -155,7 +150,6 @@ public class SubscribeService {
         }
     }
 
-=======
     /**
      * 구돌하려는 아이디가 해당 타입의 컬렉션이 실제하는 아이디인지 확인
      *
@@ -185,8 +179,6 @@ public class SubscribeService {
                 break;
         }
         return false;
->>>>>>> 05692288013c2a81a4826f8b07eca129cb4c5e16
-
     }
 }
 
