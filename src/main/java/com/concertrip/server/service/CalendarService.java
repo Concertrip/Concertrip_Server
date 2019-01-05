@@ -101,14 +101,15 @@ public class CalendarService {
 
 
             for (Subscribe s : subscribeList) {
+                log.info("--------------" + s.getType());
                 if (s.getType().equals("event")) {
                     calendarReq = eventsRepository.findEventForEventCalendar(s.getObjIdx(), standardDate[0], standardDate[1]);
-                    log.info(calendarReq.getName());
-                    calendarReq.setTabId("mvp");
+
 
                     if (calendarReq == null) {
                         continue;
                     }
+                    calendarReq.setTabId("mvp");
                     calendarReq.setSubscribe(subscribeService.isSubscribe(userIdx, "event", calendarReq.get_id()));
                     allCalendar.add(calendarReq);
                 } else if (s.getType().equals("artist")) {
