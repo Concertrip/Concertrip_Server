@@ -27,3 +27,7 @@
 ### Security Information ###
 *.properties
 *.pem
+
+
+### Scripts ###
+scripts/*

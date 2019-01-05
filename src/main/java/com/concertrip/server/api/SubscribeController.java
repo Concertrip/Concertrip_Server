@@ -4,6 +4,7 @@ package com.concertrip.server.api;
 import com.concertrip.server.model.DefaultRes;
 import com.concertrip.server.model.SubscribeReq;
 import com.concertrip.server.service.SubscribeService;
+import com.concertrip.server.service.UserService;
 import com.concertrip.server.utils.ResponseMessage;
 import com.concertrip.server.utils.StatusCode;
 import lombok.extern.slf4j.Slf4j;
@@ -24,9 +25,11 @@ import static com.concertrip.server.model.DefaultRes.FAIL_DEFAULT_RES;
 @RequestMapping("api/subscribe")
 public class SubscribeController {
     private final SubscribeService subscribeService;
+    private final UserService userService;
 
-    public SubscribeController(SubscribeService subscribeService) {
+    public SubscribeController(SubscribeService subscribeService, UserService userService) {
         this.subscribeService = subscribeService;
+        this.userService = userService;
     }
 
     @GetMapping("artist")
@@ -51,7 +54,7 @@ public class SubscribeController {
             if (subscribeReq.getId().equals("")) {
                 return new ResponseEntity<>(DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.NOT_FOUND_ARTISTS), HttpStatus.OK);
             }
-            if (token == -1) {
+            if (!userService.isRealUser(token)) {
                 return new ResponseEntity<>(DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.NOT_FOUND_USER), HttpStatus.OK);
             }
             return new ResponseEntity<>(subscribeService.subscribe(token, "artist", subscribeReq.getId()), HttpStatus.OK);
@@ -68,7 +71,7 @@ public class SubscribeController {
             if (subscribeReq.getId().equals("")) {
                 return new ResponseEntity<>(DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.NOT_FOUND_EVENT), HttpStatus.OK);
             }
-            if (token == -1) {
+            if (!userService.isRealUser(token)) {
                 return new ResponseEntity<>(DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.NOT_FOUND_USER), HttpStatus.OK);
             }
             return new ResponseEntity<>(subscribeService.subscribe(token, "event", subscribeReq.getId()), HttpStatus.OK);
@@ -85,7 +88,7 @@ public class SubscribeController {
             if (subscribeReq.getId().equals("")) {
                 return new ResponseEntity<>(DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.NOT_FOUND_GENRE), HttpStatus.OK);
             }
-            if (token == -1) {
+            if (!userService.isRealUser(token)) {
                 return new ResponseEntity<>(DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.NOT_FOUND_USER), HttpStatus.OK);
             }
             return new ResponseEntity<>(subscribeService.subscribe(token, "genre", subscribeReq.getId()), HttpStatus.OK);

@@ -17,4 +17,9 @@ public interface UserMapper {
     @Update("UPDATE user SET fcmToken = #{fcmToken} WHERE userIdx = #{userIdx}")
     void updateToken(@Param("fcmToken") final String fcmToken, @Param("userIdx") final Integer userIdx);
 
+    @Select("SELECT * FROM user WHERE userIdx = #{token}")
+    User findUserByToken(@Param("token") final Integer token);
+
+
+
 }

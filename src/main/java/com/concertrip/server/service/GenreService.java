@@ -23,16 +23,19 @@ public class GenreService {
     private final EventsRepository eventsRepository;
     private final SubscribeMapper subscribeMapper;
     private final SubscribeService subscribeService;
+    private final SearchService searchService;
 
     public GenreService(
             GenreRepository genreRepository,
             EventsRepository eventsRepository,
             SubscribeMapper subscribeMapper,
-            SubscribeService subscribeService) {
+            SubscribeService subscribeService,
+            SearchService searchService) {
         this.genreRepository = genreRepository;
         this.eventsRepository = eventsRepository;
         this.subscribeMapper = subscribeMapper;
         this.subscribeService = subscribeService;
+        this.searchService = searchService;
     }
 
     public DefaultRes findAll() {
@@ -69,6 +72,9 @@ public class GenreService {
 
     public DefaultRes findById(final String _id, final Integer token) {
         try {
+            if (ObjectUtils.isEmpty(token)) {
+                return DefaultRes.res(401, ResponseMessage.EMPTY_TOKEN);
+            }
             GenreDetailReq genreDetailReq = new GenreDetailReq();
             Genre genre = genreRepository.findBy_idEquals(_id);
             if (ObjectUtils.isEmpty(genre)) {
@@ -79,11 +85,10 @@ public class GenreService {
             genreDetailReq.setProfileImg(genre.getProfileImg());
             genreDetailReq.setBackImg(genre.getBackImg());
             genreDetailReq.setYoutubeUrl(genre.getYoutubeUrl());
-            genreDetailReq.setSubscribeNum(subscribeMapper.subscribeNum("genre", _id));
-            genreDetailReq.setIsSubscribe(subscribeService.isSubscribe(token, "genre", _id));
-            List<CommonListReq> eventsList = eventsRepository.findAllByFilterIn(genre.getCode());
+            genreDetailReq.setSubscribeNum(subscribeService.subscribeNum("genre", _id));
+            genreDetailReq.setSubscribe(subscribeService.isSubscribe(token, "genre", _id));
+            List<CommonListReq> eventsList = searchService.searchEvent(token, genre.getCode());
             genreDetailReq.setEventList(eventsList);
-            genreDetailReq.setSubscribeNum(subscribeMapper.subscribeNum("genre", _id));
 
             return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_ARTISTS, genreDetailReq);
         } catch (Exception e) {

@@ -2,7 +2,6 @@ package com.concertrip.server.service;
 
 import com.concertrip.server.dal.ArtistsDAL;
 import com.concertrip.server.dao.ArtistsRepository;
-import com.concertrip.server.dao.EventsRepository;
 import com.concertrip.server.domain.Artists;
 import com.concertrip.server.model.*;
 import com.concertrip.server.utils.ResponseMessage;
@@ -25,13 +24,15 @@ import java.util.List;
 public class ArtistsService {
     private final ArtistsDAL artistsDAL;
     private final ArtistsRepository artistsRepository;
-    private final EventsRepository eventsRepository;
+    private final SearchService searchService;
+    private final SubscribeService subscribeService;
 
 
-    public ArtistsService(ArtistsDAL artistsDAL, ArtistsRepository artistsRepository, EventsRepository eventsRepository) {
+    public ArtistsService(ArtistsDAL artistsDAL, ArtistsRepository artistsRepository, SearchService searchService, SubscribeService subscribeService) {
         this.artistsDAL = artistsDAL;
         this.artistsRepository = artistsRepository;
-        this.eventsRepository = eventsRepository;
+        this.searchService = searchService;
+        this.subscribeService = subscribeService;
     }
 
     /**
@@ -39,12 +40,18 @@ public class ArtistsService {
      * 할일 : 아티스트repo에서 다가오는 콘서트 추가해줘야함
      */
     @Transactional
-    public DefaultRes findArtistById(String id) {
+    public DefaultRes findArtistById(String id, final Integer token) {
         try {
+            if (ObjectUtils.isEmpty(token)) {
+                return DefaultRes.res(401, ResponseMessage.EMPTY_TOKEN);
+            }
             ArtistDetailReq artistDetailReq = artistsRepository.findArtistDetailById(id);
             if(ObjectUtils.isEmpty(artistDetailReq)) {
                 return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_ARTISTS);
             }
+            artistDetailReq.setSubscribe(subscribeService.isSubscribe(token, "artist", id));
+            artistDetailReq.setSubscribeNum(subscribeService.subscribeNum("artist", id));
+
             Artists artists = artistsRepository.findArtistsBy_id(id);
             String[] members = artists.getMember();
             List<CommonListReq> commonListReqList = new ArrayList<>();
@@ -52,7 +59,10 @@ public class ArtistsService {
             for (String member:members) {
                 commonListReqList.add(artistsRepository.findArtistsByName(member));
             }
-            artistDetailReq.setMemberList(commonListReqList);
+
+            String name = artists.getName();
+            artistDetailReq.setEventsList(searchService.searchEvent(token, name));
+
             return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_ARTISTS, artistDetailReq);
         } catch (Exception e){
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();

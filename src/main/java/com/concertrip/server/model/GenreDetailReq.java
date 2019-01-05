@@ -10,7 +10,7 @@ public class GenreDetailReq {
     private String profileImg;
     private String backImg;
     private String name;
-    private Boolean isSubscribe;
+    private Boolean subscribe;
     private Integer subscribeNum;
     private String youtubeUrl;
     private List<CommonListReq> eventList;

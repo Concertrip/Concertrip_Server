@@ -1,7 +1,26 @@
 package com.concertrip.server.service;
 
+import com.concertrip.server.dao.ArtistsRepository;
+import com.concertrip.server.dao.EventsRepository;
+import com.concertrip.server.dao.GenreRepository;
+import com.concertrip.server.domain.Artists;
+import com.concertrip.server.domain.Genre;
+import com.concertrip.server.dto.Subscribe;
+import com.concertrip.server.mapper.SubscribeMapper;
+import com.concertrip.server.model.CalendarReq;
+import com.concertrip.server.model.CalendarTabReq;
+import com.concertrip.server.model.DefaultRes;
+import com.concertrip.server.utils.ResponseMessage;
+import com.concertrip.server.utils.StatusCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created hyunjk on 2018-12-27.
@@ -10,201 +29,247 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service("calendar")
 public class CalendarService {
-//    private final ArtistsDAL artistsDAL;
-//    private final ArtistsRepository artistsRepository;
-//    private final ArtistsSubscribeMapper artistsSubscribeMapper;
-//    private final EventsDAL eventsDAL;
-//    private final EventsSubscribeMapper eventsSubscribeMapper;
-//    private final SubscribeMapper subscribeMapper;
-//    private final GenreRepository genreRepository;
-//
-//    public CalendarService(
-//            ArtistsDAL artistsDAL,
-//            ArtistsRepository artistsRepository,
-//            ArtistsSubscribeMapper artistsSubscribeMapper,
-//            EventsDAL eventsDAL,
-//            EventsSubscribeMapper eventsSubscribeMapper,
-//            SubscribeMapper subscribeMapper,
-//            GenreRepository genreRepository
-//    ) {
-//        this.artistsDAL = artistsDAL;
-//        this.artistsRepository = artistsRepository;
-//        this.artistsSubscribeMapper = artistsSubscribeMapper;
-//        this.eventsDAL = eventsDAL;
-//        this.eventsSubscribeMapper = eventsSubscribeMapper;
-//        this.subscribeMapper = subscribeMapper;
-//        this.genreRepository = genreRepository;
-//    }
-//
-//
-//    /**
-//     * 사용자의 전체 캘린더 보여주는 서비스
-//     *
-//     * @param userIdx
-//     * @return
-//     */
-//    public DefaultRes getTotalCalendar (String userIdx) {
-//        try {
-//            CalendarReq totalCalendar = new CalendarReq();
-//
-//            //사용자가 구독한 이벤트 정보 가져오기 + set
-//            totalCalendar.setEvents(getSubscribeEventCalendarM(userIdx));
-//
-//            //사용자가 구독한 아티스트 정보 가져오기
-//            ArtistsSubscribeReq[] artistSub = artistsSubscribeMapper.findSubscribe(userIdx);
-//            List<ArtistsCalendarReq> artistsCalendarReqList = new LinkedList<>();
-//
-//            for (int i = 0; i < artistSub.length; i++) {
-//                //구독한 아티스트의 이벤트 가져오기
-//                artistsCalendarReqList.add(getArtistsCalendarM(artistSub[i].getArtistsId()));
-//            }
-//
-//            totalCalendar.setArtists(artistsCalendarReqList);
-//
-//            return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_TOTAL_CALENDAR, totalCalendar);
-//        } catch (Exception e) {
-//            log.error(e.getMessage());
-//            return DefaultRes.res(StatusCode.DB_ERROR, ResponseMessage.DB_ERROR);
-//        }
-//    }
-//
-//    /**
-//     * 사용자가 구독한 이벤트의 일정 가져오는 서비스
-//     *
-//     * @param userIdx
-//     * @return
-//     */
-//    public DefaultRes getEventsCalendar(String userIdx) {
-//        try {
-//            HashMap<String, List<EventsReq>> eventsCalendar = getSubscribeEventCalendarM(userIdx);
-//            return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_EVENT_CALENDAR, eventsCalendar);
-//        } catch (Exception e) {
-//            log.error(e.getMessage());
-//            return DefaultRes.res(StatusCode.DB_ERROR, ResponseMessage.DB_ERROR);
-//        }
-//    }
-//
-//    /**
-//     * 특정 아티스트의 캘린더 가져오는 서비스
-//     *
-//     * @param _id
-//     * @return
-//     */
-//    public DefaultRes getArtistsCalendar (String _id) {
-//        try {
-//            ArtistsCalendarReq artistsCalendar = getArtistsCalendarM(_id);
-//            return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_ARTIST_CALENDAR, artistsCalendar);
-//        } catch (Exception e) {
-//            log.error(e.getMessage());
-//            return DefaultRes.res(StatusCode.DB_ERROR, ResponseMessage.DB_ERROR);
-//        }
-//    }
-//
-//
-//    /**
-//     * 구독한 이벤트 캘린더 가져오는 메소드
-//     * @param userIdx
-//     * @return
-//     */
-//    public HashMap<String, List<EventsReq>> getSubscribeEventCalendarM(String userIdx) {
-//        try {
-//            EventsSubscribeReq[] eventSub = eventsSubscribeMapper.findSubscribe(userIdx);
-//            List<EventsReq> eventsReqs = new LinkedList<>(); //구독학 곤서트의 정보들
-//
-//            //구독한 콘서트의 정보 가져옴
-//            for (int i = 0; i < eventSub.length; i++) {
-//                EventsReq eventsReq = eventsDAL.findEventsForCal(eventSub[i].getEventId());
-//                eventsReqs.add(eventsReq);
-//            }
-//
-//            if (eventsReqs.size() == 0)
-//                return null;
-//            HashMap<String, List<EventsReq>> eventsCal = modelingEvents(eventsReqs);
-//
-//            return eventsCal;
-//        } catch (Exception e) {
-//            log.error(e.getMessage());
-//            return null;
-//        }
-//    }
-//
-//    /**
-//     * 특정 아티스트 캘린더 가져오는 메소드
-//     *
-//     * @param _id
-//     * @return
-//     */
-//    public ArtistsCalendarReq getArtistsCalendarM (String _id) {
-//        try {
-//
-//            Artists artists = artistsDAL.findArtists(_id);
-//            ArtistsCalendarReq artistsCalendarReq = new ArtistsCalendarReq(artists.get_id(), artists.getName());
-//
-//            List<EventsReq> eventList = eventsDAL.findByTitle(artistsCalendarReq.getName());
-//
-//            if (eventList.size() == 0)
-//                return null;
-//
-//            artistsCalendarReq.setEventsList(modelingEvents(eventList));
-//
-//            return artistsCalendarReq;
-//        } catch (Exception e) {
-//            log.error(e.getMessage());
-//            return null;
-//        }
-//    }
-//
-//    //캘린더 모델링
-//    public HashMap<String, List<EventsReq>> modelingEvents(List<EventsReq> eventList) {
-//        HashMap<String, List<EventsReq>> eventsCal = new HashMap<>();
-//
-//        for (EventsReq eq : eventList) {
-//            for (int i = 0; i < eq.getDate().size(); i++) {
-//                List<EventsReq> eventListTmp;
-//                Date eventDate = eq.getDate().get(i);
-//                SimpleDateFormat format = new SimpleDateFormat("yyyy-mm-dd");
-//
-//                String date = format.format(eventDate);
-//
-//                if (eventsCal.containsKey(date)) {      //해당 날짜인 키값이 있으면
-//                    eventListTmp = eventsCal.get(date); //원래 있던 리스트 가져와서
-//                } else {                                //키 값이 없으면
-//                    eventListTmp = new LinkedList<>();  //리스트 새로 만들어서
-//                }
-//                eventListTmp.add(eq);               //뒤에다가 추가하기
-//                eventsCal.put(date, eventListTmp);
-//            }
-//        }
-//
-//        return eventsCal;
-//    }
-//
-//    public DefaultRes getCalendarTab(Integer userIdx) {
-//        try {
-//            List<Subscribe> subscribeList = subscribeMapper.findAllByUserIdx(userIdx);
-//            List<CalendarTabReq> calendarTabReqList = new ArrayList<>();
-//            for (Subscribe subscribe : subscribeList) {
-//                String type = subscribe.getType();
-//                if (type.equals("genre")) {
-//                    CalendarTabReq calendarTabReq = new CalendarTabReq();
-//                    String id = subscribe.getObjIdx();
-//                    calendarTabReq.set_id(id);
-//                    calendarTabReq.setType(type);
-//                    calendarTabReq.setName(genreRepository.findGenreBy_idEquals(id).getName());
-//                    calendarTabReqList.add(calendarTabReq);
-//                } else if (type.equals("artist")) {
-//                    CalendarTabReq calendarTabReq = new CalendarTabReq();
-//                    String id = subscribe.getObjIdx();
-//                    calendarTabReq.set_id(id);
-//                    calendarTabReq.setType(type);
-//                    calendarTabReq.setName(artistsRepository.findArtistDetailById(id).getName());
-//                    calendarTabReqList.add(calendarTabReq);
-//                }
-//            }
-//            return DefaultRes.res(StatusCode.OK, ResponseMessage.TEST_OK, calendarTabReqList);
-//        } catch (Exception e) {
-//            log.error(e.getMessage());
-//            return DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.TEST_FAIL);
-//        }
-//    }
+    private final SubscribeMapper subscribeMapper;
+    private final GenreRepository genreRepository;
+    private final ArtistsRepository artistsRepository;
+    private final EventsRepository eventsRepository;
+    private final SubscribeService subscribeService;
+
+    public CalendarService(SubscribeMapper subscribeMapper, GenreRepository genreRepository, ArtistsRepository artistsRepository, EventsRepository eventsRepository, SubscribeService subscribeService) {
+        this.subscribeMapper = subscribeMapper;
+        this.genreRepository = genreRepository;
+        this.artistsRepository = artistsRepository;
+        this.eventsRepository = eventsRepository;
+        this.subscribeService = subscribeService;
+    }
+
+
+    public DefaultRes getCalendarTab(Integer userIdx) {
+        try {
+            List<Subscribe> subscribeList = subscribeMapper.getUserAllSubscribe(userIdx);
+            List<CalendarTabReq> calendarTabReqList = new ArrayList<>();
+            CalendarTabReq all = new CalendarTabReq();
+            all.set_id("all");
+            all.setType("all");
+            all.setName("모두");
+            calendarTabReqList.add(all);
+            CalendarTabReq mvp = new CalendarTabReq();
+            mvp.set_id("mvp");
+            mvp.setType("mvp");
+            mvp.setName("내 공연");
+            calendarTabReqList.add(mvp);
+            for (Subscribe subscribe : subscribeList) {
+                String type = subscribe.getType();
+                if (type.equals("genre")) {
+                    CalendarTabReq calendarTabReq = new CalendarTabReq();
+                    String id = subscribe.getObjIdx();
+                    calendarTabReq.set_id(id);
+                    calendarTabReq.setType(type);
+                    String code = genreRepository.findGenreBy_idEquals(id).getCode();
+                    calendarTabReq.setName(code);
+                    calendarTabReqList.add(calendarTabReq);
+                } else if (type.equals("artist")) {
+                    CalendarTabReq calendarTabReq = new CalendarTabReq();
+                    String id = subscribe.getObjIdx();
+                    calendarTabReq.set_id(id);
+                    calendarTabReq.setType(type);
+                    String name = artistsRepository.findArtistDetailById(id).getName();
+                    calendarTabReq.setName(name);
+                    calendarTabReqList.add(calendarTabReq);
+                }
+            }
+            return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_SUCCESS, calendarTabReqList);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.TEST_FAIL);
+        }
+    }
+
+    public DefaultRes getAllCalendar(Integer userIdx, Integer year, Integer month, Integer day) {
+        try {
+            Date[] standardDate = new Date[] {null, null};
+            if (day == -1) {
+                standardDate = translateDate(year, month, 1, "month");
+            } else {
+                standardDate =translateDate(year, month, day, "day");
+            }
+
+            //구독한 이벤트 불러오기
+            List<Subscribe> subscribeList = subscribeMapper.getUserAllSubscribe(userIdx);
+            List<CalendarReq> allCalendar = new LinkedList<>();
+            CalendarReq calendarReq = new CalendarReq();
+
+
+            for (Subscribe s : subscribeList) {
+                log.info("--------------" + s.getType());
+                if (s.getType().equals("event")) {
+                    calendarReq = eventsRepository.findEventForEventCalendar(s.getObjIdx(), standardDate[0], standardDate[1]);
+
+
+                    if (calendarReq == null) {
+                        continue;
+                    }
+                    calendarReq.setTabId("내 공연");
+                    calendarReq.setSubscribe(subscribeService.isSubscribe(userIdx, "event", calendarReq.get_id()));
+                    allCalendar.add(calendarReq);
+                } else if (s.getType().equals("artist")) {
+                    Artists artists = artistsRepository.findArtistsBy_id(s.getObjIdx());
+                    log.info(artists.getName());
+                    List<CalendarReq> artistCalendar  = eventsRepository.findEventForArtistCalendar(artists.getName(), standardDate[0], standardDate[1]);
+
+                    for (CalendarReq cReq : artistCalendar) {
+                        if (calendarReq == null) {
+                            continue;
+                        }
+                        cReq.setTabId(artists.getName());
+                        cReq.setSubscribe(subscribeService.isSubscribe(userIdx, "event", cReq.get_id()));
+                        allCalendar.add(cReq);
+                    }
+                } else {
+                    Genre genre = genreRepository.findGenreBy_idEquals(s.getObjIdx());
+                    List<CalendarReq> genreCalendar = eventsRepository.findEventForGenreCalendar(genre.getCode(), standardDate[0], standardDate[1]);
+
+                    for (CalendarReq cReq : genreCalendar) {
+                        if (calendarReq == null) {
+                            continue;
+                        }
+                        cReq.setTabId(genre.getCode());
+                        cReq.setSubscribe(subscribeService.isSubscribe(userIdx, "evnet", cReq.get_id()));
+                        allCalendar.add(cReq);
+                    }
+                }
+            }
+
+            List<CalendarReq> allCalendarDuplicate = new LinkedList<>();
+
+            for (CalendarReq cq : allCalendar) {
+                if (!allCalendarDuplicate.contains(cq))
+                    allCalendarDuplicate.add(cq);
+            }
+
+            return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_ALL_CALENDAR, allCalendarDuplicate);
+
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.TEST_FAIL);
+        }
+
+    }
+
+    public DefaultRes getMvpCalendar(Integer userIdx, Integer year, Integer month, Integer day) {
+        try {
+            Date[] standardDate = new Date[] {null, null};
+            if (day == -1) {
+                standardDate = translateDate(year, month, 1, "month");
+            } else {
+                standardDate =translateDate(year, month, day, "day");
+            }
+
+            List<Subscribe> eventSubscribeList = subscribeMapper.getUserSubscribe(userIdx, "event");
+            List<CalendarReq> eventCalendar = new LinkedList<>();
+
+            for (Subscribe s : eventSubscribeList) {
+                CalendarReq calendarReq = eventsRepository.findEventForEventCalendar(s.getObjIdx(), standardDate[0], standardDate[1]);
+                if (ObjectUtils.isEmpty(calendarReq)) {
+                    continue;
+                }
+                calendarReq.setTabId("내 공연");
+                eventCalendar.add(calendarReq);
+            }
+
+            for (CalendarReq cReq : eventCalendar) {
+                if (cReq == null) {
+                    continue;
+                }
+                cReq.setSubscribe(subscribeService.isSubscribe(userIdx, "event", cReq.get_id()));
+            }
+
+            return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_EVENT_CALENDAR, eventCalendar);
+
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.TEST_FAIL);
+        }
+    }
+
+    public DefaultRes getArtistCalendar(Integer userIdx, String id, Integer year, Integer month, Integer day) {
+        try {
+            Date[] standardDate = new Date[] {null, null};
+            if (day == -1) {
+                standardDate = translateDate(year, month, 1, "month");
+            } else {
+                standardDate =translateDate(year, month, day, "day");
+            }
+
+            Artists artists = artistsRepository.findArtistsBy_id(id);
+
+            List<CalendarReq> artistCalendar = eventsRepository.findEventForArtistCalendar(artists.getName(), standardDate[0], standardDate[1]);
+
+
+            for (CalendarReq cReq : artistCalendar) {
+                if (cReq == null) {
+                    continue;
+                }
+                cReq.setTabId(artists.getName());
+                cReq.setSubscribe(subscribeService.isSubscribe(userIdx, "event", cReq.get_id()));
+            }
+
+            return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_ARTIST_CALENDAR, artistCalendar);
+
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.TEST_FAIL);
+        }
+    }
+
+    public DefaultRes getGenreCalendar(Integer userIdx, String id, Integer year, Integer month, Integer day) {
+        try {
+            Date[] standardDate = new Date[] {null, null};
+            if (day == -1) {
+                standardDate = translateDate(year, month, 1, "month");
+            } else {
+                standardDate =translateDate(year, month, day, "day");
+            }
+
+            Genre genre = genreRepository.findGenreBy_idEquals(id);
+
+            List<CalendarReq> genreCalendar = eventsRepository.findEventForGenreCalendar(genre.getCode(), standardDate[0], standardDate[1]);
+
+            for (CalendarReq cReq : genreCalendar) {
+                if (cReq == null) {
+                    continue;
+                }
+                cReq.setTabId(genre.getCode());
+                cReq.setSubscribe(subscribeService.isSubscribe(userIdx, "event", cReq.get_id()));
+            }
+
+            return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_GENRE_CALENDAR, genreCalendar);
+
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.TEST_FAIL);
+        }
+    }
+
+    public Date[] translateDate(Integer year, Integer month, Integer day, String type) {
+        try {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+            String startDateString = Integer.toString(year) + "-" + Integer.toString(month) + "-" + Integer.toString(day) + " 00:00:00";
+            Date startDate = format.parse(startDateString);
+
+            if (type.equals("month")) {
+                month += 1;
+                day = 0;
+            }
+
+            String endDateString = Integer.toString(year) + "-" + Integer.toString(month) + "-" + Integer.toString(day) + " 23:59:59";
+            Date endDate = format.parse(endDateString);
+
+            return new Date[]{startDate, endDate};
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return null;
+        }
+    }
 }

@@ -44,9 +44,10 @@ public class ResponseMessage {
     public static final String SUBSCRIBE = "구독 완료";
     public static final String UNSUBSCRIBE = "구독 취소 완료";
 
-    public static final String READ_TOTAL_CALENDAR = "전체 캘린더 검색 성공";
+    public static final String READ_ALL_CALENDAR = "전체 캘린더 검색 성공";
     public static final String READ_EVENT_CALENDAR = "이벤트 캘린더 검색 성공";
     public static final String READ_ARTIST_CALENDAR = "아티스트 캘린더 검색 성공";
+    public static final String READ_GENRE_CALENDAR = "장르 캘린더 검색 성공";
 
     public static final String NO_CALENDAR = "캘린더 정보 없음";
 
@@ -59,4 +60,9 @@ public class ResponseMessage {
     public static final String TEST_OK = "테스트 성공";
     public static final String TEST_FAIL = "테스트 실패";
 
+    public static final String NO_CONTENT = "데이터 없음";
+    public static final String NULL_VALUE = "필요한 값 없음";
+    public static final String DISMATCH_TYPE_OBJ = "타입과 아이디가 맞지 않습니다";
+
+    public static final String READ_SUCCESS = "조회 성공";
 }

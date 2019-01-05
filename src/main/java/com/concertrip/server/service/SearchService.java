@@ -12,6 +12,7 @@ import com.concertrip.server.utils.StatusCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 
@@ -36,6 +37,9 @@ public class SearchService {
 
     public DefaultRes search(int idx, String tag) {
         try {
+            if (ObjectUtils.isEmpty(idx)) {
+                return DefaultRes.res(401, ResponseMessage.EMPTY_TOKEN);
+            }
             Search searchResult = new Search();
 
             //가수에서 찾기
@@ -48,7 +52,7 @@ public class SearchService {
             searchResult.setGenres(searchGenre(idx, tag));
 
             if (searchResult.getArtists().size() == 0 && searchResult.getEvents().size() == 0 && searchResult.getGenres().size() == 0)
-                return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_TAG);
+                return DefaultRes.res(StatusCode.NO_CONTENT, ResponseMessage.NO_CONTENT, searchResult);
 
             return DefaultRes.res(StatusCode.OK, ResponseMessage.SEARCH_SUCCESS, searchResult);
         } catch (Exception e) {
@@ -65,6 +69,12 @@ public class SearchService {
 
     }
 
+    public void setGroup(List<CommonListReq> filterList) {
+        for (CommonListReq commonListReq : filterList) {
+            commonListReq.setGroup(artistsRepository.findArtistsBy_id(commonListReq.get_id()).getMember().length != 0);
+        }
+    }
+
     public List<CommonListReq> searchEvent(int idx, String tag) {
         List<CommonListReq> eventsFilter = eventsRepository.findByFilter(tag);
         setSubscribe(eventsFilter, "event",idx);
@@ -75,6 +85,7 @@ public class SearchService {
     public List<CommonListReq> searchArtist(int idx, String tag) {
         List<CommonListReq> artistsFilter = artistsRepository.findByFilter(tag);
         setSubscribe(artistsFilter, "artist", idx);
+        setGroup(artistsFilter);
 
         return artistsFilter;
     }
