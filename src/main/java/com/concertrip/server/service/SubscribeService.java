@@ -4,9 +4,10 @@ package com.concertrip.server.service;
 import com.concertrip.server.dao.ArtistsRepository;
 import com.concertrip.server.dao.EventsRepository;
 import com.concertrip.server.dao.GenreRepository;
-import com.concertrip.server.domain.Artists;
 import com.concertrip.server.dto.Subscribe;
+import com.concertrip.server.fcm.FcmService;
 import com.concertrip.server.mapper.SubscribeMapper;
+import com.concertrip.server.mapper.UserMapper;
 import com.concertrip.server.model.CommonListReq;
 import com.concertrip.server.model.DefaultRes;
 import com.concertrip.server.utils.ResponseMessage;
@@ -14,6 +15,7 @@ import com.concertrip.server.utils.StatusCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -30,12 +32,14 @@ public class SubscribeService {
     private final ArtistsRepository artistsRepository;
     private final GenreRepository genreRepository;
     private final SubscribeMapper subscribeMapper;
+    private final FcmService fcmService;
 
-    public SubscribeService(EventsRepository eventsRepository, ArtistsRepository artistsRepository, GenreRepository genreRepository, SubscribeMapper subscribeMapper) {
+    public SubscribeService(EventsRepository eventsRepository, ArtistsRepository artistsRepository, GenreRepository genreRepository, SubscribeMapper subscribeMapper, FcmService fcmService) {
         this.eventsRepository = eventsRepository;
         this.artistsRepository = artistsRepository;
         this.genreRepository = genreRepository;
         this.subscribeMapper = subscribeMapper;
+        this.fcmService = fcmService;
     }
 
 
@@ -92,6 +96,24 @@ public class SubscribeService {
             return DefaultRes.res(StatusCode.OK, ResponseMessage.SEARCH_SUCCESS, subList);
         } catch (Exception e) {
             return DefaultRes.res(StatusCode.DB_ERROR, ResponseMessage.DB_ERROR);
+        }
+    }
+
+    //푸시알림
+    public DefaultRes pushList(final String type, final String objIdx) {
+        try {
+            List<Subscribe> subscribeList = subscribeMapper.getSubscribeTypeObj(type, objIdx);
+            List<Integer> userIdxList = new ArrayList<>();
+
+            for(Subscribe subscribe : subscribeList) {
+                userIdxList.add(subscribe.getUserIdx());
+
+            }
+
+            return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_USER, subscribeList);
+        } catch (Exception e) {
+            return DefaultRes.res(StatusCode.DB_ERROR, ResponseMessage.DB_ERROR);
+
         }
     }
 

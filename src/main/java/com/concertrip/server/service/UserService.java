@@ -49,7 +49,24 @@ public class UserService {
         }
     }
 
-    public Integer getUserIdxByToken(final String token) {
+   public Integer getUserIdxByToken(final String token) {
         return userMapper.findUserIdxByToken(token);
+    }
+
+    @Transactional
+    public DefaultRes setFcmToken(final User user) {
+        try {
+            Integer userIdx = userMapper.findUserIdxByToken(user.getId());
+            if(userIdx == null) {
+                return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_USER);
+            } else {
+                userMapper.updateToken(user.getFcmToken(),userIdx);
+            } return DefaultRes.res(StatusCode.OK, ResponseMessage.UPDATE_USER);
+        } catch (Exception e) {
+            //Rollback
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            log.error(e.getMessage());
+            return DefaultRes.res(StatusCode.DB_ERROR, ResponseMessage.DB_ERROR);
+        }
     }
 }

@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static com.concertrip.server.model.DefaultRes.FAIL_DEFAULT_RES;
+
 
 /**
  * Created hyunjk on 2018-12-29.
@@ -90,6 +92,17 @@ public class SubscribeController {
         } catch (Exception e) {
             log.error(e.getMessage());
             return new ResponseEntity<>(DefaultRes.res(StatusCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR), HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("fcm")
+    public ResponseEntity pushMessage(@RequestParam(value = "type", defaultValue = "") final String type,
+                                      @RequestParam(value = "objIdx", defaultValue = "") final String objIdx) {
+        try {
+                return new ResponseEntity<>(subscribeService.pushList(type, objIdx), HttpStatus.OK);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return new ResponseEntity<>(FAIL_DEFAULT_RES ,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

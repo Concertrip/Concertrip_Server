@@ -35,4 +35,14 @@ public class UserController {
             return new ResponseEntity<>(FAIL_DEFAULT_RES ,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @PostMapping("")
+    public ResponseEntity fcmToken(@RequestBody final User user) {
+        try {
+            return new ResponseEntity<>(userService.setFcmToken(user),HttpStatus.OK);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return new ResponseEntity<>(FAIL_DEFAULT_RES ,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }
