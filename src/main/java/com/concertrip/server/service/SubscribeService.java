@@ -94,6 +94,8 @@ public class SubscribeService {
                     if (ObjectUtils.isEmpty(cReq)) {
                         continue;
                     }
+                    Artists artists = artistsRepository.findArtistsBy_id(cReq.get_id());
+                    cReq.setGroup(artists.getMember().length != 0);
                     cReq.setSubscribe(true);
                     subList.add(cReq);
                 }
