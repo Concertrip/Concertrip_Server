@@ -52,4 +52,12 @@ public class UserService {
     public Integer getUserIdxByToken(final String token) {
         return userMapper.findUserIdxByToken(token);
     }
+
+    public boolean isRealUser(final Integer token) {
+        if (userMapper.findUserByToken(token) == null) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 }
