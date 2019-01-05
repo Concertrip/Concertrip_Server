@@ -173,6 +173,7 @@ public class CalendarService {
                 if (ObjectUtils.isEmpty(calendarReq)) {
                     continue;
                 }
+                calendarReq.setTabId("mvp");
                 eventCalendar.add(calendarReq);
             }
 
@@ -206,8 +207,10 @@ public class CalendarService {
 
 
             for (CalendarReq cReq : artistCalendar) {
-                if (cReq == null)    continue;
-                log.info(cReq.getName());
+                if (cReq == null) {
+                    continue;
+                }
+                cReq.setTabId(artists.getName());
                 cReq.setSubscribe(subscribeService.isSubscribe(userIdx, "event", cReq.get_id()));
             }
 
@@ -233,7 +236,10 @@ public class CalendarService {
             List<CalendarReq> genreCalendar = eventsRepository.findEventForGenreCalendar(genre.getCode(), standardDate[0], standardDate[1]);
 
             for (CalendarReq cReq : genreCalendar) {
-                if (cReq == null)    continue;
+                if (cReq == null) {
+                    continue;
+                }
+                cReq.setTabId(genre.getCode());
                 cReq.setSubscribe(subscribeService.isSubscribe(userIdx, "event", cReq.get_id()));
             }
 
