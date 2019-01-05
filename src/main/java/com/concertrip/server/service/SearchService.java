@@ -3,8 +3,8 @@ package com.concertrip.server.service;
 import com.concertrip.server.dao.ArtistsRepository;
 import com.concertrip.server.dao.EventsRepository;
 import com.concertrip.server.dao.GenreRepository;
+import com.concertrip.server.domain.Artists;
 import com.concertrip.server.dto.Search;
-import com.concertrip.server.mapper.SubscribeMapper;
 import com.concertrip.server.model.CommonListReq;
 import com.concertrip.server.model.DefaultRes;
 import com.concertrip.server.utils.ResponseMessage;
@@ -69,9 +69,18 @@ public class SearchService {
 
     }
 
-    public void setGroup(List<CommonListReq> filterList) {
+    public void setGroup(List<CommonListReq> filterList, String type) {
+        Artists artists = new Artists();
         for (CommonListReq commonListReq : filterList) {
-            commonListReq.setGroup(artistsRepository.findArtistsBy_id(commonListReq.get_id()).getMember().length != 0);
+            if (type.equals("artist")) {
+                artists = artistsRepository.findArtistsBy_id(commonListReq.get_id());
+            } else {
+                String[] member = eventsRepository.getMember(commonListReq.get_id()).getMember();
+                CommonListReq commonListReq1 = artistsRepository.findArtistsByName(member[0]);
+
+                artists = artistsRepository.findArtistsBy_id(commonListReq1.get_id());
+            }
+            commonListReq.setGroup(artists.getMember().length != 0);
         }
     }
 
@@ -85,7 +94,7 @@ public class SearchService {
     public List<CommonListReq> searchArtist(int idx, String tag) {
         List<CommonListReq> artistsFilter = artistsRepository.findByFilter(tag);
         setSubscribe(artistsFilter, "artist", idx);
-        setGroup(artistsFilter);
+        setGroup(artistsFilter, "artist");
 
         return artistsFilter;
     }
