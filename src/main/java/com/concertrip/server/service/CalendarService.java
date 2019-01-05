@@ -103,25 +103,36 @@ public class CalendarService {
             for (Subscribe s : subscribeList) {
                 if (s.getType().equals("event")) {
                     calendarReq = eventsRepository.findEventForEventCalendar(s.getObjIdx(), standardDate[0], standardDate[1]);
-                    if (calendarReq == null)    continue;
+                    log.info(calendarReq.getName());
+                    calendarReq.setTabId("mvp");
+
+                    if (calendarReq == null) {
+                        continue;
+                    }
                     calendarReq.setSubscribe(subscribeService.isSubscribe(userIdx, "event", calendarReq.get_id()));
                     allCalendar.add(calendarReq);
                 } else if (s.getType().equals("artist")) {
                     Artists artists = artistsRepository.findArtistsBy_id(s.getObjIdx());
+                    log.info(artists.getName());
                     List<CalendarReq> artistCalendar  = eventsRepository.findEventForArtistCalendar(artists.getName(), standardDate[0], standardDate[1]);
 
                     for (CalendarReq cReq : artistCalendar) {
-                        if (calendarReq == null)    continue;
+                        if (calendarReq == null) {
+                            continue;
+                        }
+                        cReq.setTabId(artists.getName());
                         cReq.setSubscribe(subscribeService.isSubscribe(userIdx, "event", cReq.get_id()));
                         allCalendar.add(cReq);
                     }
                 } else {
                     Genre genre = genreRepository.findGenreBy_idEquals(s.getObjIdx());
-
                     List<CalendarReq> genreCalendar = eventsRepository.findEventForGenreCalendar(genre.getCode(), standardDate[0], standardDate[1]);
 
                     for (CalendarReq cReq : genreCalendar) {
-                        if (calendarReq == null)    continue;
+                        if (calendarReq == null) {
+                            continue;
+                        }
+                        cReq.setTabId(genre.getCode());
                         cReq.setSubscribe(subscribeService.isSubscribe(userIdx, "evnet", cReq.get_id()));
                         allCalendar.add(cReq);
                     }
