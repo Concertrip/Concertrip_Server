@@ -96,13 +96,11 @@ public class CalendarService {
 
             //구독한 이벤트 불러오기
             List<Subscribe> subscribeList = subscribeMapper.getUserAllSubscribe(userIdx);
-            log.info("size ------------ " + subscribeList.size());
             List<CalendarReq> allCalendar = new LinkedList<>();
             CalendarReq calendarReq = new CalendarReq();
 
 
             for (Subscribe s : subscribeList) {
-                log.info(s.getType());
                 if (s.getType().equals("event")) {
                     calendarReq = eventsRepository.findEventForEventCalendar(s.getObjIdx(), standardDate[0], standardDate[1]);
                     if (calendarReq == null)    continue;

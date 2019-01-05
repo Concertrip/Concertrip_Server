@@ -5,6 +5,8 @@ import com.concertrip.server.dao.ArtistsRepository;
 import com.concertrip.server.dao.EventsRepository;
 import com.concertrip.server.dao.GenreRepository;
 import com.concertrip.server.domain.Artists;
+import com.concertrip.server.domain.Events;
+import com.concertrip.server.domain.Genre;
 import com.concertrip.server.dto.Subscribe;
 import com.concertrip.server.mapper.SubscribeMapper;
 import com.concertrip.server.model.CommonListReq;
@@ -65,8 +67,12 @@ public class SubscribeService {
                 subscribeMapper.unSubscribe(token, type, objIdx);
                 return DefaultRes.res(StatusCode.OK, ResponseMessage.UNSUBSCRIBE);
             } else {
-                subscribeMapper.subscribe(token, type, objIdx);
-                return DefaultRes.res(StatusCode.OK, ResponseMessage.SUBSCRIBE);
+                if (isRealObj(type, objIdx)) {
+                    subscribeMapper.subscribe(token, type, objIdx);
+                    return DefaultRes.res(StatusCode.OK, ResponseMessage.SUBSCRIBE);
+                } else {
+                    return DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.DISMATCH_TYPE_OBJ);
+                }
             }
         } catch (Exception e) {
             return DefaultRes.res(StatusCode.DB_ERROR, ResponseMessage.DB_ERROR);
@@ -120,6 +126,36 @@ public class SubscribeService {
         }
     }
 
+    /**
+     * 구돌하려는 아이디가 해당 타입의 컬렉션이 실제하는 아이디인지 확인
+     *
+     * @param type
+     * @param objIdx
+     * @return
+     */
+    public boolean isRealObj(final String type, final String objIdx) {
+        switch (type) {
+            case "event":
+                Events events = eventsRepository.findEventsBy_id(objIdx);
+                if (events != null) {
+                    return true;
+                }
+                break;
+            case "artist" :
+                Artists artists = artistsRepository.findArtistsBy_id(objIdx);
+                if (artists != null) {
+                    return true;
+                }
+                break;
+            case "genre" :
+                Genre genre = genreRepository.findGenreBy_idEquals(objIdx);
+                if (genre != null) {
+                    return true;
+                }
+                break;
+        }
+        return false;
 
+    }
 }
 

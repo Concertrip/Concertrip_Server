@@ -14,5 +14,8 @@ public interface UserMapper {
     @Select("SELECT * FROM user WHERE id=#{userId} LIMIT 1")
     User findUserById(@Param("userId") final String userId);
 
+    @Select("SELECT * FROM user WHERE userIdx = #{token}")
+    User findUserByToken(@Param("token") final Integer token);
+
 
 }
