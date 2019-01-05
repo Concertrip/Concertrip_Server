@@ -109,7 +109,7 @@ public class CalendarService {
                     if (calendarReq == null) {
                         continue;
                     }
-                    calendarReq.setTabId("mvp");
+                    calendarReq.setTabId("내 공연");
                     calendarReq.setSubscribe(subscribeService.isSubscribe(userIdx, "event", calendarReq.get_id()));
                     allCalendar.add(calendarReq);
                 } else if (s.getType().equals("artist")) {
@@ -173,7 +173,7 @@ public class CalendarService {
                 if (ObjectUtils.isEmpty(calendarReq)) {
                     continue;
                 }
-                calendarReq.setTabId("mvp");
+                calendarReq.setTabId("내 공연");
                 eventCalendar.add(calendarReq);
             }
 
