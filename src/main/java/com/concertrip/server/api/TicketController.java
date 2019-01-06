@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,7 +32,7 @@ public class TicketController {
     @GetMapping("")
     public ResponseEntity getUserTicket(@RequestHeader(value = "Authorization") final int userIdx) {
         try{
-            return new ResponseEntity<>(ticketService.findByuserIdx(userIdx), HttpStatus.OK);
+            return new ResponseEntity<>(ticketService.findByUserIdx(userIdx), HttpStatus.OK);
         } catch (Exception e) {
             log.error(e.getMessage());
             return new ResponseEntity<>(FAIL_DEFAULT_RES, HttpStatus.INTERNAL_SERVER_ERROR);

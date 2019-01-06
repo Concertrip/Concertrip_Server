@@ -18,4 +18,6 @@ public class Ticket {
     private String seat;
     private int userIdx;
     private String eventId;
+    private String PurchaseUrl;
+    private Date now;
 }
