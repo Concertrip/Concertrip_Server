@@ -41,7 +41,7 @@ public interface EventsRepository extends MongoRepository<Events, String> {
     @Query(value = "{ _id : ?0 }", fields = "{ 'precaution' : 1, 'id' : 0 }")
     DefaultReq getPrecaution(String _id);
 
-    @Query(value = "{ _id : ?0 }", fields = "{ 'member' : 1, 'id' : 0 }")
+    @Query(value = "{ _id : ?0 }")
     DefaultReq getMember(String _id);
 
     @Query(value = "{ _id : ?0 } ")
