@@ -4,6 +4,7 @@ import com.concertrip.server.dao.ArtistsRepository;
 import com.concertrip.server.dao.EventsRepository;
 import com.concertrip.server.dao.GenreRepository;
 import com.concertrip.server.domain.Artists;
+import com.concertrip.server.domain.Genre;
 import com.concertrip.server.dto.Search;
 import com.concertrip.server.model.CommonListReq;
 import com.concertrip.server.model.DefaultRes;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.util.ObjectUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -106,9 +108,23 @@ public class SearchService {
         return genresFilter;
     }
 
-
-
-
-
-
+    public DefaultRes searchByTab(final Integer token, final String name) {
+        List<CommonListReq> commonListReqs = new ArrayList<>();
+        if (name.equals("테마")) {
+            List<Genre> genreList = genreRepository.findAll();
+            for (Genre genre : genreList) {
+                CommonListReq commonListReq = new CommonListReq();
+                commonListReq.set_id(genre.get_id());
+                commonListReq.setName(genre.getName());
+                commonListReq.setProfileImg(genre.getProfileImg());
+                commonListReq.setSubscribe(subscribeService.isSubscribe(token, "genre", genre.get_id()));
+                commonListReqs.add(commonListReq);
+            }
+        }
+        commonListReqs = searchArtist(token, name);
+        if (commonListReqs.size() == 0) {
+            return DefaultRes.res(StatusCode.NO_CONTENT, ResponseMessage.NO_CONTENT, new ArrayList<>());
+        }
+        return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_ARTISTS, commonListReqs);
+    }
 }
