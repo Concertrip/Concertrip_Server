@@ -57,7 +57,11 @@ public class ArtistsService {
             List<CommonListReq> memberList = new ArrayList<>();
 
             for (String member:members) {
-                memberList.add(artistsRepository.findArtistsByName(member));
+                CommonListReq commonListReq = artistsRepository.findArtistsByName(member);
+                if (ObjectUtils.isEmpty(commonListReq)) {
+                    continue;
+                }
+                memberList.add(commonListReq);
             }
             artistDetailReq.setMemberList(memberList);
 
