@@ -26,8 +26,8 @@ public interface UserMapper {
     @Select("SELECT * FROM user WHERE userIdx = #{token}")
     User findUserByToken(@Param("token") final Integer token);
 
-    @Select("SELECT id FROM user WHERE userIdx = #{userIdx}")
-    String findUserToken(@Param("userIdx") final Integer userIdx);
+    @Select("SELECT fcmToken FROM user WHERE userIdx = #{userIdx}")
+    String findUserFcmToken(@Param("userIdx") final Integer userIdx);
 
 
 

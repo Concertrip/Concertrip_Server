@@ -45,6 +45,7 @@ public class ResponseMessage {
     public static final String NOT_FOUND_TAG = "검색 태그를 찾을 수 없습니다.";
 
     public static final String SUBSCRIBE = "구독 완료";
+    public static final String NO_SUBSCRIBE = "구독하고 있는 회원이 없습니다.";
     public static final String UNSUBSCRIBE = "구독 취소 완료";
 
     public static final String READ_ALL_CALENDAR = "전체 캘린더 검색 성공";
@@ -57,6 +58,10 @@ public class ResponseMessage {
     public static final String NOT_FOUND_TOTAL_CALENDAR = "전체 캘린더를 찾을 수 없습니다.";
     public static final String NOT_FOUND_EVENT_CALENDAR = "이벤트 캘린더를 찾을 수 없습니다.";
     public static final String NOT_FOUND_ARTIST_CALENDAR = "아티스크 캘린더를 찾을 수 없습니다.";
+
+    public static final String READ_NOTICE = "알림 조회 성공";
+    public static final String NOT_FOUND_NOTICE = "알림을 찾을 수 없습니다";
+    public static final String CREATED_NOTICE = "알림 추가 성공";
 
     public static final String DB_ERROR = "데이터베이스 에러";
 
