@@ -7,6 +7,9 @@ public class ResponseMessage {
     public static final String UPDATE_USER = "회원 정보 수정 성공";
     public static final String DELETE_USER = "회원 탈퇴 성공";
 
+    public static final String LOGIN_SUCCESS = "로그인 성공";
+    public static final String LOGIN_FAIL = "로그인 실패";
+
     public static final String INVALID_TOKEN = "토큰값이 유효하지 않습니다.";
     public static final String EMPTY_TOKEN = "토큰값이 존재하지 않습니다.";
 
