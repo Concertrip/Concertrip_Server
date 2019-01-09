@@ -5,6 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static com.concertrip.server.model.DefaultRes.FAIL_DEFAULT_RES;
+
 /**
  * Created by HYEON on 2019-01-05.
  */
@@ -22,6 +24,12 @@ public class FcmController {
     @PostMapping("")
     public ResponseEntity send(@RequestParam(value = "type", defaultValue = "")final String type,
                                @RequestParam(value = "objIdx", defaultValue = "")final String objIdx) {
-        return new ResponseEntity<>(fcmService.send(type,objIdx), HttpStatus.OK);
+        try {
+            return new ResponseEntity<>(fcmService.send(type, objIdx), HttpStatus.OK);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return new ResponseEntity<>(FAIL_DEFAULT_RES, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
+
 }

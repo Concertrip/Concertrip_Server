@@ -5,7 +5,7 @@ import org.apache.ibatis.annotations.*;
 
 @Mapper
 public interface UserMapper {
-    @Insert("INSERT INTO user(id, password, name, fcmToken) VALUES(#{user.id}, #{user.password}, #{user.name}, #{user.fcmToken)")
+    @Insert("INSERT INTO user(id, password, name, fcmToken) VALUES(#{user.id}, #{user.password}, #{user.name}, #{user.fcmToken})")
     void save(@Param("user") final User user);
 
     @Select("SELECT userIdx FROM user WHERE id = #{userId}")
@@ -19,6 +19,9 @@ public interface UserMapper {
 
     @Select("SELECT * FROM user WHERE userIdx = #{token}")
     User findUserByToken(@Param("token") final Integer token);
+
+    @Select("SELECT id FROM user WHERE userIdx = #{userIdx}")
+    String findUserToken(@Param("userIdx") final Integer userIdx);
 
 
 

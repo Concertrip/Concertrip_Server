@@ -35,9 +35,10 @@ public class TicketService {
     }
 
     //userIdx로 티켓 조회
+    @Transactional
     public DefaultRes findByUserIdx(final int userIdx) {
         try {
-            Ticket ticket = new Ticket();
+            //Ticket ticket = new Ticket();
             if (ObjectUtils.isEmpty(userIdx)) {
                 return DefaultRes.res(401, ResponseMessage.EMPTY_TOKEN);
             }
@@ -60,9 +61,8 @@ public class TicketService {
         if (ObjectUtils.isEmpty(userIdx)) {
             return DefaultRes.res(401, ResponseMessage.EMPTY_TOKEN);
         }
-        final List<Ticket> ticketList = ticketMapper.findByUserIdxDesc(userIdx);
+        //final List<Ticket> ticketList = ticketMapper.findByUserIdxDesc(userIdx);
         final Ticket ticket = ticketMapper.findByEventId(_id);
-        //ticket = ticketMapper.updateEventId(eventId, userIdx);
         if (ticket == null) return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_TICKETS);
         return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_TICKETS, ticket);
     }

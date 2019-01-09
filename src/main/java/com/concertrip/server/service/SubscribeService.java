@@ -4,17 +4,11 @@ package com.concertrip.server.service;
 import com.concertrip.server.dao.ArtistsRepository;
 import com.concertrip.server.dao.EventsRepository;
 import com.concertrip.server.dao.GenreRepository;
-<<<<<<< HEAD
 
 import com.concertrip.server.domain.Artists;
 import com.concertrip.server.domain.Events;
 import com.concertrip.server.domain.Genre;
 
-=======
-import com.concertrip.server.domain.Artists;
-import com.concertrip.server.domain.Events;
-import com.concertrip.server.domain.Genre;
->>>>>>> 1dcdbfe9de2e69bbeff8b47858e7b1b9640b724b
 import com.concertrip.server.dto.Subscribe;
 import com.concertrip.server.fcm.FcmService;
 import com.concertrip.server.mapper.SubscribeMapper;
@@ -140,10 +134,6 @@ public class SubscribeService {
         }
     }
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 1dcdbfe9de2e69bbeff8b47858e7b1b9640b724b
     //푸시알림
     public DefaultRes pushList(final String type, final String objIdx) {
         try {
@@ -152,7 +142,6 @@ public class SubscribeService {
 
             for(Subscribe subscribe : subscribeList) {
                 userIdxList.add(subscribe.getUserIdx());
-
             }
 
             return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_USER, subscribeList);
@@ -191,11 +180,6 @@ public class SubscribeService {
                 break;
         }
         return false;
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 1dcdbfe9de2e69bbeff8b47858e7b1b9640b724b
     }
 }
 

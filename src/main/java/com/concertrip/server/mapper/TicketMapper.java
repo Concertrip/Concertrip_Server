@@ -16,11 +16,11 @@ import java.util.List;
 public interface TicketMapper {
 
     //회원으로 티켓조회 (날짜 지난 티켓 - 내림차순)
-    @Select("SELECT * FROM ticket WHERE userIdx = #{userIdx} AND date Between '2018-12-01' and '2018-12-15' ORDER BY date desc")
+    @Select("SELECT * FROM ticket WHERE userIdx = #{userIdx} AND date Between '2018-12-01' and now() ORDER BY date desc")
     List<Ticket> findByUserIdxDesc(@Param("userIdx") final int userIdx);
 
     //회원으로 티켓조회 (임박한 티켓 - 오름차순)
-    @Select("SELECT * FROM ticket WHERE userIdx = #{userIdx} AND date Between '2018-12-15' and '2018-12-31'ORDER BY date asc")
+    @Select("SELECT * FROM ticket WHERE userIdx = #{userIdx} AND date Between now() and '2019-12-31' ORDER BY date asc")
     List<Ticket> findByUserIdxAsc(@Param("userIdx") final int userIdx);
 
     //티켓 _id로 조회 내림차순(날짜 지난 티켓)
