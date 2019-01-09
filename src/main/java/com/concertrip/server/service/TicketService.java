@@ -1,16 +1,17 @@
 package com.concertrip.server.service;
 
+import com.concertrip.server.dao.EventsRepository;
+import com.concertrip.server.domain.Events;
 import com.concertrip.server.dto.Ticket;
 import com.concertrip.server.mapper.TicketMapper;
 import com.concertrip.server.mapper.UserMapper;
 import com.concertrip.server.model.DefaultRes;
 import com.concertrip.server.model.TicketListReq;
+import com.concertrip.server.model.TicketPaymentReq;
 import com.concertrip.server.utils.ResponseMessage;
 import com.concertrip.server.utils.StatusCode;
-import javafx.scene.input.DataFormat;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.util.ObjectUtils;
 
@@ -26,12 +27,14 @@ import java.util.*;
 public class TicketService {
     private final TicketMapper ticketMapper;
     private final UserMapper userMapper;
+    private final EventsRepository eventsRepository;
     SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
     Date now = new Date();
 
-    public TicketService(TicketMapper ticketMapper, UserMapper userMapper) {
+    public TicketService(TicketMapper ticketMapper, UserMapper userMapper, EventsRepository eventsRepository) {
         this.ticketMapper = ticketMapper;
         this.userMapper = userMapper;
+        this.eventsRepository = eventsRepository;
     }
 
     //userIdx로 티켓 조회
@@ -95,5 +98,16 @@ public class TicketService {
         }
     }
 
-
+    //FIXME: delete later
+    public DefaultRes save_tmp(final Integer userIdx, final TicketPaymentReq ticketPaymentReq) {
+        try {
+            String eventId = ticketPaymentReq.getEventId();
+            Events events = eventsRepository.findEventsBy_id(eventId);
+            String ticketImg = events.getTicketImg();
+            ticketMapper.save_tmp(userIdx, ticketImg);
+            return DefaultRes.res(StatusCode.OK, ResponseMessage.BUY_SUCCESS);
+        } catch (Exception e) {
+            return DefaultRes.res(StatusCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

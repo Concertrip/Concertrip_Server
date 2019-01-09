@@ -68,4 +68,5 @@ public class ResponseMessage {
     public static final String DISMATCH_TYPE_OBJ = "타입과 아이디가 맞지 않습니다";
 
     public static final String READ_SUCCESS = "조회 성공";
+    public static final String BUY_SUCCESS = "구매 성공";
 }

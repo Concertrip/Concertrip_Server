@@ -2,10 +2,7 @@ package com.concertrip.server.mapper;
 
 import com.concertrip.server.dto.Ticket;
 import org.apache.ibatis.annotations.*;
-import org.springframework.web.bind.annotation.DeleteMapping;
 
-import java.security.SecureRandom;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -42,4 +39,8 @@ public interface TicketMapper {
     //티켓 삭제
     @Delete("DELETE FROM ticket WHERE userIdx = #{userIdx}")
     void deleteByUserIdx(@Param("userIdx")final int userIdx);
+
+    //티켓 등록 임시
+    @Insert("INSERT INTO ticket_tmp(ticketImg, userIdx) VALUES(#{ticketImg}, #{userIdx})")
+    void save_tmp(@Param("userIdx") final Integer userIdx, @Param("ticketImg") final String ticketImg);
 }
