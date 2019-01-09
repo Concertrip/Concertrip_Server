@@ -120,8 +120,9 @@ public class SearchService {
                 commonListReq.setSubscribe(subscribeService.isSubscribe(token, "genre", genre.get_id()));
                 commonListReqs.add(commonListReq);
             }
+        } else  {
+            commonListReqs = searchArtist(token, name);
         }
-        commonListReqs = searchArtist(token, name);
         if (commonListReqs.size() == 0) {
             return DefaultRes.res(StatusCode.NO_CONTENT, ResponseMessage.NO_CONTENT, new ArrayList<>());
         }
