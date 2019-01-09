@@ -31,25 +31,21 @@ import java.util.concurrent.CompletableFuture;
 @Service
 @Slf4j
 public class FcmService {
-    private static final String FIREBASE_SERVER_KEY = "key=AAAAP2OleBU:APA91bEw1R4qFNJRi0GrXu8wp0N9w17a1mKaqpESA-jsAuVlV0yVbYRMhOweZG-F7l6Ml8Hfn_oMu4w1zVLop_Hgo6Hy_13hq0yl7gWSXi_gHQAfz79YUwKMefLrGv2ERk6Yz0Ay7dkU";
+    private static final String FIREBASE_SERVER_KEY = "key=AAAAtk92IRQ:APA91bFKG-STIVRioOlzJdtbMVax8hwFGSpvkhtVHbWUSoNvv6Wc4Gf0V2pR4e1jHCf9H7x9qSgdi9Yqag9SHbxXTUlFZaADUtG8OzHSSZTA3mRDwwcn_aLuvAZvXDs_P9vVf80UyEb_";
     private static final String FIREBASE_API_URL = "https://fcm.googleapis.com/fcm/send";
 
     private final UserMapper userMapper;
     private final SubscribeMapper subscribeMapper;
-    private final ArtistsRepository artistsRepository;
-    private final NoticeService noticeService;
     private final NoticeMapper noticeMapper;
 
-    public FcmService(UserMapper userMapper, SubscribeMapper subscribeMapper, ArtistsRepository artistsRepository, NoticeService noticeService, NoticeMapper noticeMapper) {
-        this.userMapper = userMapper;
+    public FcmService(UserMapper userMapper, SubscribeMapper subscribeMapper, NoticeMapper noticeMapper) {
+            this.userMapper = userMapper;
         this.subscribeMapper = subscribeMapper;
-        this.artistsRepository = artistsRepository;
-        this.noticeService = noticeService;
         this.noticeMapper = noticeMapper;
     }
 
 
-    public DefaultRes send2(final FcmReq fcmReq) {
+    public DefaultRes sendsave(final FcmReq fcmReq) {
         try {
             // get fcm token list by user subscibe
             List<Subscribe> subscribeList = subscribeMapper.getSubscribeTypeObj(fcmReq.getType(),fcmReq.getObjIdx());

@@ -31,7 +31,6 @@ public class NoticeService {
     @Transactional
     public DefaultRes save(final Notice notice) {
         try{
-            //List<Notice> noticeList = new ArrayList<>();
             noticeMapper.save(notice);
             return DefaultRes.res(StatusCode.CREATED, ResponseMessage.CREATED_NOTICE, notice);
         } catch (Exception e) {

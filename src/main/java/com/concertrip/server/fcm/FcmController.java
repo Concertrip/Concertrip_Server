@@ -23,7 +23,6 @@ import static com.concertrip.server.model.DefaultRes.FAIL_DEFAULT_RES;
 public class FcmController {
     private FcmService fcmService;
     private NoticeMapper noticeMapper;
-    private Subscribe subscribe;
 
     public FcmController(FcmService fcmService, NoticeMapper noticeMapper) {
         this.fcmService = fcmService;
@@ -33,7 +32,7 @@ public class FcmController {
     @PostMapping("")
     public ResponseEntity send(@RequestBody final FcmReq fcmReq) {
         try {
-            return new ResponseEntity<>(fcmService.send2(fcmReq), HttpStatus.OK);
+            return new ResponseEntity<>(fcmService.sendsave(fcmReq), HttpStatus.OK);
         } catch (Exception e) {
             log.error(e.getMessage());
             return new ResponseEntity<>(FAIL_DEFAULT_RES, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -43,7 +42,6 @@ public class FcmController {
     @GetMapping("/list")
     public ResponseEntity list(@RequestHeader(value = "Authorization") final int token) {
         try {
-           // int userIdx1 = subscribe.getUserIdx();
             return new ResponseEntity<>(noticeMapper.findByUserIdx(token), HttpStatus.OK);
         } catch (Exception e) {
             log.error(e.getMessage());
