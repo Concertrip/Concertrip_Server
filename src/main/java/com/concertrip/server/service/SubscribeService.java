@@ -142,7 +142,6 @@ public class SubscribeService {
 
             for(Subscribe subscribe : subscribeList) {
                 userIdxList.add(subscribe.getUserIdx());
-
             }
 
             return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_USER, subscribeList);

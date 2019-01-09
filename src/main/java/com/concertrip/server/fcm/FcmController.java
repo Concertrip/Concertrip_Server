@@ -1,9 +1,17 @@
 package com.concertrip.server.fcm;
 
+import com.concertrip.server.dto.Subscribe;
+import com.concertrip.server.mapper.NoticeMapper;
+import com.concertrip.server.mapper.SubscribeMapper;
+import com.concertrip.server.model.FcmReq;
+import com.concertrip.server.service.NoticeService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import static com.concertrip.server.model.DefaultRes.FAIL_DEFAULT_RES;
 
 /**
  * Created by HYEON on 2019-01-05.
@@ -14,14 +22,32 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("api/fcm")
 public class FcmController {
     private FcmService fcmService;
+    private NoticeMapper noticeMapper;
+    private Subscribe subscribe;
 
-    public FcmController(FcmService fcmService) {
+    public FcmController(FcmService fcmService, NoticeMapper noticeMapper) {
         this.fcmService = fcmService;
+        this.noticeMapper = noticeMapper;
     }
 
     @PostMapping("")
-    public ResponseEntity send(@RequestParam(value = "type", defaultValue = "")final String type,
-                               @RequestParam(value = "objIdx", defaultValue = "")final String objIdx) {
-        return new ResponseEntity<>(fcmService.send(type,objIdx), HttpStatus.OK);
+    public ResponseEntity send(@RequestBody final FcmReq fcmReq) {
+        try {
+            return new ResponseEntity<>(fcmService.send2(fcmReq), HttpStatus.OK);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return new ResponseEntity<>(FAIL_DEFAULT_RES, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity list(@RequestHeader(value = "Authorization") final int token) {
+        try {
+           // int userIdx1 = subscribe.getUserIdx();
+            return new ResponseEntity<>(noticeMapper.findByUserIdx(token), HttpStatus.OK);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return new ResponseEntity<>(FAIL_DEFAULT_RES, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
