@@ -1,28 +1,27 @@
 package com.concertrip.server.fcm;
 
 import com.concertrip.server.dao.ArtistsRepository;
+import com.concertrip.server.dao.EventsRepository;
+import com.concertrip.server.dao.GenreRepository;
+import com.concertrip.server.domain.Artists;
+import com.concertrip.server.domain.Events;
+import com.concertrip.server.domain.Genre;
 import com.concertrip.server.dto.Notice;
 import com.concertrip.server.dto.Subscribe;
-import com.concertrip.server.dto.User;
 import com.concertrip.server.mapper.NoticeMapper;
 import com.concertrip.server.mapper.SubscribeMapper;
 import com.concertrip.server.mapper.UserMapper;
 import com.concertrip.server.model.DefaultRes;
 import com.concertrip.server.model.FcmReq;
-import com.concertrip.server.service.NoticeService;
 import com.concertrip.server.utils.ResponseMessage;
 import com.concertrip.server.utils.StatusCode;
-import com.sun.nio.sctp.Notification;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * Created by HYEON on 2019-01-05.
@@ -37,11 +36,17 @@ public class FcmService {
     private final UserMapper userMapper;
     private final SubscribeMapper subscribeMapper;
     private final NoticeMapper noticeMapper;
+    private final ArtistsRepository artistsRepository;
+    private final EventsRepository eventsRepository;
+    private final GenreRepository genreRepository;
 
-    public FcmService(UserMapper userMapper, SubscribeMapper subscribeMapper, NoticeMapper noticeMapper) {
+    public FcmService(UserMapper userMapper, SubscribeMapper subscribeMapper, NoticeMapper noticeMapper, ArtistsRepository artistsRepository, EventsRepository eventsRepository, GenreRepository genreRepository) {
             this.userMapper = userMapper;
         this.subscribeMapper = subscribeMapper;
         this.noticeMapper = noticeMapper;
+        this.artistsRepository = artistsRepository;
+        this.eventsRepository = eventsRepository;
+        this.genreRepository = genreRepository;
     }
 
 
@@ -49,11 +54,27 @@ public class FcmService {
         try {
             // get fcm token list by user subscibe
             List<Subscribe> subscribeList = subscribeMapper.getSubscribeTypeObj(fcmReq.getType(),fcmReq.getObjIdx());
-            if (subscribeList.size() ==0) return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NO_SUBSCRIBE);
+            if (subscribeList.size() == 0) return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NO_SUBSCRIBE);
             HttpHeaders headers = new HttpHeaders();
             headers.set("Authorization", FIREBASE_SERVER_KEY);
             headers.set("Content-Type", "application/json");
             Date today = new Date();
+            //get noticeImg
+            Notice notice = new Notice();
+            log.info("dddddddddddddddddddd");
+            log.info(fcmReq.getType()); //// artist
+            if (fcmReq.getType().equals("artist")) {
+                Artists artists = artistsRepository.findArtistsBy_id(fcmReq.getObjIdx());
+                log.info(artists.toString());
+                notice.setNoticeImg(artists.getProfileImg());
+            } else if(fcmReq.getType().equals("event")){
+                Events events = eventsRepository.findEventsBy_id(fcmReq.getObjIdx());
+                log.info(events.toString());
+                notice.setNoticeImg(events.getProfileImg());
+            } else {
+                Genre genre = genreRepository.findBy_idEquals(fcmReq.getObjIdx());
+                notice.setNoticeImg(genre.getProfileImg());
+            }
             // send
             Map<String, String> notification = new HashMap<>();
             notification.put("title", fcmReq.getTitle());
@@ -62,21 +83,21 @@ public class FcmService {
             for (Subscribe subscribe : subscribeList) {
                 int userIdx = subscribe.getUserIdx();
                 String token = userMapper.findUserFcmToken(userIdx);
-
+                log.info(token);
                 Fcm fcm = new Fcm();
                 fcm.setTo(token);
                 fcm.setNotification(notification);
-                log.info(token);
 
                 HttpEntity<Fcm> request = new HttpEntity<Fcm>(fcm, headers);
                 RestTemplate restTemplate = new RestTemplate();
                 restTemplate.postForObject(FIREBASE_API_URL, request, String.class);
                 //save
-                Notice notice = new Notice();
+                //Notice notice = new Notice();
                 notice.setUserIdx(userIdx);
                 notice.setTitle(fcmReq.getTitle());
                 notice.setBody(fcmReq.getBody());
                 notice.setCreatedAt(today);
+
                 noticeMapper.save(notice);
                 log.info(notice.toString());
             }

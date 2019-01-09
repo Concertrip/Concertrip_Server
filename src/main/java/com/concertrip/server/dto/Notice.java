@@ -15,4 +15,5 @@ public class Notice {
     private String title;
     private String body;
     private Date createdAt;
+    private String noticeImg;
 }

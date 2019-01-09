@@ -18,6 +18,6 @@ public interface NoticeMapper {
     @Select("SELECT * FROM notice WHERE userIdx = #{userIdx}")
     List<Notice> findByUserIdx(@Param("userIdx")final int userIdx);
 
-    @Insert("INSERT INTO notice(userIdx, title, body, createdAt) VALUES (#{notice.userIdx}, #{notice.title}, #{notice.body}, #{notice.createdAt})")
+    @Insert("INSERT INTO notice(userIdx, title, body, createdAt, noticeImg) VALUES (#{notice.userIdx}, #{notice.title}, #{notice.body}, #{notice.createdAt}, #{notice.noticeImg})")
     void save(@Param("notice") final Notice notice);
 }
