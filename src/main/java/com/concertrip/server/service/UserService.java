@@ -11,21 +11,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import java.util.List;
-
 @Slf4j
 @Service
 public class UserService {
-
     private final UserMapper userMapper;
+    private final JwtService jwtService;
 
     /**
      * UserMapper 생성자 의존성 주입
      *
      * @param userMapper
+     * @param jwtService
      */
-    public UserService(final UserMapper userMapper) {
+    public UserService(final UserMapper userMapper, final JwtService jwtService) {
         this.userMapper = userMapper;
+        this.jwtService = jwtService;
     }
 
     /**
@@ -40,7 +40,10 @@ public class UserService {
             //TODO: need refactoring
             userMapper.save(user);
             User res = userMapper.findUserById(user.getId());
-            return DefaultRes.res(StatusCode.CREATED, ResponseMessage.CREATED_USER, res.getUserIdx() + "");
+
+            final JwtService.TokenRes tokenDto = new JwtService.TokenRes(jwtService.create(user.getUserIdx()));
+
+            return DefaultRes.res(StatusCode.CREATED, ResponseMessage.CREATED_USER, tokenDto);
         } catch (Exception e) {
             //Rollback
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
