@@ -142,9 +142,16 @@ public class CalendarService {
 
             List<CalendarReq> allCalendarDuplicate = new LinkedList<>();
 
-            for (CalendarReq cq : allCalendar) {
-                if (!allCalendarDuplicate.contains(cq))
-                    allCalendarDuplicate.add(cq);
+            for (int i = 0; i < allCalendar.size(); i++) {
+                int flag = 0;
+                for (int j = 0; j < allCalendarDuplicate.size(); j++) {
+                    if (allCalendar.get(i).getName().equals(allCalendarDuplicate.get(j).getName())) {
+                        flag = 1;
+                        break;
+                    }
+                }
+                if (flag == 1) continue;
+                allCalendarDuplicate.add(allCalendar.get(i));
             }
 
             return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_ALL_CALENDAR, allCalendarDuplicate);
