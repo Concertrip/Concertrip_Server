@@ -52,7 +52,6 @@ public class FcmService {
     public DefaultRes send2(final FcmReq fcmReq) {
         try {
             // get fcm token list by user subscibe
-
             List<Subscribe> subscribeList = subscribeMapper.getSubscribeTypeObj(fcmReq.getType(),fcmReq.getObjIdx());
             if (subscribeList.size() ==0) return DefaultRes.res(StatusCode.NOT_FOUND, ResponseMessage.NO_SUBSCRIBE);
             HttpHeaders headers = new HttpHeaders();

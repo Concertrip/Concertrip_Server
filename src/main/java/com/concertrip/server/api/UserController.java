@@ -33,7 +33,6 @@ public class UserController {
             guest.setId(uuid);
             guest.setPassword(uuid);
             guest.setName("guest");
-            guest.setFcmToken("cCwY9X4zosA:APA91bFwdNoZnRxzg_q5Ioucc2sVNW6X_uE73xNLL_TDA20S0II8ez4mmZsU4E3OqLOCikC2vkfWpjXveIMA9vsA0zK5lTKDHr7zAsLObJKIjaFEdBIDZa4d34QD4JkFsj03M9NWB3EZ");
             return new ResponseEntity<>(userService.save(guest), HttpStatus.OK);
         } catch (Exception e) {
             log.error(e.getMessage());
