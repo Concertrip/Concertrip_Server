@@ -62,8 +62,14 @@ public class SubscribeController {
 
     @Auth
     @GetMapping("genre")
-    public ResponseEntity subscribeGenreList(@RequestHeader(value = "Authorization") final int token) {
-        return new ResponseEntity<>(subscribeService.subscribeList(token, "genre"), HttpStatus.OK);
+    public ResponseEntity subscribeGenreList(@RequestHeader(value = "Authorization") final String token) {
+        try {
+            JwtService.Token decodedToken = jwtService.decode(token);
+            return new ResponseEntity<>(subscribeService.subscribeList(decodedToken.getUser_idx(), "genre"), HttpStatus.OK);
+        } catch (Exception e){
+            log.error(e.getMessage());
+            return new ResponseEntity<>(DefaultRes.res(StatusCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR), HttpStatus.OK);
+        }
     }
 
     @Auth
