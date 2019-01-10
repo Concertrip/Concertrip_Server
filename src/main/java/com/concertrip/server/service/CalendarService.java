@@ -109,6 +109,7 @@ public class CalendarService {
                     if (calendarReq == null) {
                         continue;
                     }
+                    log.info(calendarReq.getName());
                     calendarReq.setTabId("내 공연");
                     calendarReq.setSubscribe(subscribeService.isSubscribe(userIdx, "event", calendarReq.get_id()));
                     allCalendar.add(calendarReq);
@@ -133,6 +134,7 @@ public class CalendarService {
                         if (calendarReq == null) {
                             continue;
                         }
+                        log.info(cReq.getName());
                         cReq.setTabId(genre.getCode());
                         cReq.setSubscribe(subscribeService.isSubscribe(userIdx, "evnet", cReq.get_id()));
                         allCalendar.add(cReq);
@@ -142,6 +144,11 @@ public class CalendarService {
 
             List<CalendarReq> allCalendarDuplicate = new LinkedList<>();
 
+            for (CalendarReq cq : allCalendar) {
+                if (cq.getTabId().equals("내 공연")) {
+                    allCalendarDuplicate.add(cq);
+                }
+            }
             for (int i = 0; i < allCalendar.size(); i++) {
                 int flag = 0;
                 for (int j = 0; j < allCalendarDuplicate.size(); j++) {
