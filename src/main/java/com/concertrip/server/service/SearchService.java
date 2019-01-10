@@ -4,6 +4,7 @@ import com.concertrip.server.dao.ArtistsRepository;
 import com.concertrip.server.dao.EventsRepository;
 import com.concertrip.server.dao.GenreRepository;
 import com.concertrip.server.domain.Artists;
+import com.concertrip.server.domain.Events;
 import com.concertrip.server.domain.Genre;
 import com.concertrip.server.dto.Search;
 import com.concertrip.server.model.CommonListReq;
@@ -16,6 +17,7 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,12 +31,14 @@ public class SearchService {
     private final ArtistsRepository artistsRepository;
     private final GenreRepository genreRepository;
     private final SubscribeService subscribeService;
+    private final EventsService eventsService;
 
-    public SearchService(EventsRepository eventsRepository, ArtistsRepository artistsRepository, GenreRepository genreRepository, SubscribeService subscribeService1) {
+    public SearchService(final EventsRepository eventsRepository, final ArtistsRepository artistsRepository, final GenreRepository genreRepository, final SubscribeService subscribeService1, final  EventsService eventsService) {
         this.eventsRepository = eventsRepository;
         this.artistsRepository = artistsRepository;
         this.genreRepository = genreRepository;
         this.subscribeService = subscribeService1;
+        this.eventsService = eventsService;
     }
 
     public DefaultRes search(int idx, String tag) {
@@ -88,6 +92,11 @@ public class SearchService {
 
     public List<CommonListReq> searchEvent(int idx, String tag) {
         List<CommonListReq> eventsFilter = eventsRepository.findByFilter(tag);
+
+        for (CommonListReq c : eventsFilter) {
+            c.setHashTag(makeHashTag(c.get_id()));
+        }
+
         setSubscribe(eventsFilter, "event",idx);
 
         return eventsFilter;
@@ -127,5 +136,22 @@ public class SearchService {
             return DefaultRes.res(StatusCode.NO_CONTENT, ResponseMessage.NO_CONTENT, new ArrayList<>());
         }
         return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_ARTISTS, commonListReqs);
+    }
+
+    public String makeHashTag(String _id) {
+        Events events = eventsRepository.findEventsBy_id(_id);
+        Date[] dates = events.getDate();
+        String region = events.getRegion();
+
+        String day1 = "#" + Integer.toString(dates[0].getMonth() + 1) + "월 " + Integer.toString(dates[0].getDate()) + "일";
+        String day2 = "";
+
+        if (dates.length != 1) {
+            int last = dates.length - 1;
+            day2 = "-" + Integer.toString(dates[last].getMonth() + 1) + "월 " + Integer.toString(dates[last].getDate()) + "일";
+        }
+
+        String hashTag  = day1 + day2 + " #" + region;
+        return hashTag;
     }
 }

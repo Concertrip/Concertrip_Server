@@ -16,4 +16,5 @@ public class CommonListReq {
     private boolean subscribe = false;
     private String[] tag;
     private Boolean group = false;
+    private String hashTag;
 }

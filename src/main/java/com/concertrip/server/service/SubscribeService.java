@@ -10,13 +10,13 @@ import com.concertrip.server.domain.Events;
 import com.concertrip.server.domain.Genre;
 
 import com.concertrip.server.dto.Subscribe;
-import com.concertrip.server.fcm.FcmService;
 import com.concertrip.server.mapper.SubscribeMapper;
 import com.concertrip.server.model.CommonListReq;
 import com.concertrip.server.model.DefaultRes;
 import com.concertrip.server.utils.ResponseMessage;
 import com.concertrip.server.utils.StatusCode;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -37,14 +37,15 @@ public class SubscribeService {
     private final ArtistsRepository artistsRepository;
     private final GenreRepository genreRepository;
     private final SubscribeMapper subscribeMapper;
-    private final FcmService fcmService;
+    private final SearchService searchService;
 
-    public SubscribeService(EventsRepository eventsRepository, ArtistsRepository artistsRepository, GenreRepository genreRepository, SubscribeMapper subscribeMapper, FcmService fcmService) {
+
+    public SubscribeService(final EventsRepository eventsRepository, final ArtistsRepository artistsRepository, final GenreRepository genreRepository, final SubscribeMapper subscribeMapper, @Lazy final SearchService searchService) {
         this.eventsRepository = eventsRepository;
         this.artistsRepository = artistsRepository;
         this.genreRepository = genreRepository;
         this.subscribeMapper = subscribeMapper;
-        this.fcmService = fcmService;
+        this.searchService = searchService;
     }
 
 
@@ -111,6 +112,7 @@ public class SubscribeService {
                     if (ObjectUtils.isEmpty(cReq)) {
                         continue;
                     }
+                    cReq.setHashTag(searchService.makeHashTag(cReq.get_id()));
                     cReq.setSubscribe(true);
                     subList.add(cReq);
                 }

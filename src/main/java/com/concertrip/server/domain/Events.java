@@ -28,6 +28,7 @@ public class Events implements Serializable {
     private String backImg;
     @NonNull
     private String location;
+    private String region;
     private String[] member;
     private Date[] date;
     private String[] seatName;
