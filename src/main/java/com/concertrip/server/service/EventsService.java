@@ -80,7 +80,11 @@ public class EventsService {
             List<CommonListReq> memberList = new LinkedList<>();
 
             for (String member : members) {
-                memberList.add(artistsRepository.getArtistInfo(member));
+                CommonListReq commonListReq = artistsRepository.getArtistInfo(member);
+                if (ObjectUtils.isEmpty(commonListReq)) {
+                    continue;
+                }
+                memberList.add(commonListReq);
             }
             eventsDetail.setMemberList(memberList);
 
