@@ -95,6 +95,7 @@ public class CalendarService {
             } else {
                 standardDate =translateDate(year, month, day, "day");
             }
+            log.info("user : " + userIdx);
 
             //구독한 이벤트 불러오기
             List<Subscribe> subscribeList = subscribeMapper.getUserAllSubscribe(userIdx);
@@ -197,6 +198,7 @@ public class CalendarService {
                 if (cReq == null) {
                     continue;
                 }
+                cReq.setHashTag(cReq.get_id());
                 cReq.setSubscribe(subscribeService.isSubscribe(userIdx, "event", cReq.get_id()));
             }
 
@@ -226,6 +228,7 @@ public class CalendarService {
                 if (cReq == null) {
                     continue;
                 }
+                cReq.setHashTag(cReq.get_id());
                 cReq.setTabId(artists.getName());
                 cReq.setSubscribe(subscribeService.isSubscribe(userIdx, "event", cReq.get_id()));
             }
@@ -255,6 +258,7 @@ public class CalendarService {
                 if (cReq == null) {
                     continue;
                 }
+                cReq.setHashTag(cReq.get_id());
                 cReq.setTabId(genre.getCode());
                 cReq.setSubscribe(subscribeService.isSubscribe(userIdx, "event", cReq.get_id()));
             }
