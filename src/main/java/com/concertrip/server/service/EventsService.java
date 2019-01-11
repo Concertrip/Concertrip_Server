@@ -94,6 +94,10 @@ public class EventsService {
             eventsDetail.setSubscribe(subscribeService.isSubscribe(token, "event", _id));
             eventsDetail.setSubscribeNum(subscribeService.subscribeNum("event", _id));
 
+            if (!events.getTicketImg().equals("")) {
+                eventsDetail.setPurchase(true);
+            }
+
             return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_EVENTS, eventsDetail);
         } catch (Exception e) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();

@@ -30,4 +30,5 @@ public class EventsDetailReq {
     private String[] seatPrice;
     private List<Precaution> precautionList;
     private String eventInfoImg;
+    private Boolean purchase = false;
 }
