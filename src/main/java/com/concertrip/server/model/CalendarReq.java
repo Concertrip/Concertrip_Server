@@ -13,9 +13,11 @@ import java.util.Date;
 public class CalendarReq {
     @Id
     private String _id;
+    private String tabId;
     private String name;
     private String profileImg;
     private Date[] date;
     private String[] tag;
     private boolean subscribe = false;
+    private String hashTag;
 }

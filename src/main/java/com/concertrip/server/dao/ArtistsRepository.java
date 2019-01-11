@@ -25,6 +25,8 @@ public interface ArtistsRepository extends MongoRepository<Artists, String> {
 
     Artists insert(Artists artists);
 
+    //Artists findNameById
+
     List<Artists> findAll();
 
     @Query(value = "{ filter : { $regex : ?0 } }", fields = "{ 'name' : 1, 'profileImg' : 1, 'filter' : 1 }")

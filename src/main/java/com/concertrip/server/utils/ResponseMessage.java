@@ -7,6 +7,9 @@ public class ResponseMessage {
     public static final String UPDATE_USER = "회원 정보 수정 성공";
     public static final String DELETE_USER = "회원 탈퇴 성공";
 
+    public static final String LOGIN_SUCCESS = "로그인 성공";
+    public static final String LOGIN_FAIL = "로그인 실패";
+
     public static final String INVALID_TOKEN = "토큰값이 유효하지 않습니다.";
     public static final String EMPTY_TOKEN = "토큰값이 존재하지 않습니다.";
 
@@ -42,6 +45,7 @@ public class ResponseMessage {
     public static final String NOT_FOUND_TAG = "검색 태그를 찾을 수 없습니다.";
 
     public static final String SUBSCRIBE = "구독 완료";
+    public static final String NO_SUBSCRIBE = "구독하고 있는 회원이 없습니다.";
     public static final String UNSUBSCRIBE = "구독 취소 완료";
 
     public static final String READ_ALL_CALENDAR = "전체 캘린더 검색 성공";
@@ -55,6 +59,10 @@ public class ResponseMessage {
     public static final String NOT_FOUND_EVENT_CALENDAR = "이벤트 캘린더를 찾을 수 없습니다.";
     public static final String NOT_FOUND_ARTIST_CALENDAR = "아티스크 캘린더를 찾을 수 없습니다.";
 
+    public static final String READ_NOTICE = "알림 조회 성공";
+    public static final String NOT_FOUND_NOTICE = "알림을 찾을 수 없습니다";
+    public static final String CREATED_NOTICE = "알림 추가 성공";
+
     public static final String DB_ERROR = "데이터베이스 에러";
 
     public static final String TEST_OK = "테스트 성공";
@@ -62,6 +70,8 @@ public class ResponseMessage {
 
     public static final String NO_CONTENT = "데이터 없음";
     public static final String NULL_VALUE = "필요한 값 없음";
+    public static final String DISMATCH_TYPE_OBJ = "타입과 아이디가 맞지 않습니다";
 
     public static final String READ_SUCCESS = "조회 성공";
+    public static final String BUY_SUCCESS = "구매 성공";
 }

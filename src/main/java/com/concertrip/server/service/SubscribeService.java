@@ -4,7 +4,11 @@ package com.concertrip.server.service;
 import com.concertrip.server.dao.ArtistsRepository;
 import com.concertrip.server.dao.EventsRepository;
 import com.concertrip.server.dao.GenreRepository;
+
 import com.concertrip.server.domain.Artists;
+import com.concertrip.server.domain.Events;
+import com.concertrip.server.domain.Genre;
+
 import com.concertrip.server.dto.Subscribe;
 import com.concertrip.server.mapper.SubscribeMapper;
 import com.concertrip.server.model.CommonListReq;
@@ -12,9 +16,11 @@ import com.concertrip.server.model.DefaultRes;
 import com.concertrip.server.utils.ResponseMessage;
 import com.concertrip.server.utils.StatusCode;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -31,12 +37,15 @@ public class SubscribeService {
     private final ArtistsRepository artistsRepository;
     private final GenreRepository genreRepository;
     private final SubscribeMapper subscribeMapper;
+    private final SearchService searchService;
 
-    public SubscribeService(EventsRepository eventsRepository, ArtistsRepository artistsRepository, GenreRepository genreRepository, SubscribeMapper subscribeMapper) {
+
+    public SubscribeService(final EventsRepository eventsRepository, final ArtistsRepository artistsRepository, final GenreRepository genreRepository, final SubscribeMapper subscribeMapper, @Lazy final SearchService searchService) {
         this.eventsRepository = eventsRepository;
         this.artistsRepository = artistsRepository;
         this.genreRepository = genreRepository;
         this.subscribeMapper = subscribeMapper;
+        this.searchService = searchService;
     }
 
 
@@ -65,8 +74,12 @@ public class SubscribeService {
                 subscribeMapper.unSubscribe(token, type, objIdx);
                 return DefaultRes.res(StatusCode.OK, ResponseMessage.UNSUBSCRIBE);
             } else {
-                subscribeMapper.subscribe(token, type, objIdx);
-                return DefaultRes.res(StatusCode.OK, ResponseMessage.SUBSCRIBE);
+                if (isRealObj(type, objIdx)) {
+                    subscribeMapper.subscribe(token, type, objIdx);
+                    return DefaultRes.res(StatusCode.OK, ResponseMessage.SUBSCRIBE);
+                } else {
+                    return DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.DISMATCH_TYPE_OBJ);
+                }
             }
         } catch (Exception e) {
             return DefaultRes.res(StatusCode.DB_ERROR, ResponseMessage.DB_ERROR);
@@ -88,6 +101,8 @@ public class SubscribeService {
                     if (ObjectUtils.isEmpty(cReq)) {
                         continue;
                     }
+                    Artists artists = artistsRepository.findArtistsBy_id(cReq.get_id());
+                    cReq.setGroup(artists.getMember().length != 0);
                     cReq.setSubscribe(true);
                     subList.add(cReq);
                 }
@@ -97,6 +112,7 @@ public class SubscribeService {
                     if (ObjectUtils.isEmpty(cReq)) {
                         continue;
                     }
+                    cReq.setHashTag(searchService.makeHashTag(cReq.get_id()));
                     cReq.setSubscribe(true);
                     subList.add(cReq);
                 }
@@ -120,6 +136,52 @@ public class SubscribeService {
         }
     }
 
+    //푸시알림
+    public DefaultRes pushList(final String type, final String objIdx) {
+        try {
+            List<Subscribe> subscribeList = subscribeMapper.getSubscribeTypeObj(type, objIdx);
+            List<Integer> userIdxList = new ArrayList<>();
 
+            for(Subscribe subscribe : subscribeList) {
+                userIdxList.add(subscribe.getUserIdx());
+            }
+
+            return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_USER, subscribeList);
+        } catch (Exception e) {
+            return DefaultRes.res(StatusCode.DB_ERROR, ResponseMessage.DB_ERROR);
+
+        }
+    }
+
+    /**
+     * 구돌하려는 아이디가 해당 타입의 컬렉션이 실제하는 아이디인지 확인
+     *
+     * @param type
+     * @param objIdx
+     * @return
+     */
+    public boolean isRealObj(final String type, final String objIdx) {
+        switch (type) {
+            case "event":
+                Events events = eventsRepository.findEventsBy_id(objIdx);
+                if (events != null) {
+                    return true;
+                }
+                break;
+            case "artist" :
+                Artists artists = artistsRepository.findArtistsBy_id(objIdx);
+                if (artists != null) {
+                    return true;
+                }
+                break;
+            case "genre" :
+                Genre genre = genreRepository.findGenreBy_idEquals(objIdx);
+                if (genre != null) {
+                    return true;
+                }
+                break;
+        }
+        return false;
+    }
 }
 

@@ -27,7 +27,8 @@ public class EventsDetailReq {
     private List<CommonListReq> memberList;
     private Date[] date;
     private String[] seatName;
-    private int[] seatPrice;
+    private String[] seatPrice;
     private List<Precaution> precautionList;
     private String eventInfoImg;
+    private Boolean purchase = false;
 }

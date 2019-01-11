@@ -1,5 +1,7 @@
 package com.concertrip.server.api;
 
+import com.concertrip.server.fcm.FcmService;
+import com.concertrip.server.mapper.UserMapper;
 import com.concertrip.server.service.UserService;
 import com.concertrip.server.dto.User;
 import lombok.extern.slf4j.Slf4j;
@@ -16,9 +18,11 @@ import static com.concertrip.server.model.DefaultRes.FAIL_DEFAULT_RES;
 @RequestMapping("/api/user")
 public class UserController {
     private final UserService userService;
+    private final FcmService fcmService;
 
-    public UserController(final UserService userService) {
+    public UserController(final UserService userService, FcmService fcmService) {
         this.userService = userService;
+        this.fcmService = fcmService;
     }
 
     @PostMapping("/guest")
@@ -35,4 +39,14 @@ public class UserController {
             return new ResponseEntity<>(FAIL_DEFAULT_RES ,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @PostMapping("")
+    public ResponseEntity fcmToken(@RequestBody final User user) {
+        try {
+            return new ResponseEntity<>(userService.setFcmToken(user),HttpStatus.OK);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return new ResponseEntity<>(FAIL_DEFAULT_RES ,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

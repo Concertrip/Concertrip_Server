@@ -7,6 +7,7 @@ import com.concertrip.server.model.DefaultReq;
 import com.concertrip.server.model.EventsDetailReq;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
+import org.springframework.data.mongodb.core.FindAndModifyOptions;
 
 import java.util.Date;
 import java.util.List;
@@ -41,7 +42,7 @@ public interface EventsRepository extends MongoRepository<Events, String> {
     @Query(value = "{ _id : ?0 }", fields = "{ 'precaution' : 1, 'id' : 0 }")
     DefaultReq getPrecaution(String _id);
 
-    @Query(value = "{ _id : ?0 }", fields = "{ 'member' : 1, 'id' : 0 }")
+    @Query(value = "{ _id : ?0 }")
     DefaultReq getMember(String _id);
 
     @Query(value = "{ _id : ?0 } ")
@@ -53,7 +54,6 @@ public interface EventsRepository extends MongoRepository<Events, String> {
     List<CommonListReq> findAllByFilterIn(String filter);
 
     Events findEventsBy_id(String _id);
-
 }
 
 

@@ -37,7 +37,7 @@ public class ArtistsService {
 
     /**
      * 아티스트 상세 페이지 조회
-     * 할일 : 아티스트repo에서 다가오는 콘서트 추가해줘야함
+     * 
      */
     @Transactional
     public DefaultRes findArtistById(String id, final Integer token) {
@@ -54,14 +54,21 @@ public class ArtistsService {
 
             Artists artists = artistsRepository.findArtistsBy_id(id);
             String[] members = artists.getMember();
-            List<CommonListReq> commonListReqList = new ArrayList<>();
+            List<CommonListReq> memberList = new ArrayList<>();
 
             for (String member:members) {
-                commonListReqList.add(artistsRepository.findArtistsByName(member));
+                CommonListReq commonListReq = artistsRepository.findArtistsByName(member);
+                if (ObjectUtils.isEmpty(commonListReq)) {
+                    continue;
+                }
+                memberList.add(commonListReq);
             }
+            artistDetailReq.setMemberList(memberList);
 
             String name = artists.getName();
             artistDetailReq.setEventsList(searchService.searchEvent(token, name));
+
+            searchService.setGroup(artistDetailReq.getEventsList(), "event");
 
             return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_ARTISTS, artistDetailReq);
         } catch (Exception e){
