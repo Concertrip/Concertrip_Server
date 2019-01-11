@@ -1,6 +1,8 @@
 # Concertrip_Server
 #### 가장 먼저 받아보는 콘서트, 페스티벌 일정 구독 서비스
 
+![앱아이콘](https://github.com/Concertrip/Concertrip_Server/blob/master/image/app_icon.png "앱아이콘")
+
 * 2018 SOPT 23기해커톤
     *  프로젝트 기간 : 2018년 12월 22일 ~ 2019년 1월 12일
 * API - (https://github.com/Concertrip/Concertrip_Server/wiki)
@@ -108,3 +110,6 @@
 ## Concertrip 의 다른 프로젝트
 * [Android](https://github.com/Concertrip/Concertrip__Android)
 * [iOS](https://github.com/Concertrip/Concertrip_iOS)
+
+## wireframe
+![wireframe](https://github.com/Concertrip/Concertrip_Server/blob/master/image/wireframe.png)
