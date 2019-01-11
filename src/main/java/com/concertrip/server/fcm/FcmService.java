@@ -88,6 +88,7 @@ public class FcmService {
                     fcm.setTo(token);
                     fcm.setNotification(notification);
 
+
                     HttpEntity<Fcm> request = new HttpEntity<Fcm>(fcm, headers);
                     RestTemplate restTemplate = new RestTemplate();
                     restTemplate.postForObject(FIREBASE_API_URL, request, String.class);

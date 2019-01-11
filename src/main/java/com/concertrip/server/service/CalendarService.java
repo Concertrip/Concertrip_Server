@@ -34,13 +34,15 @@ public class CalendarService {
     private final ArtistsRepository artistsRepository;
     private final EventsRepository eventsRepository;
     private final SubscribeService subscribeService;
+    private final SearchService searchService;
 
-    public CalendarService(SubscribeMapper subscribeMapper, GenreRepository genreRepository, ArtistsRepository artistsRepository, EventsRepository eventsRepository, SubscribeService subscribeService) {
+    public CalendarService(SubscribeMapper subscribeMapper, GenreRepository genreRepository, ArtistsRepository artistsRepository, EventsRepository eventsRepository, SubscribeService subscribeService, SearchService searchService) {
         this.subscribeMapper = subscribeMapper;
         this.genreRepository = genreRepository;
         this.artistsRepository = artistsRepository;
         this.eventsRepository = eventsRepository;
         this.subscribeService = subscribeService;
+        this.searchService = searchService;
     }
 
 
@@ -110,11 +112,11 @@ public class CalendarService {
                         continue;
                     }
                     calendarReq.setTabId("내 공연");
+                    calendarReq.setHashTag(searchService.makeHashTag(calendarReq.get_id()));
                     calendarReq.setSubscribe(subscribeService.isSubscribe(userIdx, "event", calendarReq.get_id()));
                     allCalendar.add(calendarReq);
                 } else if (s.getType().equals("artist")) {
                     Artists artists = artistsRepository.findArtistsBy_id(s.getObjIdx());
-                    log.info(artists.getName());
                     List<CalendarReq> artistCalendar  = eventsRepository.findEventForArtistCalendar(artists.getName(), standardDate[0], standardDate[1]);
 
                     for (CalendarReq cReq : artistCalendar) {
@@ -122,6 +124,7 @@ public class CalendarService {
                             continue;
                         }
                         cReq.setTabId(artists.getName());
+                        cReq.setHashTag(searchService.makeHashTag(cReq.get_id()));
                         cReq.setSubscribe(subscribeService.isSubscribe(userIdx, "event", cReq.get_id()));
                         allCalendar.add(cReq);
                     }
@@ -134,6 +137,7 @@ public class CalendarService {
                             continue;
                         }
                         cReq.setTabId(genre.getCode());
+                        cReq.setHashTag(searchService.makeHashTag(cReq.get_id()));
                         cReq.setSubscribe(subscribeService.isSubscribe(userIdx, "evnet", cReq.get_id()));
                         allCalendar.add(cReq);
                     }
@@ -142,6 +146,11 @@ public class CalendarService {
 
             List<CalendarReq> allCalendarDuplicate = new LinkedList<>();
 
+            for (CalendarReq cq : allCalendar) {
+                if (cq.getTabId().equals("내 공연")) {
+                    allCalendarDuplicate.add(cq);
+                }
+            }
             for (int i = 0; i < allCalendar.size(); i++) {
                 int flag = 0;
                 for (int j = 0; j < allCalendarDuplicate.size(); j++) {

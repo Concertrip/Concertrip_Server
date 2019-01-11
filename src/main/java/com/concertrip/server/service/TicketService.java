@@ -46,13 +46,23 @@ public class TicketService {
             if (ObjectUtils.isEmpty(userIdx)) {
                 return DefaultRes.res(401, ResponseMessage.EMPTY_TOKEN);
             }
-            log.info(df.format(now));
             List<Ticket> ticketList1 = ticketMapper.findByUserIdxAsc(userIdx); //오름차순
             List<Ticket> ticketList2 = ticketMapper.findByUserIdxDesc(userIdx);
-            TicketListReq ticketListReq = new TicketListReq(ticketList1,ticketList2);
-            log.info(ticketList1.toString());
-            log.info(ticketList2.toString());
+            TicketListReq ticketListReq = new TicketListReq(ticketList1, ticketList2);
             return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_TICKETS, ticketListReq);
+        } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            log.error(e.getMessage());
+            return DefaultRes.res(StatusCode.DB_ERROR, ResponseMessage.DB_ERROR);
+        }
+    }
+    @Transactional
+    public DefaultRes findTicketImg(final int userIdx) {
+        try {
+            List<String> ticketList = ticketMapper.findTicketImg(userIdx);
+
+
+            return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_TICKETS, ticketList);
         } catch (Exception e) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             log.error(e.getMessage());
@@ -106,6 +116,8 @@ public class TicketService {
             Events events = eventsRepository.findEventsBy_id(eventId);
             String ticketImg = events.getTicketImg();
             ticketMapper.save_tmp(userIdx, ticketImg);
+            log.info(eventId);
+
             return DefaultRes.res(StatusCode.OK, ResponseMessage.BUY_SUCCESS);
         } catch (Exception e) {
             return DefaultRes.res(StatusCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR);

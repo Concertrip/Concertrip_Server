@@ -19,4 +19,5 @@ public class CalendarReq {
     private Date[] date;
     private String[] tag;
     private boolean subscribe = false;
+    private String hashTag;
 }

@@ -34,7 +34,7 @@ public class TicketController {
     public ResponseEntity getUserTicket(@RequestHeader(value = "Authorization") final String token) {
         try{
             JwtService.Token decodedToken = jwtService.decode(token);
-            return new ResponseEntity<>(ticketService.findByUserIdx(decodedToken.getUser_idx()), HttpStatus.OK);
+            return new ResponseEntity<>(ticketService.findTicketImg(decodedToken.getUser_idx()), HttpStatus.OK);
         } catch (Exception e) {
             log.error(e.getMessage());
             return new ResponseEntity<>(FAIL_DEFAULT_RES, HttpStatus.INTERNAL_SERVER_ERROR);

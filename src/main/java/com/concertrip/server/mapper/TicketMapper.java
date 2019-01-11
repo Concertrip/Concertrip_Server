@@ -34,7 +34,7 @@ public interface TicketMapper {
     //티켓 등록
     @Insert("INSERT INTO ticket(serialNum, seat, barcodeNum, title, date, location, eventId, userIdx)" +
             "VALUES(#{ticket.serialNum}, #{ticket.seat}, #{ticket.barcodeNum}, #{ticket.title}, #{ticket.date}, #{ticket.location}, #{ticket.eventId}, #{ticket.userIdx})")
-    void save(@Param("ticket")final Ticket ticket);
+    Ticket save(@Param("ticket")final Ticket ticket);
 
     //티켓 삭제
     @Delete("DELETE FROM ticket WHERE userIdx = #{userIdx}")
@@ -43,4 +43,7 @@ public interface TicketMapper {
     //티켓 등록 임시
     @Insert("INSERT INTO ticket_tmp(ticketImg, userIdx) VALUES(#{ticketImg}, #{userIdx})")
     void save_tmp(@Param("userIdx") final Integer userIdx, @Param("ticketImg") final String ticketImg);
+
+    @Select("SELECT ticketImg FROM ticket_tmp WHERE userIdx = #{userIdx}")
+    List<String> findTicketImg(@Param("userIdx") final Integer userIdx);
 }
