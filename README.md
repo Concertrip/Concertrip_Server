@@ -8,6 +8,8 @@
 * API - (https://github.com/Concertrip/Concertrip_Server/wiki)
 * 논리적 DB 모델링
 
+![ERD](https://github.com/Concertrip/Concertrip_Server/blob/develop/image/erd.JPG)
+
 
 ## 의존성
 ```xml
@@ -112,4 +114,4 @@
 * [iOS](https://github.com/Concertrip/Concertrip_iOS)
 
 ## wireframe
-![wireframe](https://github.com/Concertrip/Concertrip_Server/blob/master/image/wireframe.png)
+![wireframe](https://github.com/Concertrip/Concertrip_Server/blob/develop/image/workflow.JPG)
