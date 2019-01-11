@@ -197,6 +197,7 @@ public class CalendarService {
                 if (cReq == null) {
                     continue;
                 }
+                cReq.setHashTag(cReq.get_id());
                 cReq.setSubscribe(subscribeService.isSubscribe(userIdx, "event", cReq.get_id()));
             }
 
@@ -226,6 +227,7 @@ public class CalendarService {
                 if (cReq == null) {
                     continue;
                 }
+                cReq.setHashTag(cReq.get_id());
                 cReq.setTabId(artists.getName());
                 cReq.setSubscribe(subscribeService.isSubscribe(userIdx, "event", cReq.get_id()));
             }
@@ -255,6 +257,7 @@ public class CalendarService {
                 if (cReq == null) {
                     continue;
                 }
+                cReq.setHashTag(cReq.get_id());
                 cReq.setTabId(genre.getCode());
                 cReq.setSubscribe(subscribeService.isSubscribe(userIdx, "event", cReq.get_id()));
             }

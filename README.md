@@ -1,8 +1,8 @@
 # Concertrip_Server
+#### 가장 먼저 받아보는 콘서트, 페스티벌 일정 구독 서비스
 
-
-* 2018 SOPT 23기 
-* 프로젝트 기간 : 2018년 12월 22일 ~ 2019년 1월 12일
+* 2018 SOPT 23기해커톤
+    *  프로젝트 기간 : 2018년 12월 22일 ~ 2019년 1월 12일
 * API - (https://github.com/Concertrip/Concertrip_Server/wiki)
 * 논리적 DB 모델링
 
@@ -10,6 +10,10 @@
 ## 의존성
 ```xml
 <dependencies>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-mongodb</artifactId>
@@ -23,6 +27,7 @@
             <artifactId>mybatis-spring-boot-starter</artifactId>
             <version>1.3.2</version>
         </dependency>
+        <!-- AWS -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-aws</artifactId>
@@ -33,26 +38,39 @@
             <artifactId>spring-boot-devtools</artifactId>
             <scope>runtime</scope>
         </dependency>
+        <!-- DB -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jdbc</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.mariadb.jdbc</groupId>
             <artifactId>mariadb-java-client</artifactId>
         </dependency>
+        <!-- LOMBOK -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+
+        <!-- JWT -->
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>3.4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>1.8.11</version>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>
             <artifactId>json-simple</artifactId>
@@ -85,6 +103,7 @@
 * 김현진 - [hyunjkluz](https://github.com/hyunjkluz)
 * 유현영 - [You-hyeonyeong](https://github.com/You-hyeonyeong)
 
+[기여자 목록](https://github.com/Concertrip/Concertrip_Server/pulse)을 확인하여 이 프로젝트에 참가하신 분들을 보실 수 있습니다.
 
 ## Concertrip 의 다른 프로젝트
 * [Android](https://github.com/Concertrip/Concertrip__Android)
