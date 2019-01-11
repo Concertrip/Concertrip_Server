@@ -95,7 +95,6 @@ public class CalendarService {
             } else {
                 standardDate =translateDate(year, month, day, "day");
             }
-            log.info("user : " + userIdx);
 
             //구독한 이벤트 불러오기
             List<Subscribe> subscribeList = subscribeMapper.getUserAllSubscribe(userIdx);
