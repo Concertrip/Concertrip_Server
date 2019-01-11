@@ -7,6 +7,7 @@ import com.concertrip.server.model.DefaultReq;
 import com.concertrip.server.model.EventsDetailReq;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
+import org.springframework.data.mongodb.core.FindAndModifyOptions;
 
 import java.util.Date;
 import java.util.List;
@@ -53,6 +54,9 @@ public interface EventsRepository extends MongoRepository<Events, String> {
     List<CommonListReq> findAllByFilterIn(String filter);
 
     Events findEventsBy_id(String _id);
+
+    Findand
+
 
 }
 

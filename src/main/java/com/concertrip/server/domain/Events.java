@@ -37,4 +37,5 @@ public class Events implements Serializable {
     private String ticketImg;
     private int[] precaution;
     private String[] filter;
+    private Integer[] subscribeList;
 }
