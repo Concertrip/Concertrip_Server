@@ -95,6 +95,8 @@ public class CalendarService {
             } else {
                 standardDate =translateDate(year, month, day, "day");
             }
+            log.info(standardDate[0].toString());
+            log.info(standardDate[1].toString());
 
             //구독한 이벤트 불러오기
             List<Subscribe> subscribeList = subscribeMapper.getUserAllSubscribe(userIdx);
@@ -106,7 +108,6 @@ public class CalendarService {
                 log.info("--------------" + s.getType());
                 if (s.getType().equals("event")) {
                     calendarReq = eventsRepository.findEventForEventCalendar(s.getObjIdx(), standardDate[0], standardDate[1]);
-
 
                     if (calendarReq == null) {
                         continue;
