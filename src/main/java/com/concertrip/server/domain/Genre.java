@@ -25,5 +25,5 @@ public class Genre {
     private String youtubeUrl;
     @NonNull
     private String code;
-    private Integer[] subscribeList;
+    private Integer[] subscriber;
 }

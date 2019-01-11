@@ -1,5 +1,6 @@
 package com.concertrip.server.service;
 
+import com.concertrip.server.dal.SubscribeDAL;
 import com.concertrip.server.dao.ArtistsRepository;
 import com.concertrip.server.dao.EventsRepository;
 import com.concertrip.server.dao.GenreRepository;
@@ -12,11 +13,11 @@ import com.concertrip.server.model.CommonListReq;
 import com.concertrip.server.model.DefaultRes;
 import com.concertrip.server.utils.ResponseMessage;
 import com.concertrip.server.utils.StatusCode;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -28,13 +29,15 @@ public class RenewSubscribeService {
     private final GenreRepository genreRepository;
     private final SubscribeMapper subscribeMapper;
     private final SearchService searchService;
+    private final SubscribeDAL subscribeDAL;
 
-    public RenewSubscribeService(EventsRepository eventsRepository, ArtistsRepository artistsRepository, GenreRepository genreRepository, SubscribeMapper subscribeMapper, SearchService searchService) {
+    public RenewSubscribeService(EventsRepository eventsRepository, ArtistsRepository artistsRepository, GenreRepository genreRepository, SubscribeMapper subscribeMapper, SearchService searchService, SubscribeDAL subscribeDAL) {
         this.eventsRepository = eventsRepository;
         this.artistsRepository = artistsRepository;
         this.genreRepository = genreRepository;
         this.subscribeMapper = subscribeMapper;
         this.searchService = searchService;
+        this.subscribeDAL = subscribeDAL;
     }
 
     public Boolean isSubscribe(final Integer userIdx, final String type, final String objIdx) {
@@ -56,38 +59,37 @@ public class RenewSubscribeService {
         Integer[] subscribeList = {};
         if (type.equals("artist")) {
             Artists artists = artistsRepository.findArtistsBy_id(objIdx);
-            subscribeList = artists.getSubscribeList();
+            subscribeList = artists.getSubscriber();
         }
         if (type.equals("genre")) {
             Genre genre = genreRepository.findGenreBy_idEquals(objIdx);
-            subscribeList = genre.getSubscribeList();
+            subscribeList = genre.getSubscriber();
         }
         if (type.equals("event")) {
             Events events = eventsRepository.findEventsBy_id(objIdx);
-            subscribeList = events.getSubscribeList();
+            subscribeList = events.getSubscriber();
         }
         return subscribeList;
     }
 
-    public DefaultRes subscribe(final int token, final String type, final String objIdx) {
+    public DefaultRes subscribe(final Integer userIdx, final String type, final String objIdx) {
         try {
-            if (ObjectUtils.isEmpty(token)) {
+            if (ObjectUtils.isEmpty(userIdx)) {
                 return DefaultRes.res(401, ResponseMessage.EMPTY_TOKEN);
             }
-            // update rds
-            if (isSubscribe(token, type, objIdx)) {
-                subscribeMapper.unSubscribe(token, type, objIdx);
+            if (isSubscribe(userIdx, type, objIdx)) {
+//                subscribeMapper.unSubscribe(userIdx, type, objIdx);
+                subscribeDAL.subscribe(type, objIdx, userIdx, true);
                 return DefaultRes.res(StatusCode.OK, ResponseMessage.UNSUBSCRIBE);
             } else {
                 if (isRealObj(type, objIdx)) {
-                    subscribeMapper.subscribe(token, type, objIdx);
+//                    subscribeMapper.subscribe(userIdx, type, objIdx);
+                    subscribeDAL.subscribe(type, objIdx, userIdx, false);
                     return DefaultRes.res(StatusCode.OK, ResponseMessage.SUBSCRIBE);
                 } else {
                     return DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.DISMATCH_TYPE_OBJ);
                 }
             }
-
-            //update mongo
         } catch (Exception e) {
             return DefaultRes.res(StatusCode.DB_ERROR, ResponseMessage.DB_ERROR);
         }
@@ -164,6 +166,21 @@ public class RenewSubscribeService {
         } catch (Exception e) {
             log.error(e.getMessage());
             return DefaultRes.res(StatusCode.DB_ERROR, ResponseMessage.DB_ERROR);
+        }
+    }
+    public DefaultRes pushList(final String type, final String objIdx) {
+        try {
+            List<Subscribe> subscribeList = subscribeMapper.getSubscribeTypeObj(type, objIdx);
+            List<Integer> userIdxList = new ArrayList<>();
+
+            for(Subscribe subscribe : subscribeList) {
+                userIdxList.add(subscribe.getUserIdx());
+            }
+
+            return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_USER, subscribeList);
+        } catch (Exception e) {
+            return DefaultRes.res(StatusCode.DB_ERROR, ResponseMessage.DB_ERROR);
+
         }
     }
 }

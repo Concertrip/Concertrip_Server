@@ -54,10 +54,6 @@ public interface EventsRepository extends MongoRepository<Events, String> {
     List<CommonListReq> findAllByFilterIn(String filter);
 
     Events findEventsBy_id(String _id);
-
-    Findand
-
-
 }
 
 

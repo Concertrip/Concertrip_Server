@@ -4,6 +4,7 @@ package com.concertrip.server.api;
 import com.concertrip.server.model.DefaultRes;
 import com.concertrip.server.model.SubscribeReq;
 import com.concertrip.server.service.JwtService;
+import com.concertrip.server.service.RenewSubscribeService;
 import com.concertrip.server.service.SubscribeService;
 import com.concertrip.server.service.UserService;
 import com.concertrip.server.utils.ResponseMessage;
@@ -26,13 +27,11 @@ import static com.concertrip.server.model.DefaultRes.FAIL_DEFAULT_RES;
 @RestController
 @RequestMapping("api/subscribe")
 public class SubscribeController {
-    private final SubscribeService subscribeService;
-    private final UserService userService;
+    private final RenewSubscribeService subscribeService;
     private final JwtService jwtService;
 
-    public SubscribeController(final SubscribeService subscribeService, final UserService userService, final JwtService jwtService) {
+    public SubscribeController(final RenewSubscribeService subscribeService, final JwtService jwtService) {
         this.subscribeService = subscribeService;
-        this.userService = userService;
         this.jwtService = jwtService;
     }
 

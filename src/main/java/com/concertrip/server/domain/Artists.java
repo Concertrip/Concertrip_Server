@@ -28,6 +28,6 @@ public class Artists implements Serializable {
     private String youtubeUrl;
     private String[] filter;
     private String[] member;
-    private Integer[] subscribeList;
+    private Integer[] subscriber;
 
 }
