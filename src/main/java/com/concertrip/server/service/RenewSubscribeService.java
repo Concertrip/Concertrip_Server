@@ -78,12 +78,12 @@ public class RenewSubscribeService {
                 return DefaultRes.res(401, ResponseMessage.EMPTY_TOKEN);
             }
             if (isSubscribe(userIdx, type, objIdx)) {
-//                subscribeMapper.unSubscribe(userIdx, type, objIdx);
+                subscribeMapper.unSubscribe(userIdx, type, objIdx);
                 subscribeDAL.subscribe(type, objIdx, userIdx, true);
                 return DefaultRes.res(StatusCode.OK, ResponseMessage.UNSUBSCRIBE);
             } else {
                 if (isRealObj(type, objIdx)) {
-//                    subscribeMapper.subscribe(userIdx, type, objIdx);
+                    subscribeMapper.subscribe(userIdx, type, objIdx);
                     subscribeDAL.subscribe(type, objIdx, userIdx, false);
                     return DefaultRes.res(StatusCode.OK, ResponseMessage.SUBSCRIBE);
                 } else {

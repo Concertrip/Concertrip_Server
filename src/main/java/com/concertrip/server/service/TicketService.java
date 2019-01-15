@@ -116,7 +116,6 @@ public class TicketService {
             Events events = eventsRepository.findEventsBy_id(eventId);
             String ticketImg = events.getTicketImg();
             ticketMapper.save_tmp(userIdx, ticketImg);
-            log.info(eventId);
 
             return DefaultRes.res(StatusCode.OK, ResponseMessage.BUY_SUCCESS);
         } catch (Exception e) {

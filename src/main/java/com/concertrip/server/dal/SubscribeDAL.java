@@ -32,7 +32,7 @@ public class SubscribeDAL {
      * @param isSubscribe 구독하기에서 오면 false, 구독 취소에서 오면 true
      */
     public void subscribe(String type, String id, Integer userIdx, boolean isSubscribe) {
-        Query query = new Query(Criteria.where("id").is(id));
+        Query query = new Query(new Criteria("_id").is(id));
         Update update = new Update();
 
         if (isSubscribe) {
