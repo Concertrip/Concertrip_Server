@@ -8,7 +8,7 @@
 * API - (https://github.com/Concertrip/Concertrip_Server/wiki)
 * 논리적 DB 모델링
 
-![ERD](https://github.com/Concertrip/Concertrip_Server/blob/develop/image/erd.JPG)
+![ERD](https://github.com/Concertrip/Concertrip_Server/blob/master/image/erd.JPG)
 
 
 ## 프로젝트 설명
@@ -22,6 +22,11 @@
  
 *  지금은 작은 서비스이지만 운영 시스템의 중요도, 리스크 등을 감안하고 서버의 안정성을 생각해서 개발서버와 운영서버 두개를 운영하였습니다.
     * 개발 서버에서 거의 모든 환경이 운영과 같이 맞추어져 있어서 확인 후 운영쪽에 적용하였습니다.
+
+
+## Architecture
+![Architecture](https://github.com/Concertrip/Concertrip_Server/blob/master/image/Server_Architecture.png)
+
 
 ## 의존성
 ```xml
