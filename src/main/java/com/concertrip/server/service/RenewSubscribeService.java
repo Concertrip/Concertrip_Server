@@ -41,7 +41,10 @@ public class RenewSubscribeService {
     }
 
     public Boolean isSubscribe(final Integer userIdx, final String type, final String objIdx) {
-        Integer[] subscribeList = this.getSubscribeListOfObject(type, objIdx);
+        Integer[] subscribeList = getSubscribeListOfObject(type, objIdx);
+        if (subscribeList == null) {
+            return false;
+        }
         for (Integer sub : subscribeList) {
             if (sub.equals(userIdx)) {
                 return true;
@@ -51,25 +54,27 @@ public class RenewSubscribeService {
     }
 
     public Integer subscribeNum(final String type, final String objIdx) {
-        Integer[] subscribeList = this.getSubscribeListOfObject(type, objIdx);
+        Integer[] subscribeList = getSubscribeListOfObject(type, objIdx);
+        if (subscribeList == null) {
+            return 0;
+        }
         return subscribeList.length;
     }
 
     private Integer[] getSubscribeListOfObject(final String type, final String objIdx) {
-        Integer[] subscribeList = {};
         if (type.equals("artist")) {
             Artists artists = artistsRepository.findArtistsBy_id(objIdx);
-            subscribeList = artists.getSubscriber();
+            return artists.getSubscriber();
         }
         if (type.equals("genre")) {
             Genre genre = genreRepository.findGenreBy_idEquals(objIdx);
-            subscribeList = genre.getSubscriber();
+            return genre.getSubscriber();
         }
         if (type.equals("event")) {
             Events events = eventsRepository.findEventsBy_id(objIdx);
-            subscribeList = events.getSubscriber();
+            return events.getSubscriber();
         }
-        return subscribeList;
+        return null;
     }
 
     public DefaultRes subscribe(final Integer userIdx, final String type, final String objIdx) {
@@ -91,6 +96,7 @@ public class RenewSubscribeService {
                 }
             }
         } catch (Exception e) {
+            log.error(e.getMessage());
             return DefaultRes.res(StatusCode.DB_ERROR, ResponseMessage.DB_ERROR);
         }
     }

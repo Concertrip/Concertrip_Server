@@ -68,7 +68,7 @@ public class ArtistsService {
             String name = artists.getName();
             artistDetailReq.setEventsList(searchService.searchEvent(token, name));
 
-            searchService.setGroup(artistDetailReq.getEventsList(), "event");
+//            searchService.setGroup(artistDetailReq.getEventsList(), "event");
 
             return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_ARTISTS, artistDetailReq);
         } catch (Exception e){

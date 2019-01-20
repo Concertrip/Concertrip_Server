@@ -60,8 +60,7 @@ public class TicketService {
     public DefaultRes findTicketImg(final int userIdx) {
         try {
             List<String> ticketList = ticketMapper.findTicketImg(userIdx);
-
-
+            Collections.reverse(ticketList);
             return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_TICKETS, ticketList);
         } catch (Exception e) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
